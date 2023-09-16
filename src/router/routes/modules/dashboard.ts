@@ -7,33 +7,22 @@ const DASHBOARD = {
   component: DEFAULT_LAYOUT,
   meta: {
     locale: 'menu.dashboard',
-    //requiresAuth: true,
-    icon: 'icon-user',
+    requiresAuth: true,
+    icon: 'icon-settings',
     order: 0,
   },
-  // children: [
-  //   // {
-  //   //   path: 'super-admin',
-  //   //   name: 'superAdmin',
-  //   //   component: () => import('@/views/dashboard/workplace/index.vue'),
-  //   //   meta: {
-  //   //     locale: 'menu.dashboard.workplace',
-  //   //     requiresAuth: true,
-  //   //     roles: ['*'],
-  //   //   },
-  //   // },
-
-  //   // {
-  //   //   path: 'monitor',
-  //   //   name: 'Monitor',
-  //   //   component: () => import('@/views/dashboard/monitor/index.vue'),
-  //   //   meta: {
-  //   //     locale: 'menu.dashboard.monitor',
-  //   //     requiresAuth: true,
-  //   //     roles: ['admin'],
-  //   //   },
-  //   // },
-  // ],
+  children: [
+    {
+      path: 'set-roles',
+      name: 'setRoles',
+      component: () => import('@/views/dashboard/setRoles/index.vue'),
+      meta: {
+        locale: 'menu.dashboard.setRoles',
+        requiresAuth: true,
+        //roles: ['*'],
+      },
+    },
+  ],
 };
 
 export default DASHBOARD;
