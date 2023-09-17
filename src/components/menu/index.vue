@@ -51,7 +51,7 @@ export default defineComponent({
         name: item.name,
       });
     };
-    // menu的open-keys是展开子菜单的key数组
+    // menu的open-keys是展开子菜单的key数组，包含menu和sub-menu
     const findMenuOpenKeys = (target: string) => {
       const result: string[] = [];
       let isFind = false;
@@ -71,12 +71,10 @@ export default defineComponent({
         if (isFind) return;
         backtrack(el, [el.name as string]);
       });
-      console.log(result);
       return result;
     };
     listenerRouteChange((newRoute) => {
       const { requiresAuth, activeMenu, hideInMenu } = newRoute.meta;
-      console.log(newRoute.meta);
       if (requiresAuth && (!hideInMenu || activeMenu)) {
         const menuOpenKeys = findMenuOpenKeys(
           (activeMenu || newRoute.name) as string,
@@ -86,9 +84,8 @@ export default defineComponent({
         openKeys.value = [...keySet];
 
         selectedKey.value = [
-          activeMenu || menuOpenKeys[menuOpenKeys.length - 1],
+          (activeMenu || menuOpenKeys[menuOpenKeys.length - 1]) as string,
         ];
-        console.log(selectedKey.value);
       }
     }, true);
     const renderSubMenu = () => {

@@ -9,7 +9,7 @@ const DASHBOARD = {
     locale: 'menu.dashboard',
     requiresAuth: true,
     icon: 'icon-settings',
-    order: 0,
+    order: 5,
   },
   children: [
     {

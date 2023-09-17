@@ -4,6 +4,7 @@ import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import tailwindcss from 'tailwindcss';
+import svgLoader from 'vite-svg-loader';
 import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
@@ -11,6 +12,8 @@ export default defineConfig({
     vue(),
     // Provides Vue 3 JSX & TSX support with HMR.
     vueJsx(),
+    // 使用 vite-svg-loader
+    svgLoader(),
     // arcoDesign按需引入样式
     configArcoStyleImportPlugin() as PluginOption,
   ],
