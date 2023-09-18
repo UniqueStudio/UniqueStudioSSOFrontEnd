@@ -16,6 +16,10 @@ arcodesign + tailwindcss
 
 ### 开发规范
 
+用 ESLint 来检查代码质量，用stylelint，用 Prettier 来格式化代码
+
+
+
 #### 样式规范
 
 * 使用 less （arcodesign官方支持less）。
@@ -32,4 +36,6 @@ arcodesign + tailwindcss
   i18n.global.t('');
   ```
 
+### vite插件
 
+`vite-plugin-vue-inspector`
