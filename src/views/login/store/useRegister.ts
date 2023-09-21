@@ -1,12 +1,19 @@
 import { defineStore } from 'pinia';
-import { RegisterStore } from '../type';
 import type { ValidatedError } from '@arco-design/web-vue';
 import { Message } from '@arco-design/web-vue';
-import type { RegisterRequest, RegisterResponse } from '@/constants/httpMsg/register/RegisterStatusMsg';
-import type { ValidateCodeRequest, ValidateCodeResponse } from '@/constants/httpMsg/register/ValidateStatusMsg';
+import type {
+  RegisterRequest,
+  RegisterResponse,
+} from '@/constants/httpMsg/register/RegisterStatusMsg';
+import type {
+  ValidateCodeRequest,
+  ValidateCodeResponse,
+} from '@/constants/httpMsg/register/ValidateStatusMsg';
 
 import { register, sendValidateCode } from '@/api';
 import i18n from '@/locale';
+
+import { RegisterStore } from '../type';
 
 const useRegisterStore = defineStore('register', {
   state: (): RegisterStore => ({
@@ -16,7 +23,7 @@ const useRegisterStore = defineStore('register', {
       phoneNumber: '',
       email: '',
       password: '',
-      validateCode: ''
+      validateCode: '',
     },
     isSendValidateCode: false,
     buttonContent: i18n.global.t('register.getValidateCode'),
@@ -35,46 +42,51 @@ const useRegisterStore = defineStore('register', {
             password: this.registerFormInfo.password,
             validate_code: this.registerFormInfo.validateCode,
           };
-          const res:Promise<RegisterResponse> = register(oPostData);
-          res.then((response)=>{
-            if(response !== null){
+          const res: Promise<RegisterResponse> = register(oPostData);
+          res.then((response) => {
+            if (response !== null) {
               Message.success(i18n.global.t('register.success'));
             }
           });
         }
-      })
+      });
     },
     handleValidateCode(registerFormRef: any) {
-      registerFormRef.validateField('phoneNumber').then((ValidatedError: ValidatedError) => {
-        if (ValidatedError) {
-          return;
-        } else {
-          const oPostData: ValidateCodeRequest = {
-            phone: this.registerFormInfo.phoneNumber,
-          }
-          const res:Promise< ValidateCodeResponse> = sendValidateCode (oPostData);
-          res.then((response)=>{
-            if(response !== null){
-              Message.success(i18n.global.t('register.getValidateCode.success'));
-            }
-          });
-          this.isSendValidateCode = true;
+      registerFormRef
+        .validateField('phoneNumber')
+        .then((ValidatedError: ValidatedError) => {
+          if (ValidatedError) {
+            return;
+          } else {
+            const oPostData: ValidateCodeRequest = {
+              phone: this.registerFormInfo.phoneNumber,
+            };
+            const res: Promise<ValidateCodeResponse> =
+              sendValidateCode(oPostData);
+            res.then((response) => {
+              if (response !== null) {
+                Message.success(
+                  i18n.global.t('register.getValidateCode.success'),
+                );
+              }
+            });
+            this.isSendValidateCode = true;
 
-          let countDown: number = 60;
-          const timeInterval = setInterval(() => {
-            countDown--;
-            if (countDown > 0) {
-              this.buttonContent = String(countDown);
-            } else {
-              this.buttonContent = i18n.global.t('register.getValidateCode');
-              this.isSendValidateCode = false;
-              clearInterval(timeInterval);
-            }
-          }, 1000);
-        }
-      })
-    }
-  }
+            let countDown: number = 60;
+            const timeInterval = setInterval(() => {
+              countDown--;
+              if (countDown > 0) {
+                this.buttonContent = String(countDown);
+              } else {
+                this.buttonContent = i18n.global.t('register.getValidateCode');
+                this.isSendValidateCode = false;
+                clearInterval(timeInterval);
+              }
+            }, 1000);
+          }
+        });
+    },
+  },
 });
 
 export default useRegisterStore;

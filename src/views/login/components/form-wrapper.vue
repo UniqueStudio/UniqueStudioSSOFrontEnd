@@ -5,8 +5,8 @@
       <a-popover position="right">
         <div class="login-form-sub-title mb-4">{{ '什么是sso系统' }}</div>
       </a-popover>
-      <login-form v-if="!isRegister"/>
-      <register-form v-if="isRegister"/>
+      <login-form v-if="!isRegister" />
+      <register-form v-if="isRegister" />
     </div>
   </div>
 </template>
@@ -17,17 +17,19 @@ import { storeToRefs } from 'pinia';
 import loginForm from './login-form.vue';
 import registerForm from './register-form.vue';
 // store
-import {  useLoginStore } from '../store';
-const loginStore = useLoginStore();
-const { isRegister} = storeToRefs(loginStore);
+import { useLoginStore } from '../store';
 
+const loginStore = useLoginStore();
+const { isRegister } = storeToRefs(loginStore);
 </script>
 
 <style lang="less" scoped>
 .login-wrapper {
   border: 1px solid var(--color-border-1);
   border-radius: 8px;
-  box-shadow: rgba(22, 14, 45, 0.02) 0px 0px 40px, rgba(22, 14, 45, 0.06) 0px 0px 104px;
+  box-shadow:
+    rgba(22, 14, 45, 0.02) 0px 0px 40px,
+    rgba(22, 14, 45, 0.06) 0px 0px 104px;
 
   .login-form {
     &-body {
@@ -54,7 +56,6 @@ const { isRegister} = storeToRefs(loginStore);
       display: flex;
       justify-content: space-between;
     }
-
   }
 }
 </style>

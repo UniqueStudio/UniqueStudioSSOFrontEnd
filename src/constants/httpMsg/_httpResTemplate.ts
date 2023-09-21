@@ -1,4 +1,4 @@
-export interface HttpRes<T = {}> {
-  message:string;
-  data:T;
+export interface HttpRes<T = object> {
+  message: string;
+  data: T;
 }

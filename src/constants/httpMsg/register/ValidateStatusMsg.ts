@@ -1,10 +1,10 @@
-import { HttpRes } from "../_httpResTemplate";
+import { HttpRes } from '../_httpResTemplate';
 
 export interface ValidateCodeRequest {
-  phone:string,
+  phone: string;
 }
 
 export type ValidateCodeResponse = HttpRes<{
-  message:string,
-  data:string,
-}>
+  message: string;
+  data: string;
+}>;

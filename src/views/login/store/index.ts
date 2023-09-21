@@ -1,7 +1,4 @@
-import  useLoginStore  from "./useLogin";
-import useRegisterStore from "./useRegister";
+import useLoginStore from './useLogin';
+import useRegisterStore from './useRegister';
 
-export {
-  useLoginStore,
-  useRegisterStore,
-}
+export { useLoginStore, useRegisterStore };

@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue';
+
 defineProps({
   items: {
     type: Array as PropType<string[]>,
