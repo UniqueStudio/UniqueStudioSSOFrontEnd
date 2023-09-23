@@ -1,8 +1,4 @@
-import { register, sendValidateCode} from './register';
+import { register, sendValidateCode } from './register';
 import { ssoLogin } from './login';
 
-export {
-  register,
-  sendValidateCode,
-  ssoLogin,
-}
+export { register, sendValidateCode, ssoLogin };

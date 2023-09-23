@@ -19,7 +19,7 @@ const DASHBOARD = {
       meta: {
         locale: 'menu.dashboard.setRoles',
         requiresAuth: true,
-        //roles: ['*'],
+        // roles: ['*'],
       },
     },
   ],

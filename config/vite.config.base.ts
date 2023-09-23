@@ -1,11 +1,11 @@
 import { resolve } from 'path';
 import { defineConfig, PluginOption } from 'vite';
-import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import tailwindcss from 'tailwindcss';
 import svgLoader from 'vite-svg-loader';
 import autoprefixer from 'autoprefixer';
+import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 
 export default defineConfig({
   plugins: [

@@ -1,10 +1,10 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import App from './App.vue';
 import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import router from './router';
 import i18n from './locale';
+import App from './App.vue';
 import '@/styles/tailwind.css';
 
 // 全量引入样式

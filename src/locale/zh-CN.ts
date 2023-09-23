@@ -10,4 +10,4 @@ export default {
   ...localeApi,
   ...localeLogin,
   ...localeNoPermission,
-}
+};
