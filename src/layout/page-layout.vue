@@ -1,6 +1,6 @@
 <template>
   <router-view v-slot="{ Component, route }">
-    <component :is="Component" :key="route.fullPath" />
+    <div class="p-5"> <component :is="Component" :key="route.fullPath" /></div>
   </router-view>
 </template>
 
