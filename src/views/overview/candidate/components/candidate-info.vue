@@ -52,14 +52,26 @@
       :checked="selectedCandidates.includes(candidate.id)"
     ></candidate-info-card>
   </a-checkbox-group>
+  <edit-buttons
+    :selected-candidates="selectedCandidates"
+    :step-info="stepInfo"
+  ></edit-buttons>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, PropType } from 'vue';
 import { Groups } from '@/constants/team';
 import { Gender } from '@/views/login/type';
 import { Candidate } from '../type';
 import candidateInfoCard from './candidate-info-card.vue';
+import editButtons from './edit-buttons.vue';
+
+defineProps({
+  stepInfo: {
+    type: Object as PropType<{ cur: string; next: string }>,
+    default: () => ({}),
+  },
+});
 
 const groups = computed(() => Object.values(Groups));
 const currentGroup = ref(Groups.PM);

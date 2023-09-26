@@ -12,7 +12,8 @@ export default {
   'common.operation.switchStage': '转移阶段',
   'common.operation.terminate': '终止投递',
   'common.operation.notify': '发送通知',
-
+  'common.operation.confirmTerminate': '确认终止投递？',
+  'common.operation.editContent': '编辑内容',
 
   'common.user.phone': '手机号码',
   'common.user.email': '邮箱',
