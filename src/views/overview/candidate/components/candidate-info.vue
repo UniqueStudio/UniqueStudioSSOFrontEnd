@@ -52,10 +52,7 @@
       :checked="selectedCandidates.includes(candidate.id)"
     ></candidate-info-card>
   </a-checkbox-group>
-  <edit-buttons
-    :selected-candidates="selectedCandidates"
-    :step-info="stepInfo"
-  ></edit-buttons>
+  <edit-buttons :candidates="candidates" :step-info="stepInfo"></edit-buttons>
 </template>
 
 <script setup lang="ts">
@@ -264,6 +261,13 @@ const candidateInfo: Candidate[] = [
   },
 ];
 const selectedCandidates = ref<number[]>([]);
+
+const candidates = computed(
+  () =>
+    selectedCandidates.value.map((selectId) =>
+      candidateInfo.find(({ id }) => id === selectId),
+    ) as Candidate[],
+);
 
 const handleChangeAll = (value: boolean) => {
   indeterminate.value = false;

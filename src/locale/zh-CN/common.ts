@@ -25,5 +25,6 @@ export default {
   'common.user.school': '学院',
   'common.user.major': '专业',
   'common.user.score': '加权',
-  'common.user.recommender': '加权',
+  'common.user.recommender': '推荐人',
+  'common.user.currentStage': '当前阶段',
 };

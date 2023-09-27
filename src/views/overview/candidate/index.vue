@@ -61,7 +61,6 @@ const currentStep = ref(2);
   .title {
     color: #1d2129;
     font-size: 20px;
-    font-weight: 500;
     padding-bottom: 20px;
   }
   .step-fail {

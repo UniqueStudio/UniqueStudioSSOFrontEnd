@@ -1,13 +1,25 @@
 <template>
   <div class="flex justify-end gap-2 pt-5">
-    <a-button type="primary" @click="showSwitchStage = true">
-      {{ $t('common.operation.switchStage') }} </a-button
-    ><a-button status="danger" @click="showTerminate = true">
-      {{ $t('common.operation.terminate') }} </a-button
-    ><a-button type="outline" @click="showNotify = true">
-      <template #icon>
-        <icon-plus />
-      </template>
+    <a-button
+      type="primary"
+      :disabled="!candidates.length"
+      @click="showSwitchStage = true"
+    >
+      {{ $t('common.operation.switchStage') }}
+    </a-button>
+    <a-button
+      status="danger"
+      :disabled="!candidates.length"
+      @click="showTerminate = true"
+    >
+      {{ $t('common.operation.terminate') }}
+    </a-button>
+    <a-button
+      type="outline"
+      :disabled="!candidates.length"
+      @click="showNotify = true"
+    >
+      <template #icon> <icon-plus /> </template>
       {{ $t('common.operation.notify') }}
     </a-button>
   </div>
@@ -22,7 +34,7 @@
       style="text-align: center"
       v-html="
         $t('candidate.switchStage', {
-          num: `<span style='color: rgb(var(--arcoblue-6));'>${selectedCandidates.length}</span>`,
+          num: `<span style='color: rgb(var(--arcoblue-6));'>${candidates.length}</span>`,
           cur: `<span style='color: rgb(var(--arcoblue-6));'>${$t(
             stepInfo.cur,
           )}</span>`,
@@ -44,7 +56,7 @@
       style="text-align: center"
       v-html="
         $t('candidate.terminate', {
-          num: `<span style='color: rgb(var(--arcoblue-6));'>${selectedCandidates.length}</span>`,
+          num: `<span style='color: rgb(var(--arcoblue-6));'>${candidates.length}</span>`,
         })
       "
     ></div>
@@ -55,27 +67,47 @@
     :on-before-ok="handleNotify"
   >
     <a-form :model="formData" layout="vertical">
-      <a-form-item field="ids" :label="$t('candidate.receiver')">
-        <a-input-tag :default-value="['test']" readonly />
+      <a-form-item>
+        <template #label>
+          <div style="color: var(--color-text-1)">
+            {{ $t('candidate.receiver') }}
+          </div>
+        </template>
+        <a-input-tag v-model="names" readonly />
       </a-form-item>
-      <a-form-item field="content" :label="$t('common.operation.editContent')">
-        <a-select
-          v-model:model-value="formData.content.stage"
-          :trigger-props="{ autoFitPopupMinWidth: true }"
+      <a-form-item field="content">
+        <template #label>
+          <div style="color: var(--color-text-1)">
+            {{ $t('common.operation.editContent') }}
+          </div>
+        </template>
+        <div class="flex gap-2 justify-between w-full"
+          ><a-select
+            v-model:model-value="formData.content.stage"
+            :trigger-props="{ autoFitPopupMinWidth: true }"
+          >
+            <a-option
+              v-for="item in steps"
+              :key="item.index"
+              :value="item.index"
+            >
+              {{ $t(item.step) }}
+            </a-option>
+          </a-select>
+          <a-date-picker
+            v-model="formData.content.date"
+            class="min-w-fit"
+            @change="changeDate"
+          />
+          <a-select
+            v-model:model-value="formData.content.room"
+            :trigger-props="{ autoFitPopupMinWidth: true }"
+          >
+            <a-option v-for="item in [808, 809, 810, 811]" :key="item">
+              {{ item }}
+            </a-option>
+          </a-select></div
         >
-          <a-option v-for="item in steps" :key="item.index" :value="item.index">
-            {{ $t(item.step) }}
-          </a-option>
-        </a-select>
-        <a-date-picker v-model="formData.content.date" @change="changeDate" />
-        <a-select
-          v-model:model-value="formData.content.room"
-          :trigger-props="{ autoFitPopupMinWidth: true }"
-        >
-          <a-option v-for="item in [808, 809, 810, 811]" :key="item">
-            {{ item }}
-          </a-option>
-        </a-select>
       </a-form-item>
       <a-form-item field="content">
         <a-textarea v-model="formData.content.text" auto-size />
@@ -85,12 +117,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, PropType } from 'vue';
+import { ref, PropType, computed } from 'vue';
 import { recruitSteps } from '@/constants/team';
+import { Candidate } from '../type';
 
-defineProps({
-  selectedCandidates: {
-    type: Array as PropType<number[]>,
+const props = defineProps({
+  candidates: {
+    type: Array as PropType<Candidate[]>,
     default: () => [],
   },
   stepInfo: {
@@ -105,16 +138,17 @@ const steps = Object.values(recruitSteps).map((step, index) => ({
 }));
 
 const formData = ref({
-  ids: [],
   content: {
     stage: 0,
     date: '',
     room: '808',
-    text: '',
+    text: '[联创团队] {{候选人姓名}}你好，你通过了{{招新名称}}{{组别}}组笔试流程审核，请于{{!请指定时间!}}在{{!请指定地点!}}参加熬测流程，请务必准时到场。',
   },
 });
+
+const names = computed(() => props.candidates.map(({ name }) => name));
 const changeDate = () => {
-  console.log(formData.value.content);
+  console.log(names);
 };
 
 const showSwitchStage = ref(false);
