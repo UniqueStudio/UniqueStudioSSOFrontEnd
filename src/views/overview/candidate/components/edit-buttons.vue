@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-end gap-2 pt-5">
+  <div class="flex justify-end gap-2">
     <a-button
       type="primary"
       :disabled="!candidates.length"
@@ -31,7 +31,7 @@
     :on-before-ok="handleSwitchStage"
   >
     <div
-      style="text-align: center"
+      class="text-center"
       v-html="
         $t('candidate.switchStage', {
           num: `<span style='color: rgb(var(--arcoblue-6));'>${candidates.length}</span>`,
@@ -53,7 +53,7 @@
     :on-before-ok="handleTerminate"
   >
     <div
-      style="text-align: center"
+      class="text-center"
       v-html="
         $t('candidate.terminate', {
           num: `<span style='color: rgb(var(--arcoblue-6));'>${candidates.length}</span>`,
@@ -69,7 +69,7 @@
     <a-form :model="formData" layout="vertical">
       <a-form-item>
         <template #label>
-          <div style="color: var(--color-text-1)">
+          <div class="text-[--color-text-1]">
             {{ $t('candidate.receiver') }}
           </div>
         </template>
@@ -77,7 +77,7 @@
       </a-form-item>
       <a-form-item field="content">
         <template #label>
-          <div style="color: var(--color-text-1)">
+          <div class="text-[--color-text-1]">
             {{ $t('common.operation.editContent') }}
           </div>
         </template>

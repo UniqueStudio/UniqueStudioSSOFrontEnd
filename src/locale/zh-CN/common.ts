@@ -8,6 +8,7 @@ export default {
   'common.operation.cancel': '取消',
   'common.operation.back': '返回',
   'common.operation.more': '查看更多',
+  'common.operation.close': '收起',
   'common.operation.submitComment': '发表评论',
   'common.operation.switchStage': '转移阶段',
   'common.operation.terminate': '终止投递',
@@ -27,4 +28,8 @@ export default {
   'common.user.score': '加权',
   'common.user.recommender': '推荐人',
   'common.user.currentStage': '当前阶段',
+  'common.user.baseInfo': '基本信息',
+  'common.user.resume': '简历/作品集',
+  'common.user.intro': '自我介绍',
+  'common.user.comment': '评论',
 };

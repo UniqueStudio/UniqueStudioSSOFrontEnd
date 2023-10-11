@@ -21,7 +21,7 @@
 
         <a-button
           type="text"
-          style="background-color: transparent"
+          class="bg-transparent"
           @click="handleClearSelected"
         >
           {{ $t('common.operation.clearSelected') }}
@@ -42,7 +42,7 @@
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
     v-model="selectedCandidates"
-    class="grid grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto"
+    class="grid grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5"
     @change="handleChange"
   >
     <candidate-info-card
@@ -78,7 +78,7 @@ const checkedAll = ref(false);
 
 const candidateInfo: Candidate[] = [
   {
-    id: 1,
+    id: '1',
     name: '名字1',
     avatar: '',
     gender: Gender.male,
@@ -103,7 +103,7 @@ const candidateInfo: Candidate[] = [
     group: Groups.PM,
   },
   {
-    id: 2,
+    id: '2',
     name: '名字2',
     avatar: '',
     gender: Gender.female,
@@ -125,7 +125,7 @@ const candidateInfo: Candidate[] = [
     group: Groups.PM,
   },
   {
-    id: 3,
+    id: '3',
     name: '名字3',
     avatar: '',
     gender: Gender.female,
@@ -147,7 +147,7 @@ const candidateInfo: Candidate[] = [
     group: Groups.PM,
   },
   {
-    id: 4,
+    id: '4',
     name: '名字4',
     avatar: '',
     gender: Gender.female,
@@ -169,7 +169,7 @@ const candidateInfo: Candidate[] = [
     group: Groups.PM,
   },
   {
-    id: 5,
+    id: '5',
     name: '名字5',
     avatar: '',
     gender: Gender.male,
@@ -194,7 +194,7 @@ const candidateInfo: Candidate[] = [
     group: Groups.PM,
   },
   {
-    id: 6,
+    id: '6',
     name: '名字6',
     avatar: '',
     gender: Gender.female,
@@ -216,7 +216,7 @@ const candidateInfo: Candidate[] = [
     group: Groups.PM,
   },
   {
-    id: 7,
+    id: '7',
     name: '名字7',
     avatar: '',
     gender: Gender.female,
@@ -238,7 +238,7 @@ const candidateInfo: Candidate[] = [
     group: Groups.PM,
   },
   {
-    id: 8,
+    id: '8',
     name: '名字8',
     avatar: '',
     gender: Gender.female,
@@ -260,7 +260,7 @@ const candidateInfo: Candidate[] = [
     group: Groups.PM,
   },
 ];
-const selectedCandidates = ref<number[]>([]);
+const selectedCandidates = ref<string[]>([]);
 
 const candidates = computed(
   () =>
@@ -275,7 +275,7 @@ const handleChangeAll = (value: boolean) => {
   selectedCandidates.value = value ? candidateInfo.map(({ id }) => id) : [];
 };
 
-const handleChange = (values: number[]) => {
+const handleChange = (values: string[]) => {
   if (values.length === candidateInfo.length) {
     checkedAll.value = true;
     indeterminate.value = false;

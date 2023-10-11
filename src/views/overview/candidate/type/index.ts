@@ -12,7 +12,7 @@ interface CommentInfo {
 
 // todo 候选人信息，后续完善
 export interface Candidate {
-  id: number;
+  id: string;
   name: string;
   avatar: string;
   gender: Gender;
