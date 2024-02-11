@@ -60,10 +60,10 @@
           class="w-56 px-2"
         >
           <a-step
-            v-for="(item, index) in steps"
+            v-for="(item, index) in recruitSteps"
             :key="index"
-            :description="item.time"
-            ><span class="text-sm">{{ $t(item.step) }}</span>
+            :description="''"
+            ><span class="text-sm">{{ $t(item.i18Key) }}</span>
           </a-step>
         </a-steps>
       </div>
@@ -128,8 +128,8 @@
       <edit-buttons
         :candidates="[user]"
         :step-info="{
-          cur: steps[user.steps.length - 1]?.step,
-          next: steps[user.steps.length]?.step,
+          cur: 0,
+          next: 1,
         }"
       ></edit-buttons>
     </div>
@@ -138,7 +138,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Groups, recruitSteps } from '@/constants/team';
+import { Group, recruitSteps } from '@/constants/team';
 import { Gender } from '@/views/login/type';
 import comment from './comment.vue';
 import editButtons from '../components/edit-buttons.vue';
@@ -168,7 +168,7 @@ const user = ref<Candidate>({
   email: 'henhen@aaa.hust',
   status: '已终止',
   steps: ['2023.09.09', '2023.09.10'],
-  group: Groups.Design,
+  group: Group.Design,
 });
 const steps = Object.values(recruitSteps).map((step, num) => ({
   step,

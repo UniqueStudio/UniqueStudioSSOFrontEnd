@@ -8,10 +8,10 @@
         changeable
       >
         <a-step
-          v-for="(item, index) in steps"
+          v-for="(item, index) in recruitSteps"
           :key="index"
-          :description="`${item.num}${$t('candidate.person')}`"
-          >{{ $t(item.step) }}</a-step
+          :description="`${'todo'}${$t('candidate.person')}`"
+          >{{ $t(item.i18Key) }}</a-step
         >
       </a-steps>
       <div class="flex">
@@ -22,24 +22,16 @@
           <template #icon>
             <icon-close />
           </template>
-          {{ $t('candidate.steps.fail') }}</a-step
+          {{ $t('common.steps.Fail') }}</a-step
         >
-        <a-step
-          class="step-all"
-          :description="`${514}${$t('candidate.person')}`"
-        >
+        <a-step class="step-all" :description="`${514}${$t('common.person')}`">
           <template #icon> <icon-user /> </template
-          >{{ $t('candidate.steps.all') }}</a-step
+          >{{ $t('common.steps.All') }}</a-step
         >
       </div>
     </div>
     <a-divider />
-    <candidate-info
-      :step-info="{
-        cur: steps[currentStep]?.step,
-        next: steps[currentStep + 1]?.step,
-      }"
-    ></candidate-info>
+    <candidate-info></candidate-info>
   </div>
 </template>
 
@@ -48,8 +40,7 @@ import { ref } from 'vue';
 import { recruitSteps } from '@/constants/team';
 import candidateInfo from './components/candidate-info.vue';
 
-const steps = Object.values(recruitSteps).map((step, num) => ({ step, num }));
-const currentStep = ref(2);
+const currentStep = ref(0);
 </script>
 
 <style scoped lang="less">

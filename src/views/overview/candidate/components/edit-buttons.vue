@@ -36,10 +36,10 @@
         $t('candidate.switchStage', {
           num: `<span style='color: rgb(var(--arcoblue-6));'>${candidates.length}</span>`,
           cur: `<span style='color: rgb(var(--arcoblue-6));'>${$t(
-            stepInfo.cur,
+            recruitSteps[stepInfo.cur].i18Key,
           )}</span>`,
           next: `<span style='color: rgb(var(--arcoblue-6));'>${$t(
-            stepInfo.next,
+            recruitSteps[stepInfo.next].i18Key,
           )}</span>`,
         })
       "
@@ -87,11 +87,11 @@
             :trigger-props="{ autoFitPopupMinWidth: true }"
           >
             <a-option
-              v-for="item in steps"
-              :key="item.index"
-              :value="item.index"
+              v-for="(item, index) in recruitSteps"
+              :key="index"
+              :value="index"
             >
-              {{ $t(item.step) }}
+              {{ $t(item.i18Key) }}
             </a-option>
           </a-select>
           <a-date-picker
@@ -127,15 +127,10 @@ const props = defineProps({
     default: () => [],
   },
   stepInfo: {
-    type: Object as PropType<{ cur: string; next: string }>,
+    type: Object as PropType<{ cur: number; next: number }>,
     default: () => ({}),
   },
 });
-
-const steps = Object.values(recruitSteps).map((step, index) => ({
-  step,
-  index,
-}));
 
 const formData = ref({
   content: {

@@ -32,4 +32,19 @@ export default {
   'common.user.resume': '简历/作品集',
   'common.user.intro': '自我介绍',
   'common.user.comment': '评论',
+
+  'common.steps.SignUp': '报名',
+  'common.steps.WrittenTest': '笔试',
+  'common.steps.GroupTimeSelection': '组面时间选择',
+  'common.steps.GroupInterview': '组面',
+  'common.steps.OnlineGroupInterview': '在线组面',
+  'common.steps.StressTest': '熬测',
+  'common.steps.TeamTimeSelection': '群面时间选择',
+  'common.steps.TeamInterview': '团体面试',
+  'common.steps.OnlineTeamInterview': '在线群面',
+  'common.steps.Pass': '通过',
+  'common.steps.Fail': '已终止',
+  'common.steps.All': '全部',
+
+  'common.person': '人',
 };

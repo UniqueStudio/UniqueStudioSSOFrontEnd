@@ -5,6 +5,21 @@
     </div>
     <ul class="right-side">
       <li>
+        <!-- @vue-ignore 由于逆变@change会报ts错误 -->
+        <a-select
+          v-model="recruitmentStore.current"
+          class="w-32 bg-transparent"
+          @change="recruitmentStore.setCurrentRecruitment"
+        >
+          <a-option
+            v-for="item of recruitmentStore.data"
+            :key="item.uid"
+            :value="item.uid"
+            :label="item.name"
+          />
+        </a-select>
+      </li>
+      <li>
         <a-dropdown trigger="click">
           <a-avatar
             :size="32"
@@ -20,6 +35,10 @@
 
 <script setup lang="ts">
 import LogoSVG from '@/assets/svg/logo.svg';
+import useRecruitmentStore from '@/store/modules/recruitment';
+
+const recruitmentStore = useRecruitmentStore();
+recruitmentStore.getAllRecruitments();
 </script>
 
 <style scoped lang="less">

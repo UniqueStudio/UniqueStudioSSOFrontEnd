@@ -52,26 +52,22 @@
       :checked="selectedCandidates.includes(candidate.id)"
     ></candidate-info-card>
   </a-checkbox-group>
-  <edit-buttons :candidates="candidates" :step-info="stepInfo"></edit-buttons>
+  <edit-buttons
+    :candidates="candidates"
+    :step-info="{ cur: 0, next: 1 }"
+  ></edit-buttons>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, PropType } from 'vue';
-import { Groups } from '@/constants/team';
+import { ref, computed } from 'vue';
+import { Group } from '@/constants/team';
 import { Gender } from '@/views/login/type';
 import { Candidate } from '../type';
 import candidateInfoCard from './candidate-info-card.vue';
 import editButtons from './edit-buttons.vue';
 
-defineProps({
-  stepInfo: {
-    type: Object as PropType<{ cur: string; next: string }>,
-    default: () => ({}),
-  },
-});
-
-const groups = computed(() => Object.values(Groups));
-const currentGroup = ref(Groups.PM);
+const groups = computed(() => Object.values(Group));
+const currentGroup = ref(Group.PM);
 
 const indeterminate = ref(false);
 const checkedAll = ref(false);
@@ -100,7 +96,7 @@ const candidateInfo: Candidate[] = [
     email: 'henhen@aaa.hust',
     status: '已终止',
     steps: ['2023.09.09', '2023.09.10'],
-    group: Groups.PM,
+    group: Group.PM,
   },
   {
     id: '2',
@@ -122,7 +118,7 @@ const candidateInfo: Candidate[] = [
     email: 'henhen@aaa.hust',
     status: '已终止',
     steps: ['2023.09.09', '2023.09.10'],
-    group: Groups.PM,
+    group: Group.PM,
   },
   {
     id: '3',
@@ -144,7 +140,7 @@ const candidateInfo: Candidate[] = [
     email: 'henhen@aaa.hust',
     status: '已终止',
     steps: ['2023.09.09', '2023.09.10'],
-    group: Groups.PM,
+    group: Group.PM,
   },
   {
     id: '4',
@@ -166,7 +162,7 @@ const candidateInfo: Candidate[] = [
     email: 'henhen@aaa.hust',
     status: '已终止',
     steps: ['2023.09.09', '2023.09.10'],
-    group: Groups.PM,
+    group: Group.PM,
   },
   {
     id: '5',
@@ -191,7 +187,7 @@ const candidateInfo: Candidate[] = [
     email: 'henhen@aaa.hust',
     status: '已终止',
     steps: ['2023.09.09', '2023.09.10'],
-    group: Groups.PM,
+    group: Group.PM,
   },
   {
     id: '6',
@@ -213,7 +209,7 @@ const candidateInfo: Candidate[] = [
     email: 'henhen@aaa.hust',
     status: '已终止',
     steps: ['2023.09.09', '2023.09.10'],
-    group: Groups.PM,
+    group: Group.PM,
   },
   {
     id: '7',
@@ -235,7 +231,7 @@ const candidateInfo: Candidate[] = [
     email: 'henhen@aaa.hust',
     status: '已终止',
     steps: ['2023.09.09', '2023.09.10'],
-    group: Groups.PM,
+    group: Group.PM,
   },
   {
     id: '8',
@@ -257,7 +253,7 @@ const candidateInfo: Candidate[] = [
     email: 'henhen@aaa.hust',
     status: '已终止',
     steps: ['2023.09.09', '2023.09.10'],
-    group: Groups.PM,
+    group: Group.PM,
   },
 ];
 const selectedCandidates = ref<string[]>([]);

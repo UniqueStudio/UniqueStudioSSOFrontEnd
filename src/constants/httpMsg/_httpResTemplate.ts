@@ -1,4 +1,5 @@
 export interface HttpRes<T = object> {
-  message: string;
+  code: number;
+  msg: string;
   data: T;
 }

@@ -7,13 +7,13 @@ import axios, {
 import { HttpRes } from '@/constants/httpMsg/_httpResTemplate';
 import { Message } from '@arco-design/web-vue';
 import i18n from '@/locale';
-import { SERVER_BASE_URL } from '@/constants';
+import { HR_BASE_URL } from '@/constants';
 
 // const { t } = useI18n();
 
 export default function request<T = object>(config: AxiosRequestConfig) {
   const instance: AxiosInstance = axios.create({
-    baseURL: SERVER_BASE_URL,
+    baseURL: HR_BASE_URL,
     timeout: 60000,
     withCredentials: true,
   });
@@ -38,8 +38,8 @@ export default function request<T = object>(config: AxiosRequestConfig) {
       if (response.status === 200) {
         return data;
       }
-      if (data.message) {
-        Message.error(data.message);
+      if (data.msg) {
+        Message.error(data.msg);
       } else {
         console.error('# error', { response });
         Message.error(i18n.global.t('request.unknowErr'));
@@ -48,8 +48,8 @@ export default function request<T = object>(config: AxiosRequestConfig) {
     },
     (err: any): any => {
       console.error(err);
-      if (err.response.data.message) {
-        Message.error(err.response.data.message);
+      if (err.response.data.msg) {
+        Message.error(err.response.data.msg);
       } else {
         Message.error(err.message);
       }
@@ -57,9 +57,15 @@ export default function request<T = object>(config: AxiosRequestConfig) {
     },
   );
 
-  return new Promise<HttpRes<T>>(async (resolve) => {
+  return new Promise<HttpRes<T>>((resolve, reject) => {
     // 这里的res的类型为 data ｜ null ，在请求的时候记得判断是否为null
-    const res = await instance(config);
-    resolve(res as unknown as HttpRes<T>);
+    instance(config).then(
+      (res) => {
+        resolve(res as unknown as HttpRes<T>);
+      },
+      (reason) => {
+        reject(reason);
+      },
+    );
   });
 }
