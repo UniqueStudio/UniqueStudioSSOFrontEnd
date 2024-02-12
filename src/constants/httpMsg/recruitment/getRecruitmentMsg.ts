@@ -4,14 +4,14 @@ import { HttpRes } from '../_httpResTemplate';
 import { InterviewSelection } from '../interview/getInterviewMsg';
 
 interface Statistics {
-  ai: number;
-  android: number;
-  design: number;
-  game: number;
-  ios: number;
-  lab: number;
-  pm: number;
-  web: number;
+  ai?: number;
+  android?: number;
+  design?: number;
+  game?: number;
+  ios?: number;
+  lab?: number;
+  pm?: number;
+  web?: number;
 }
 
 export interface Recruitment {

@@ -137,12 +137,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineProps } from 'vue';
 import { Group, recruitSteps } from '@/constants/team';
 import { Gender } from '@/views/login/type';
 import comment from './comment.vue';
 import editButtons from '../components/edit-buttons.vue';
 import { Candidate } from '../type';
+
+const props = defineProps({
+  id: {
+    type: String,
+    default: '',
+  },
+});
+
+console.log('id', props.id);
 
 const user = ref<Candidate>({
   id: '1',

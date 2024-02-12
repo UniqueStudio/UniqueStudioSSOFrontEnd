@@ -11,7 +11,7 @@
       <template #title>
         <div class="flex justify-between">
           <div class="flex justify-start gap-2 items-center">
-            <a-link :href="`candidate/detail/${info.id}`">
+            <a-link :href="`candidate/detail/${info.uid}`">
               <a-avatar class="card-avatar" :size="24">
                 {{ info.avatar || info.name }}
               </a-avatar>
@@ -83,11 +83,11 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { Candidate } from '../type';
+import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
 
 defineProps({
   info: {
-    type: Object as PropType<Candidate>,
+    type: Object as PropType<Application>,
     default: () => ({}),
   },
   checked: {

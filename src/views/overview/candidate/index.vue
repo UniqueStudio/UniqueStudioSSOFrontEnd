@@ -10,21 +10,24 @@
         <a-step
           v-for="(item, index) in recruitSteps"
           :key="index"
-          :description="`${'todo'}${$t('candidate.person')}`"
+          :description="`${stepCnt[index]}${$t('candidate.person')}`"
           >{{ $t(item.i18Key) }}</a-step
         >
       </a-steps>
       <div class="flex">
         <a-step
           class="step-fail"
-          :description="`${114}${$t('candidate.person')}`"
+          :description="`${failCnt}${$t('candidate.person')}`"
         >
           <template #icon>
             <icon-close />
           </template>
           {{ $t('common.steps.Fail') }}</a-step
         >
-        <a-step class="step-all" :description="`${514}${$t('common.person')}`">
+        <a-step
+          class="step-all"
+          :description="`${curApplications.length}${$t('common.person')}`"
+        >
           <template #icon> <icon-user /> </template
           >{{ $t('common.steps.All') }}</a-step
         >
@@ -36,11 +39,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { recruitSteps } from '@/constants/team';
+import useRecruitmentStore from '@/store/modules/recruitment';
 import candidateInfo from './components/candidate-info.vue';
 
+const recStore = useRecruitmentStore();
+
 const currentStep = ref(0);
+const curApplications = computed(() => recStore.currentRec?.applications ?? []);
+const stepCnt = computed(() =>
+  recruitSteps.map(
+    ({ value }) =>
+      curApplications.value.filter(({ step }) => value.includes(step)).length,
+  ),
+);
+
+const failCnt = computed(
+  () => curApplications.value.filter(({ rejected }) => rejected).length,
+);
 </script>
 
 <style scoped lang="less">

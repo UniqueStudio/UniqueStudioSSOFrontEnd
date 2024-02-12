@@ -6,12 +6,7 @@ import {
   createRecruitment,
   updateRecruitment,
 } from '@/api';
-import {
-  RecruitmentState,
-  UpdateParams,
-  CreateParams,
-  Recruitment,
-} from './types';
+import { RecruitmentState, UpdateParams, CreateParams } from './types';
 
 const useRecruitmentStore = defineStore('recruitment', {
   state: (): RecruitmentState => ({

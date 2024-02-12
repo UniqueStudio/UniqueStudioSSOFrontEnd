@@ -9,13 +9,13 @@
         @change="handleChangeAll"
         >{{ $t('common.operation.selectAll') }}
       </a-checkbox>
-      <div v-if="selectedCandidates.length" class="flex pr-2 items-center">
+      <div v-if="selectedApplications.length" class="flex pr-2 items-center">
         <a-descriptions
           :label-style="{ padding: '0 10px' }"
           :value-style="{ padding: '0' }"
         >
           <a-descriptions-item :label="$t('common.operation.selected')">
-            <span>{{ selectedCandidates.length }}</span>
+            <span>{{ selectedApplications.length }}</span>
           </a-descriptions-item>
         </a-descriptions>
 
@@ -41,15 +41,15 @@
   </div>
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
-    v-model="selectedCandidates"
+    v-model="selectedApplications"
     class="grid grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5"
     @change="handleChange"
   >
     <candidate-info-card
-      v-for="candidate in candidateInfo"
-      :key="candidate.id"
+      v-for="candidate in groupApps"
+      :key="candidate.uid"
       :info="candidate"
-      :checked="selectedCandidates.includes(candidate.id)"
+      :checked="selectedApplications.includes(candidate.uid)"
     ></candidate-info-card>
   </a-checkbox-group>
   <edit-buttons
@@ -61,218 +61,41 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { Group } from '@/constants/team';
-import { Gender } from '@/views/login/type';
-import { Candidate } from '../type';
+import useRecruitmentStore from '@/store/modules/recruitment';
 import candidateInfoCard from './candidate-info-card.vue';
 import editButtons from './edit-buttons.vue';
 
+const recStore = useRecruitmentStore();
+
+const curApplications = computed(() => recStore.currentRec?.applications ?? []);
+
 const groups = computed(() => Object.values(Group));
-const currentGroup = ref(Group.PM);
+const currentGroup = ref(Group.Pm);
 
 const indeterminate = ref(false);
 const checkedAll = ref(false);
 
-const candidateInfo: Candidate[] = [
-  {
-    id: '1',
-    name: '名字1',
-    avatar: '',
-    gender: Gender.male,
-    school: '计算机学院',
-    major: '计科',
-    grade: '大一',
-    score: '前1%',
-    recommender: 'abc',
-    intro: '自我介绍',
-    comment: {
-      good: [
-        { name: 'aaa', comment: '好好好' },
-        { name: 'aaa', comment: '好好好' },
-      ],
-      normal: [{ name: 'aaa', comment: '嗯嗯恩' }],
-      bad: [{ name: 'aaa', comment: '呃呃呃' }],
-    },
-    phone: '1145141919',
-    email: 'henhen@aaa.hust',
-    status: '已终止',
-    steps: ['2023.09.09', '2023.09.10'],
-    group: Group.PM,
-  },
-  {
-    id: '2',
-    name: '名字2',
-    avatar: '',
-    gender: Gender.female,
-    school: '计算机学院',
-    major: '计科',
-    grade: '大一',
-    score: '前1%',
-    recommender: 'abc',
-    intro: '自我介绍',
-    comment: {
-      good: [],
-      normal: [],
-      bad: [],
-    },
-    phone: '1145141919',
-    email: 'henhen@aaa.hust',
-    status: '已终止',
-    steps: ['2023.09.09', '2023.09.10'],
-    group: Group.PM,
-  },
-  {
-    id: '3',
-    name: '名字3',
-    avatar: '',
-    gender: Gender.female,
-    school: '计算机学院',
-    major: '计科',
-    grade: '大一',
-    score: '前1%',
-    recommender: 'abc',
-    intro: '自我介绍',
-    comment: {
-      good: [],
-      normal: [],
-      bad: [],
-    },
-    phone: '1145141919',
-    email: 'henhen@aaa.hust',
-    status: '已终止',
-    steps: ['2023.09.09', '2023.09.10'],
-    group: Group.PM,
-  },
-  {
-    id: '4',
-    name: '名字4',
-    avatar: '',
-    gender: Gender.female,
-    school: '计算机学院',
-    major: '计科',
-    grade: '大一',
-    score: '前1%',
-    recommender: 'abc',
-    intro: '自我介绍',
-    comment: {
-      good: [],
-      normal: [],
-      bad: [],
-    },
-    phone: '1145141919',
-    email: 'henhen@aaa.hust',
-    status: '已终止',
-    steps: ['2023.09.09', '2023.09.10'],
-    group: Group.PM,
-  },
-  {
-    id: '5',
-    name: '名字5',
-    avatar: '',
-    gender: Gender.male,
-    school: '计算机学院',
-    major: '计科',
-    grade: '大一',
-    score: '前1%',
-    recommender: 'abc',
-    intro: '自我介绍',
-    comment: {
-      good: [
-        { name: 'aaa', comment: '好好好' },
-        { name: 'aaa', comment: '好好好' },
-      ],
-      normal: [{ name: 'aaa', comment: '嗯嗯恩' }],
-      bad: [{ name: 'aaa', comment: '呃呃呃' }],
-    },
-    phone: '1145141919',
-    email: 'henhen@aaa.hust',
-    status: '已终止',
-    steps: ['2023.09.09', '2023.09.10'],
-    group: Group.PM,
-  },
-  {
-    id: '6',
-    name: '名字6',
-    avatar: '',
-    gender: Gender.female,
-    school: '计算机学院',
-    major: '计科',
-    grade: '大一',
-    score: '前1%',
-    recommender: 'abc',
-    intro: '自我介绍',
-    comment: {
-      good: [],
-      normal: [],
-      bad: [],
-    },
-    phone: '1145141919',
-    email: 'henhen@aaa.hust',
-    status: '已终止',
-    steps: ['2023.09.09', '2023.09.10'],
-    group: Group.PM,
-  },
-  {
-    id: '7',
-    name: '名字7',
-    avatar: '',
-    gender: Gender.female,
-    school: '计算机学院',
-    major: '计科',
-    grade: '大一',
-    score: '前1%',
-    recommender: 'abc',
-    intro: '自我介绍',
-    comment: {
-      good: [],
-      normal: [],
-      bad: [],
-    },
-    phone: '1145141919',
-    email: 'henhen@aaa.hust',
-    status: '已终止',
-    steps: ['2023.09.09', '2023.09.10'],
-    group: Group.PM,
-  },
-  {
-    id: '8',
-    name: '名字8',
-    avatar: '',
-    gender: Gender.female,
-    school: '计算机学院',
-    major: '计科',
-    grade: '大一',
-    score: '前1%',
-    recommender: 'abc',
-    intro: '自我介绍',
-    comment: {
-      good: [],
-      normal: [],
-      bad: [],
-    },
-    phone: '1145141919',
-    email: 'henhen@aaa.hust',
-    status: '已终止',
-    steps: ['2023.09.09', '2023.09.10'],
-    group: Group.PM,
-  },
-];
-const selectedCandidates = ref<string[]>([]);
+const groupApps = computed(() =>
+  curApplications.value.filter(({ group }) => group === currentGroup.value),
+);
+const selectedApplications = ref<string[]>([]);
 
-const candidates = computed(
-  () =>
-    selectedCandidates.value.map((selectId) =>
-      candidateInfo.find(({ id }) => id === selectId),
-    ) as Candidate[],
+const candidates = computed(() =>
+  selectedApplications.value.map((selectId) =>
+    groupApps.value.find(({ uid }) => uid === selectId),
+  ),
 );
 
 const handleChangeAll = (value: boolean) => {
   indeterminate.value = false;
   checkedAll.value = value;
-  selectedCandidates.value = value ? candidateInfo.map(({ id }) => id) : [];
+  selectedApplications.value = value
+    ? groupApps.value.map(({ uid }) => uid)
+    : [];
 };
 
 const handleChange = (values: string[]) => {
-  if (values.length === candidateInfo.length) {
+  if (values.length === groupApps.value.length) {
     checkedAll.value = true;
     indeterminate.value = false;
   } else if (values.length === 0) {
@@ -285,8 +108,8 @@ const handleChange = (values: string[]) => {
 };
 
 const handleClearSelected = () => {
-  selectedCandidates.value.length = 0;
-  handleChange(selectedCandidates.value);
+  selectedApplications.value.length = 0;
+  handleChange(selectedApplications.value);
 };
 </script>
 

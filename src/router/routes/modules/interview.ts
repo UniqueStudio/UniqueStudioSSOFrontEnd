@@ -12,21 +12,21 @@ const DASHBOARD = {
   },
   children: [
     {
-      path: 'management',
-      name: 'interviewMangement',
-      component: () => import('@/views/interview/management/index.vue'),
-      meta: {
-        locale: 'menu.interview.management',
-        requiresAuth: true,
-        // roles: ['*'],
-      },
-    },
-    {
       path: 'schedule',
       name: 'interviewSchedule',
       component: () => import('@/views/interview/schedule/index.vue'),
       meta: {
         locale: 'menu.interview.schedule',
+        requiresAuth: true,
+        // roles: ['*'],
+      },
+    },
+    {
+      path: 'management',
+      name: 'interviewMangement',
+      component: () => import('@/views/interview/management/index.vue'),
+      meta: {
+        locale: 'menu.interview.management',
         requiresAuth: true,
         // roles: ['*'],
       },
