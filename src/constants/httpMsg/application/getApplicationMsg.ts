@@ -1,6 +1,6 @@
 import { Step, Gender, Group, TimeString } from '@/constants/team';
 import { HttpRes } from '../_httpResTemplate';
-import { InterviewSelection } from '../interview/getInterviewMsg';
+import { Interview } from '../interview/getInterviewMsg';
 import { Comment } from '../comment/createCommentMsg';
 
 interface UserDetail {
@@ -33,10 +33,10 @@ export interface Application {
   step: Step;
   candidate_id: string;
   recruitment_id: string;
-  interview_allocations_group: TimeString;
-  interview_allocations_team: TimeString;
+  interview_allocations_group?: Interview;
+  interview_allocations_team?: Interview;
   user_detail?: UserDetail;
-  interview_selections?: InterviewSelection[];
+  interview_selections?: Interview[];
   comments?: Comment[];
 }
 
@@ -46,6 +46,4 @@ export type ApplicationResponse = HttpRes<Application>;
 
 export type ApplicationResumeResponse = Blob;
 
-export type AvailableInterviewSelectionsResponse = HttpRes<
-  InterviewSelection[]
->;
+export type AvailableInterviewSelectionsResponse = HttpRes<Interview[]>;

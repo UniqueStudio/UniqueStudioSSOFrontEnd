@@ -21,7 +21,7 @@ export {
   updateApplication,
   updateApplicationStep,
   deleteApplication,
-  abandonApplication,
+  rejectApplication,
   allocateApplicationInterview,
   selectApplicationInterview,
 } from './application';

@@ -2,7 +2,7 @@
   <div class="flex">
     <a-card
       class="w-full"
-      :class="{ 'checked-style': checked }"
+      :class="{ 'bg-[#f0f5ff]': checked }"
       title="Arco Card"
       size="small"
       hoverable
@@ -12,68 +12,68 @@
         <div class="flex justify-between">
           <div class="flex justify-start gap-2 items-center">
             <a-link :href="`candidate/detail/${info.uid}`">
-              <a-avatar class="card-avatar" :size="24">
-                {{ info.avatar || info.name }}
+              <a-avatar class="bg-[rgb(var(--primary-6))] mr-2" :size="24">
+                {{
+                  info.user_detail?.avatar_url || info.user_detail?.name || ''
+                }}
               </a-avatar>
               <a-typography-text class="text-lg">
-                {{ info.name }}
+                {{ info.user_detail?.name || '' }}
               </a-typography-text>
             </a-link>
-            <a-tag color="red">{{ info.status }}</a-tag>
+            <a-tag v-if="info.rejected" color="red">{{
+              $t('common.status.rejected')
+            }}</a-tag>
+            <a-tag v-if="info.abandoned" color="gray">{{
+              $t('common.status.abandoned')
+            }}</a-tag>
           </div>
-          <a-checkbox :value="info.id"></a-checkbox>
+          <a-checkbox :value="info.uid"></a-checkbox>
         </div>
 
-        <div class="desc">
+        <div class="flex justify-between text-xs pt-3">
           <div>
-            <span class="desc-label">{{ $t('common.user.gender') }}</span>
-            <span>{{ $t('common.user.gender.other') }}</span>
+            <span class="text-[--color-text-3] pr-1.5">{{
+              $t('common.user.gender')
+            }}</span>
+            <span>{{ $t(GenderMap[info.user_detail?.gender ?? 0]) }}</span>
           </div>
           <div>
-            <span class="desc-label">{{ $t('common.user.grade') }}</span>
-            <span>{{ '大一' }}</span>
+            <span class="text-[--color-text-3] pr-1.5">{{
+              $t('common.user.grade')
+            }}</span>
+            <span>{{ info.grade }}</span>
           </div>
           <div>
-            <span class="desc-label">{{ $t('common.user.school') }}</span>
-            <span>{{ '计算机科学与技术学院' }}</span>
+            <span class="text-[--color-text-3] pr-1.5">{{
+              $t('common.user.institute')
+            }}</span>
+            <span>{{ info.institute }}</span>
           </div>
         </div>
       </template>
       <div class="flex justify-between">
         <div class="flex gap-2">
-          <a-tag
-            v-if="info.comment.good.length"
-            color="gray"
-            class="text-xs rounded-full px-2.5"
-          >
-            <template #icon> 😘 </template>
-            {{ info.comment.good.length }}
-          </a-tag>
-          <a-tag
-            v-if="info.comment.normal.length"
-            color="gray"
-            class="text-xs rounded-full px-2.5"
-          >
-            <template #icon> 🤔 </template>
-            {{ info.comment.normal.length }}
-          </a-tag>
-          <a-tag
-            v-if="info.comment.bad.length"
-            color="gray"
-            class="text-xs rounded-full px-2.5"
-          >
-            <template #icon> 😅 </template>
-            {{ info.comment.bad.length }}
-          </a-tag>
+          <template v-for="(item, index) in EvaluationMap">
+            <a-tag
+              v-if="info.comments?.[index].length"
+              :key="item"
+              color="gray"
+              class="text-xs rounded-full px-2.5"
+            >
+              <template #icon> {{ item }} </template>
+              {{ info.comments?.[index].length }}
+            </a-tag>
+          </template>
         </div>
-        <a-tag color="transparent" class="comment-tag">
+        <a-tag
+          color="transparent"
+          style="color: var(--color-text-3)"
+          class="text-xs rounded px-1.5 py-1 bg-transparent"
+        >
           <template #icon> <icon-message /> </template>
           {{
-            `${
-              info.comment.good.length +
-              info.comment.normal.length +
-              info.comment.bad.length
-            }条评论`
+            `${info.comments?.reduce((res, x) => res + x.length, 0) ?? 0}条评论`
           }}
         </a-tag>
       </div>
@@ -83,11 +83,12 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
+import { CandidateInfo } from '@/store/modules/recruitment/types';
+import { EvaluationMap, GenderMap } from '@/constants/team';
 
 defineProps({
   info: {
-    type: Object as PropType<Application>,
+    type: Object as PropType<CandidateInfo>,
     default: () => ({}),
   },
   checked: {
@@ -97,29 +98,4 @@ defineProps({
 });
 </script>
 
-<style scoped lang="less">
-.checked-style {
-  background-color: #f0f5ff;
-}
-.card-avatar {
-  background-color: rgb(var(--arcoblue-6));
-  margin-right: 8px;
-}
-.desc {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  padding-top: 12px;
-  &-label {
-    color: var(--color-text-3);
-    padding-right: 7px;
-  }
-}
-.comment-tag {
-  font-size: 12px;
-  border-radius: 9999px;
-  padding: 6px 0 6px 10px;
-  background-color: transparent;
-  color: var(--color-text-3);
-}
-</style>
+<style scoped lang="less"></style>

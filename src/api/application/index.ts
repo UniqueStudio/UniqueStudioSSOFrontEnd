@@ -9,7 +9,7 @@ import {
   CreateApplicationResponse,
 } from '@/constants/httpMsg/application/createApplicationMsg';
 import {
-  AbandonApplicationResponse,
+  RejectApplicationResponse,
   AllocateApplicationInterviewRequest,
   AllocateApplicationInterviewResponse,
   SelectApplicationInterviewRequest,
@@ -83,11 +83,11 @@ export async function updateApplication(
   return res;
 }
 
-export async function abandonApplication(
+export async function rejectApplication(
   aid: string,
-): Promise<AbandonApplicationResponse> {
-  const res: AbandonApplicationResponse = await request({
-    url: `/applications/${aid}/abandoned`,
+): Promise<RejectApplicationResponse> {
+  const res: RejectApplicationResponse = await request({
+    url: `/applications/${aid}/rejected`,
     method: 'PUT',
   });
   return res;

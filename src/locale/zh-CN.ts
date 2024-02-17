@@ -6,6 +6,7 @@ import localeCandidate from '@/views/overview/candidate/locale/zh-CN';
 
 import localeMenu from './zh-CN/menu';
 import localeCommon from './zh-CN/common';
+import localeSms from './zh-CN/sms';
 
 export default {
   ...localeMenu,
@@ -14,4 +15,5 @@ export default {
   ...localeNoPermission,
   ...localeCandidate,
   ...localeCommon,
+  ...localeSms,
 };

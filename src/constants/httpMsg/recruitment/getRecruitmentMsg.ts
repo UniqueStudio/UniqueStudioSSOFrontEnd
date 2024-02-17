@@ -1,7 +1,7 @@
 import { TimeString } from '@/constants/team';
 import { Application } from '../application/getApplicationMsg';
 import { HttpRes } from '../_httpResTemplate';
-import { InterviewSelection } from '../interview/getInterviewMsg';
+import { Interview } from '../interview/getInterviewMsg';
 
 interface Statistics {
   ai?: number;
@@ -24,7 +24,7 @@ export interface Recruitment {
   end: TimeString;
   statistics?: Statistics;
   applications?: Application[];
-  interviews?: InterviewSelection[];
+  interviews?: Interview[];
 }
 
 export type AllRecruitmentsResponse = HttpRes<Recruitment[]>;

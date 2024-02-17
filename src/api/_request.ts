@@ -48,7 +48,7 @@ export default function request<T = object>(config: AxiosRequestConfig) {
     },
     (err: any): any => {
       console.error(err);
-      if (err.response.data.msg) {
+      if (err.response?.data?.msg) {
         Message.error(err.response.data.msg);
       } else {
         Message.error(err.message);

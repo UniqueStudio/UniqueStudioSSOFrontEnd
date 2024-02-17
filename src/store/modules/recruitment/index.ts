@@ -6,7 +6,13 @@ import {
   createRecruitment,
   updateRecruitment,
 } from '@/api';
-import { RecruitmentState, UpdateParams, CreateParams } from './types';
+import { Evaluation } from '@/constants/team';
+import {
+  RecruitmentState,
+  UpdateParams,
+  CreateParams,
+  CandidateInfo,
+} from './types';
 
 const useRecruitmentStore = defineStore('recruitment', {
   state: (): RecruitmentState => ({
@@ -37,6 +43,9 @@ const useRecruitmentStore = defineStore('recruitment', {
       this.currentRid = data.uid;
       this.currentRec = data;
     },
+    async refresh() {
+      this.setCurrentRecruitment(this.currentRid);
+    },
     async createRecruitment(data: CreateParams) {
       await createRecruitment(data);
       this.getAllRecruitments();
@@ -47,6 +56,24 @@ const useRecruitmentStore = defineStore('recruitment', {
         this.setCurrentRecruitment(rid);
       }
       this.getAllRecruitments();
+    },
+  },
+  getters: {
+    curApplications(): CandidateInfo[] {
+      return (this.currentRec?.applications ?? []).map((app) => {
+        const comments = [
+          Evaluation.Good,
+          Evaluation.Normal,
+          Evaluation.Bad,
+        ].map(
+          (eva) =>
+            app.comments?.filter(({ evaluation }) => evaluation === eva) ?? [],
+        ) as unknown as CandidateInfo['comments'];
+        return {
+          ...app,
+          comments,
+        };
+      });
     },
   },
 });

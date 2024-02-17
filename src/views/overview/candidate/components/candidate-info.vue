@@ -29,15 +29,7 @@
       </div>
     </div>
 
-    <a-tabs
-      v-model:active-key="currentGroup"
-      class="flex items-center"
-      type="text"
-      size="medium"
-    >
-      <a-tab-pane v-for="item in groups" :key="item" :title="item">
-      </a-tab-pane>
-    </a-tabs>
+    <team-group-radio v-model="currentGroup"></team-group-radio>
   </div>
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
@@ -46,60 +38,110 @@
     @change="handleChange"
   >
     <candidate-info-card
-      v-for="candidate in groupApps"
+      v-for="candidate in filteredApps"
       :key="candidate.uid"
       :info="candidate"
       :checked="selectedApplications.includes(candidate.uid)"
     ></candidate-info-card>
   </a-checkbox-group>
-  <edit-buttons
-    :candidates="candidates"
-    :step-info="{ cur: 0, next: 1 }"
-  ></edit-buttons>
+  <div class="flex justify-between flex-row-reverse">
+    <edit-buttons
+      :candidates="candidates"
+      :cur-step="curStep"
+      :group="currentGroup"
+    ></edit-buttons>
+    <a-button
+      v-show="props.curStep === 1"
+      type="primary"
+      @click="showUploadModal = true"
+      >{{ $t('common.operation.uploadTest') }}</a-button
+    >
+  </div>
+  <a-modal
+    v-model:visible="showUploadModal"
+    :title="$t('common.operation.uploadTest')"
+  >
+    <a-form :model="uploadData">
+      <a-form-item field="group" :label="$t('common.user.group')">
+        <a-select v-model="uploadData.group">
+          <a-option v-for="item in groups" :key="item">{{ item }}</a-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item field="data">
+        <a-upload
+          v-model="uploadData.data"
+          draggable
+          action="/"
+          :auto-upload="false"
+          :limit="1"
+        />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { Group } from '@/constants/team';
+import { ref, computed, watch } from 'vue';
+import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import candidateInfoCard from './candidate-info-card.vue';
 import editButtons from './edit-buttons.vue';
 
+const props = defineProps({
+  curStep: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
+});
+
 const recStore = useRecruitmentStore();
 
-const curApplications = computed(() => recStore.currentRec?.applications ?? []);
-
-const groups = computed(() => Object.values(Group));
-const currentGroup = ref(Group.Pm);
+const currentGroup = ref(Group.Web);
+const groups = computed(() =>
+  Object.values(Group).filter((x) => x !== Group.Unique),
+);
 
 const indeterminate = ref(false);
 const checkedAll = ref(false);
 
-const groupApps = computed(() =>
-  curApplications.value.filter(({ group }) => group === currentGroup.value),
+const filteredApps = computed(() =>
+  recStore.curApplications.filter(
+    ({ step, group }) =>
+      recruitSteps[props.curStep].value.includes(step) &&
+      group === currentGroup.value,
+  ),
 );
 const selectedApplications = ref<string[]>([]);
 
 const candidates = computed(() =>
-  selectedApplications.value.map((selectId) =>
-    groupApps.value.find(({ uid }) => uid === selectId),
-  ),
+  selectedApplications.value.map((selectId) => {
+    const app = filteredApps.value.find(({ uid }) => uid === selectId);
+    return {
+      name: app?.user_detail?.name ?? '',
+      aid: app?.uid ?? '',
+      step: app?.step ?? recruitSteps[props.curStep].value[0],
+      abandoned: app?.abandoned ?? false,
+      rejected: app?.rejected ?? false,
+    };
+  }),
 );
 
 const handleChangeAll = (value: boolean) => {
   indeterminate.value = false;
   checkedAll.value = value;
   selectedApplications.value = value
-    ? groupApps.value.map(({ uid }) => uid)
+    ? filteredApps.value.map(({ uid }) => uid)
     : [];
 };
 
 const handleChange = (values: string[]) => {
-  if (values.length === groupApps.value.length) {
-    checkedAll.value = true;
-    indeterminate.value = false;
-  } else if (values.length === 0) {
+  if (values.length === 0) {
     checkedAll.value = false;
+    indeterminate.value = false;
+  } else if (values.length === filteredApps.value.length) {
+    checkedAll.value = true;
     indeterminate.value = false;
   } else {
     checkedAll.value = false;
@@ -111,6 +153,15 @@ const handleClearSelected = () => {
   selectedApplications.value.length = 0;
   handleChange(selectedApplications.value);
 };
+
+watch([() => props.curStep, currentGroup], handleClearSelected);
+
+const uploadData = ref({
+  group: currentGroup,
+  data: null,
+});
+
+const showUploadModal = ref(false);
 </script>
 
 <style scoped lang="less"></style>

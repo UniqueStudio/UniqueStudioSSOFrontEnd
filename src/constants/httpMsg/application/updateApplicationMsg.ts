@@ -29,7 +29,7 @@ export interface SelectApplicationInterviewRequest {
 
 export type UpdateApplicationResponse = HttpRes<Application>;
 
-export type AbandonApplicationResponse = HttpRes<object>;
+export type RejectApplicationResponse = HttpRes<object>;
 
 export type UpdateApplicationStepResponse = HttpRes<object>;
 

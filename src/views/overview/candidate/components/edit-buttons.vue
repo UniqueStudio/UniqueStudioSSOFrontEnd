@@ -2,25 +2,21 @@
   <div class="flex justify-end gap-2">
     <a-button
       type="primary"
-      :disabled="!candidates.length"
-      @click="showSwitchStage = true"
+      :disabled="props.curStep >= recruitSteps.length - 1 || !candidates.length"
+      @click="openSwitchStage"
     >
       {{ $t('common.operation.switchStage') }}
     </a-button>
     <a-button
       status="danger"
       :disabled="!candidates.length"
-      @click="showTerminate = true"
+      @click="openTerminate"
     >
       {{ $t('common.operation.terminate') }}
     </a-button>
-    <a-button
-      type="outline"
-      :disabled="!candidates.length"
-      @click="showNotify = true"
-    >
+    <a-button type="outline" :disabled="!candidates.length" @click="openNotify">
       <template #icon> <icon-plus /> </template>
-      {{ $t('common.operation.notify') }}
+      {{ $t('common.operation.sendNotification') }}
     </a-button>
   </div>
   <a-modal
@@ -30,20 +26,39 @@
     :title="$t('common.operation.switchStage')"
     :on-before-ok="handleSwitchStage"
   >
-    <div
-      class="text-center"
-      v-html="
-        $t('candidate.switchStage', {
-          num: `<span style='color: rgb(var(--arcoblue-6));'>${candidates.length}</span>`,
-          cur: `<span style='color: rgb(var(--arcoblue-6));'>${$t(
-            recruitSteps[stepInfo.cur].i18Key,
-          )}</span>`,
-          next: `<span style='color: rgb(var(--arcoblue-6));'>${$t(
-            recruitSteps[stepInfo.next].i18Key,
-          )}</span>`,
-        })
-      "
-    ></div>
+    <div class="text-center">
+      <i18n-t keypath="candidate.switchStage" tag="div">
+        <template #num>
+          <span class="text-[rgb(var(--primary-6))]">{{
+            candidates.length
+          }}</span>
+        </template>
+        <template #cur>
+          <span class="text-[rgb(var(--primary-6))]">{{
+            $t(recruitSteps[curStep].i18Key)
+          }}</span>
+        </template>
+        <template #next>
+          <a-select
+            v-model:model-value="nextStep"
+            :bordered="false"
+            class="text-[rgb(var(--primary-6))] w-auto"
+          >
+            <a-option
+              v-for="item in nextValidSteps"
+              :key="item"
+              :value="item"
+              class="w-min"
+              :title="$t(`common.steps.${item}`)"
+              >{{ $t(`common.steps.${item}`) }}</a-option
+            >
+          </a-select>
+        </template>
+      </i18n-t>
+      <a-alert type="warning" class="mt-3">{{
+        $t('candidate.warnNotify')
+      }}</a-alert>
+    </div>
   </a-modal>
   <a-modal
     v-model:visible="showTerminate"
@@ -52,121 +67,136 @@
     :title="$t('common.operation.confirmTerminate')"
     :on-before-ok="handleTerminate"
   >
-    <div
-      class="text-center"
-      v-html="
-        $t('candidate.terminate', {
-          num: `<span style='color: rgb(var(--arcoblue-6));'>${candidates.length}</span>`,
-        })
-      "
-    ></div>
-  </a-modal>
-  <a-modal
-    v-model:visible="showNotify"
-    :title="$t('common.operation.notify')"
-    :on-before-ok="handleNotify"
-  >
-    <a-form :model="formData" layout="vertical">
-      <a-form-item>
-        <template #label>
-          <div class="text-[--color-text-1]">
-            {{ $t('candidate.receiver') }}
-          </div>
+    <div class="text-center">
+      <i18n-t keypath="candidate.terminate" tag="div">
+        <template #num>
+          <span class="text-[rgb(var(--primary-6))]">{{
+            candidates.length
+          }}</span>
         </template>
-        <a-input-tag v-model="names" readonly />
-      </a-form-item>
-      <a-form-item field="content">
-        <template #label>
-          <div class="text-[--color-text-1]">
-            {{ $t('common.operation.editContent') }}
-          </div>
-        </template>
-        <div class="flex gap-2 justify-between w-full"
-          ><a-select
-            v-model:model-value="formData.content.stage"
-            :trigger-props="{ autoFitPopupMinWidth: true }"
-          >
-            <a-option
-              v-for="(item, index) in recruitSteps"
-              :key="index"
-              :value="index"
-            >
-              {{ $t(item.i18Key) }}
-            </a-option>
-          </a-select>
-          <a-date-picker
-            v-model="formData.content.date"
-            class="min-w-fit"
-            @change="changeDate"
-          />
-          <a-select
-            v-model:model-value="formData.content.room"
-            :trigger-props="{ autoFitPopupMinWidth: true }"
-          >
-            <a-option v-for="item in [808, 809, 810, 811]" :key="item">
-              {{ item }}
-            </a-option>
-          </a-select></div
-        >
-      </a-form-item>
-      <a-form-item field="content">
-        <a-textarea v-model="formData.content.text" auto-size />
-      </a-form-item>
-    </a-form>
+      </i18n-t>
+    </div>
   </a-modal>
+  <notification-modal
+    v-model:showNotify="showNotify"
+    :candidates="props.candidates"
+    :cur-step="props.curStep"
+    :group="props.group"
+    :rec-name="recStore.currentRec?.name ?? ''"
+    :type="'Accept'"
+  ></notification-modal>
 </template>
 
 <script setup lang="ts">
-import { ref, PropType, computed } from 'vue';
-import { recruitSteps } from '@/constants/team';
-import { Candidate } from '../type';
+import { ref, PropType, computed, watch } from 'vue';
+import { recruitSteps, Step, Group } from '@/constants/team';
+import NotificationModal from '@/views/components/notification-modal.vue';
+import { updateApplicationStep, rejectApplication } from '@/api';
+import useRecruitmentStore from '@/store/modules/recruitment';
+import { Message } from '@arco-design/web-vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+const recStore = useRecruitmentStore();
 
 const props = defineProps({
   candidates: {
-    type: Array as PropType<Candidate[]>,
+    type: Array as PropType<
+      {
+        name: string;
+        aid: string;
+        step: Step;
+        abandoned: boolean;
+        rejected: boolean;
+      }[]
+    >,
     default: () => [],
+    required: true,
   },
-  stepInfo: {
-    type: Object as PropType<{ cur: number; next: number }>,
-    default: () => ({}),
+  curStep: {
+    type: Number,
+    required: true,
   },
-});
-
-const formData = ref({
-  content: {
-    stage: 0,
-    date: '',
-    room: '808',
-    text: '[联创团队] {{候选人姓名}}你好，你通过了{{招新名称}}{{组别}}组笔试流程审核，请于{{!请指定时间!}}在{{!请指定地点!}}参加熬测流程，请务必准时到场。',
+  group: {
+    type: String as PropType<Group>,
+    required: true,
   },
 });
-
-const names = computed(() => props.candidates.map(({ name }) => name));
-const changeDate = () => {
-  console.log(names);
-};
 
 const showSwitchStage = ref(false);
 const showTerminate = ref(false);
 const showNotify = ref(false);
 
+const nextValidSteps = computed(() => {
+  const arr: Step[] = [];
+  recruitSteps
+    .slice(props.curStep + 1)
+    .forEach(({ value }) => arr.push(...value));
+  return arr;
+});
+const nextStep = ref(nextValidSteps.value[0]);
+watch(nextValidSteps, () => {
+  [nextStep.value] = nextValidSteps.value;
+});
+
+const openSwitchStage = () => {
+  if (
+    props.candidates.some(({ abandoned, rejected }) => abandoned || rejected)
+  ) {
+    Message.error(t('candidate.noAbandonedRejected'));
+    return;
+  }
+  showSwitchStage.value = true;
+};
+
 const handleSwitchStage = async () => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 1000);
-  });
-  return true;
+  try {
+    await Promise.all(
+      props.candidates.map(({ aid, step }) =>
+        updateApplicationStep(aid, {
+          from: step,
+          to: nextStep.value,
+        }),
+      ),
+    );
+    return true;
+  } catch (err) {
+    return false;
+  } finally {
+    recStore.refresh();
+  }
 };
+
+const openTerminate = () => {
+  if (
+    props.candidates.some(({ abandoned, rejected }) => abandoned || rejected)
+  ) {
+    Message.error(t('candidate.noAbandonedRejected'));
+    return;
+  }
+  showTerminate.value = true;
+};
+
 const handleTerminate = async () => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 1000);
-  });
-  return true;
+  try {
+    await Promise.all(
+      props.candidates.map(({ aid }) => rejectApplication(aid)),
+    );
+    return true;
+  } catch (err) {
+    return false;
+  } finally {
+    recStore.refresh();
+  }
 };
-const handleNotify = async () => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 1000);
-  });
-  return true;
+
+const openNotify = () => {
+  if (props.candidates.some(({ abandoned }) => abandoned)) {
+    Message.error(t('candidate.noAbandoned'));
+    return;
+  }
+  showNotify.value = true;
 };
 </script>
 

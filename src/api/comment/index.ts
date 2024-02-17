@@ -9,7 +9,7 @@ export async function createComment(
   data: CreateCommentRequest,
 ): Promise<CreateCommentResponse> {
   const res: CreateCommentResponse = await request({
-    url: '/comments',
+    url: '/comments/',
     method: 'POST',
     data,
   });

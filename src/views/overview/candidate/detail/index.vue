@@ -1,6 +1,9 @@
 <template>
-  <div class="detail-wrapper">
-    <div class="detail-left">
+  <div
+    v-if="applyStore.data && user"
+    class="flex bg-white w-full h-full overflow-hidden"
+  >
+    <div class="flex flex-col items-center gap-9 w-69 px-3 py-4">
       <a-tag
         color="transparent"
         style="color: var(--color-text-3)"
@@ -13,16 +16,15 @@
       </a-tag>
 
       <div class="flex flex-col items-center">
-        <a-avatar :size="64">{{ user.name }}</a-avatar>
-        <div class="text-[--color-text-1] pt-3">{{ user.name }}</div>
-        <div class="text-[--color-text-3]">{{ user.group }}</div>
+        <a-avatar :size="64">{{ user.avatar_url || user.name || '' }}</a-avatar>
+        <div class="text-[--color-text-1] pt-3">{{ user.name ?? '' }}</div>
+        <div class="text-[--color-text-3]">{{ applyStore.data.group }}</div>
       </div>
 
       <div class="flex flex-col justify-around gap-3 w-56 px-2">
         <div class="flex gap-4">
           <div
-            class="w-9 h-9 rounded-full flex justify-center items-center"
-            style="background-color: rgb(var(--gray-2))"
+            class="w-9 h-9 rounded-full flex justify-center items-center bg-[rgb(var(--gray-2))] shrink-0"
           >
             <icon-phone size="20" />
           </div>
@@ -30,14 +32,13 @@
             <div class="text-[--color-text-3]">
               {{ $t('common.user.phone') }}
             </div>
-            <div>{{ user.phone }}</div>
+            <div>{{ user.phone ?? '' }}</div>
           </div>
         </div>
 
         <div class="flex gap-3">
           <div
-            class="w-9 h-9 rounded-full flex justify-center items-center"
-            style="background-color: rgb(var(--gray-2))"
+            class="w-9 h-9 rounded-full flex justify-center items-center bg-[rgb(var(--gray-2))] shrink-0"
           >
             <icon-email size="20" />
           </div>
@@ -45,7 +46,7 @@
             <div class="text-[--color-text-3]">
               {{ $t('common.user.email') }}
             </div>
-            <div>{{ user.email }}</div>
+            <div>{{ user.email ?? '' }}</div>
           </div>
         </div>
       </div>
@@ -55,9 +56,11 @@
           {{ $t('common.user.currentStage') }}
         </div>
         <a-steps
-          v-model:current="user.steps.length"
+          v-model:current="currentStep"
           direction="vertical"
           class="w-56 px-2"
+          :status="stepStatus.status"
+          :title="$t(stepStatus.title)"
         >
           <a-step
             v-for="(item, index) in recruitSteps"
@@ -68,30 +71,29 @@
         </a-steps>
       </div>
     </div>
-
     <a-divider direction="vertical" class="h-auto m-6" />
-    <div class="detail-right">
+    <div class="flex flex-col justify-between w-full px-6 py-4">
       <a-tabs type="rounded" size="large">
         <a-tab-pane key="1" :title="$t('common.user.baseInfo')">
           <div class="flex flex-col gap-9">
             <a-descriptions size="large" layout="inline-vertical" :column="3">
               <a-descriptions-item :label="$t('common.user.gender')">
-                {{ user.gender }}
+                {{ $t(GenderMap[user.gender]) }}
               </a-descriptions-item>
-              <a-descriptions-item :label="$t('common.user.school')">
-                {{ user.school }}
+              <a-descriptions-item :label="$t('common.user.institute')">
+                {{ applyStore.data.institute }}
               </a-descriptions-item>
               <a-descriptions-item :label="$t('common.user.major')">
-                {{ user.major }}
+                {{ applyStore.data.major }}
               </a-descriptions-item>
               <a-descriptions-item :label="$t('common.user.grade')">
-                {{ user.grade }}
+                {{ applyStore.data.grade }}
               </a-descriptions-item>
-              <a-descriptions-item :label="$t('common.user.score')">
-                {{ user.score }}
+              <a-descriptions-item :label="$t('common.user.rank')">
+                {{ applyStore.data.rank }}
               </a-descriptions-item>
-              <a-descriptions-item :label="$t('common.user.recommender')">
-                {{ user.recommender }}
+              <a-descriptions-item :label="$t('common.user.referrer')">
+                {{ applyStore.data.referrer }}
               </a-descriptions-item>
             </a-descriptions>
             <div>
@@ -102,11 +104,10 @@
                 class="text-[--color-neutral-8]"
                 :class="{ 'line-clamp-3': !showIntroDetail }"
               >
-                {{ user.intro }}
+                {{ applyStore.data.intro }}
               </div>
               <div
-                style="color: rgb(var(--arcoblue-6))"
-                class="text-sm cursor-pointer"
+                class="text-sm text-[rgb(var(--primary-6))] cursor-pointer"
                 @click="showIntroDetail = !showIntroDetail"
               >
                 {{
@@ -118,7 +119,7 @@
                 }}
               </div>
             </div>
-            <comment :id="user.id"></comment>
+            <comment></comment>
           </div>
         </a-tab-pane>
         <a-button type="text" shape="round">{{
@@ -126,23 +127,44 @@
         }}</a-button>
       </a-tabs>
       <edit-buttons
-        :candidates="[user]"
-        :step-info="{
-          cur: 0,
-          next: 1,
-        }"
+        :candidates="[
+          {
+            name: user.name,
+            aid: applyStore.data.uid,
+            step: applyStore.data.step,
+            abandoned: applyStore.data.abandoned,
+            rejected: applyStore.data.rejected,
+          },
+        ]"
+        :group="applyStore.data.group"
+        :cur-step="currentStep"
       ></edit-buttons>
     </div>
   </div>
+  <a-result v-else status="404" :title="$t('candidate.applicationNotFound')">
+    <template #extra>
+      <a-space>
+        <a-button
+          type="secondary"
+          @click="applyStore.getApplication(props.id)"
+          >{{ $t('common.operation.refresh') }}</a-button
+        >
+        <a-button type="primary" @click="$router.back()">{{
+          $t('common.operation.back')
+        }}</a-button>
+      </a-space>
+    </template>
+  </a-result>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
-import { Group, recruitSteps } from '@/constants/team';
-import { Gender } from '@/views/login/type';
+import { ref, defineProps, computed } from 'vue';
+import { recruitSteps, GenderMap } from '@/constants/team';
+import useApplicationStore from '@/store/modules/application';
 import comment from './comment.vue';
 import editButtons from '../components/edit-buttons.vue';
-import { Candidate } from '../type';
+
+const applyStore = useApplicationStore();
 
 const props = defineProps({
   id: {
@@ -151,65 +173,51 @@ const props = defineProps({
   },
 });
 
-console.log('id', props.id);
+applyStore.getApplication(props.id);
 
-const user = ref<Candidate>({
-  id: '1',
-  name: '联小创',
-  avatar: '',
-  gender: Gender.male,
-  school: '计算机学院',
-  major: '计科',
-  grade: '大一',
-  score: '前1%',
-  recommender: 'abc',
-  intro:
-    '我热爱阅读与思考，并积极去了解这个世界对我来说的未知。“有两件事物我愈是思考，愈觉得神奇，内心也愈是充满敬畏，那就是我们头顶灿烂的星空和我们内心崇高的道德准则。”我喜欢观察人类，了解他们在想什么。 我想加入产品经理组，并且对于通过设计互联网产品来解决生活中的问题充满激情。例如我自己在生活中喜欢品尝鸡尾酒，但是在大众点评或美团这种常用的第三方消费点评软件中很难了解到一家清吧的鸡尾酒价格以及特色，经常会踩雷或者实际去到店中即使会有调酒师的介绍也不知道哪种酒适合自己的口味，如果没有关注公众号或者加上老板微信也很难及时了解到店里的活动，所以我设想如果有一个针对热爱调酒和品酒文化的用户的专属于清吧的社区软件，就能很好的解决这些问题。在生活中我会积极体验各种各样的产品，仔细观察产品是否存在缺陷，并思考如何改进它们，或创造一款互联网产品来解决空白问题，以提供更好的用户体验。',
-  comment: {
-    good: [
-      { name: 'aaa', comment: '好好好' },
-      { name: 'aaa', comment: '好好好' },
-    ],
-    normal: [{ name: 'aaa', comment: '嗯嗯恩' }],
-    bad: [{ name: 'aaa', comment: '呃呃呃' }],
-  },
-  phone: '1145141919',
-  email: 'henhen@aaa.hust',
-  status: '已终止',
-  steps: ['2023.09.09', '2023.09.10'],
-  group: Group.Design,
+const user = computed(() => applyStore.data?.user_detail);
+
+const currentStep = computed(() => {
+  if (!applyStore.data) return 0;
+  return (
+    recruitSteps.findIndex(({ value }) =>
+      value.includes(applyStore.data!.step),
+    ) + 1
+  );
 });
-const steps = Object.values(recruitSteps).map((step, num) => ({
-  step,
-  time: user.value.steps[num],
-}));
+
+const stepStatus = computed<{
+  status: 'error' | 'process' | 'finish';
+  title: string;
+}>(() => {
+  if (applyStore.data?.rejected) {
+    return {
+      status: 'error',
+      title: 'common.status.rejected',
+    };
+  }
+  if (applyStore.data?.abandoned) {
+    return {
+      status: 'error',
+      title: 'common.status.abandoned',
+    };
+  }
+  return currentStep.value < recruitSteps.length
+    ? {
+        status: 'process',
+        title: 'common.status.process',
+      }
+    : {
+        status: 'finish',
+        title: 'common.steps.Pass',
+      };
+});
+
 const showIntroDetail = ref(false);
 </script>
 
 <style scoped lang="less">
-.detail-wrapper {
-  display: flex;
-  background-color: #fff;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  .detail-left {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 36px;
-    width: 274px;
-    padding: 12px 16px;
-    :deep(.arco-steps-item:not(:last-child)) {
-      min-height: 66px;
-    }
-  }
-  .detail-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    padding: 24px 16px;
-  }
+:deep(.arco-steps-item:not(:last-child)) {
+  min-height: 66px;
 }
 </style>

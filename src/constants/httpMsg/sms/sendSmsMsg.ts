@@ -7,7 +7,7 @@ export interface SmsRequest {
   next: Step;
   time: string; // 笔试/面试/熬测时间
   place: string; // 地点
-  meetingId: string; // 在线面试的会议id
+  meeting_id: string; // 在线面试的会议id
   rest: string; // 补充信息
   aids: string[]; // 简历id
 }
