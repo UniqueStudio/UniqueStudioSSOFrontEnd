@@ -9,7 +9,12 @@ import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      script: {
+        // 当前vue版本(3.3.4) defineModel api为实验性功能，后面如果遇到问题可以考虑升级到更高版本以使用正式功能
+        defineModel: true,
+      },
+    }),
     // Provides Vue 3 JSX & TSX support with HMR.
     vueJsx(),
     // 使用 vite-svg-loader
