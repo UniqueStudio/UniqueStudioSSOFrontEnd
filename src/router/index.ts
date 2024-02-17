@@ -9,7 +9,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: 'login',
+      // 暂时重定向到总览
+      redirect: '/overview',
     },
     {
       path: '/login',
