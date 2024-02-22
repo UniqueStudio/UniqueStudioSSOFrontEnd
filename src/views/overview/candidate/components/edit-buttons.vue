@@ -3,6 +3,7 @@
     <a-button
       type="primary"
       :disabled="props.curStep >= recruitSteps.length - 1 || !candidates.length"
+      class="rounded-full sm:rounded-none"
       @click="openSwitchStage"
     >
       {{ $t('common.operation.switchStage') }}
@@ -10,12 +11,26 @@
     <a-button
       status="danger"
       :disabled="!candidates.length"
+      class="rounded-full sm:rounded-none"
       @click="openTerminate"
     >
       {{ $t('common.operation.terminate') }}
     </a-button>
-    <a-button type="outline" :disabled="!candidates.length" @click="openNotify">
+    <a-button
+      type="outline"
+      class="hidden sm:inline-block"
+      :disabled="!candidates.length"
+      @click="openNotify"
+    >
       <template #icon> <icon-plus /> </template>
+      {{ $t('common.operation.sendNotification') }}
+    </a-button>
+    <a-button
+      type="outline"
+      class="sm:hidden rounded-full"
+      :disabled="!candidates.length"
+      @click="openNotify"
+    >
       {{ $t('common.operation.sendNotification') }}
     </a-button>
   </div>

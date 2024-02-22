@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <a-card
-      class="w-full"
+      class="w-full h-min"
       :class="{ 'bg-[#f0f5ff]': checked }"
       title="Arco Card"
       size="small"
