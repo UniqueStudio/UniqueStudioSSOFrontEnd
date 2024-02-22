@@ -1,21 +1,18 @@
 <template>
-  <a-layout class="h-full w-full">
-    <div class="layout-navbar">
-      <NavBar />
-    </div>
-    <a-layout>
+  <a-layout class="fixed top-0 left-0 right-0 bottom-0 items-stretch">
+    <NavBar class="w-full h-[60px] shrink-0" />
+    <a-layout class="overflow-hidden">
       <a-layout-sider
         v-if="renderMenu"
         :width="menuWidth"
-        class="layout-sider"
-        :style="{ paddingTop: navbar ? navbarHeight : '' }"
+        class="layout-sider hidden sm:block"
       >
         <div class="menu-wrapper">
           <Menu />
         </div>
       </a-layout-sider>
-      <a-layout class="layout-content" :style="pagePaddingStyle">
-        <a-layout-content>
+      <a-layout class="bg-[--color-fill-2]">
+        <a-layout-content class="overflow-hidden">
           <page-layout />
         </a-layout-content>
       </a-layout>
@@ -39,49 +36,14 @@ const menuWidth = computed(() => {
   // 48是左侧菜单收起的宽度
   return appStore.menuCollapse ? 48 : appStore.menuWidth;
 });
-const pagePaddingStyle = computed(() => {
-  const paddingLeft =
-    renderMenu.value && !hideMenu.value
-      ? { paddingLeft: `${menuWidth.value}px` }
-      : {};
-  const paddingTop = navbar.value ? { paddingTop: navbarHeight } : {};
-  return { ...paddingLeft, ...paddingTop };
-});
 </script>
 
 <style scoped lang="less">
 @nav-size-height: 60px;
 
 .layout-navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
   width: 100%;
   height: @nav-size-height;
-}
-
-.layout-sider {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 99;
-  height: 100%;
-  transition: all 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
-  // &::after {
-  //   position: absolute;
-  //   top: 0;
-  //   right: -1px;
-  //   display: block;
-  //   width: 1px;
-  //   height: 100%;
-  //   background-color: var(--color-border);
-  //   content: '';
-  // }
-
-  // > :deep(.arco-layout-sider-children) {
-  //   overflow-y: hidden;
-  // }
 }
 
 .menu-wrapper {
@@ -110,7 +72,7 @@ const pagePaddingStyle = computed(() => {
 .layout-content {
   min-height: 100vh;
   overflow-y: hidden;
-  background-color: var(--color-fill-2);
+  background-color: var();
   //transition: padding 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
 }
 </style>
