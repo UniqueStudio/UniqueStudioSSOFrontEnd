@@ -65,6 +65,7 @@ export default {
   'common.status.process': '进行中',
   'common.status.rejected': '已淘汰',
   'common.status.abandoned': '已放弃',
+  'common.status.waitForDistribution': '待分配',
 
   'common.sms.place': '地点',
   'common.sms.meetingId': '在线会议id',
