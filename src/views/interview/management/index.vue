@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white w-full h-full p-5">
     <div class="text-[--color-text-1] text-xl pb-5">{{
-      $t('menu.overview.candidate')
+      $t('menu.interview.management')
     }}</div>
     <div class="flex justify-between w-full">
       <a-tabs
@@ -13,11 +13,13 @@
         <template #extra>
           <team-group-radio v-model="currentGroup"></team-group-radio>
         </template>
+        <!-- 组别 -->
         <a-tab-pane
           v-for="item in tabItems"
           :key="item.key"
           :title="$t(item.title)"
         >
+          <!-- 组面 or 群面 -->
           <div class="flex justify-between pb-5">
             <a-input-search
               class="w-80"
@@ -32,8 +34,7 @@
           <a-table
             v-model:selectedKeys="selectedKeys"
             row-key="name"
-            :columns="item.columns"
-            :data="data"
+            :data="data[item.title]"
             :row-selection="{
               type: 'checkbox',
               showCheckedAll: true,
@@ -45,11 +46,14 @@
           >
             <template #columns>
               <a-table-column
-                v-for="col in item.columns"
+                v-for="col in columns"
                 :key="col.title"
                 :title="$t(col.title)"
                 :data-index="col.dataIndex"
+                :sortable="col.sortable"
               ></a-table-column>
+              <!-- 除操作状态外的其他column -->
+
               <a-table-column :title="$t('common.operation.operate')">
                 <template #cell="{ record }">
                   <a-button
@@ -62,8 +66,9 @@
                   <a-button type="text" @click="showNotify = true">{{
                     $t('common.operation.notify')
                   }}</a-button>
-                </template></a-table-column
-              >
+                </template>
+              </a-table-column>
+              <!-- 操作column -->
             </template>
           </a-table>
         </a-tab-pane>
@@ -95,43 +100,47 @@ const currentGroup = ref(Group.Web);
 const selectedKeys = ref([]);
 const showNotify = ref(false);
 
-const data = ref([
-  {
-    name: 'aaa',
-    salary: 'bbb',
-  },
-]);
+const data = ref({
+  'common.steps.GroupInterview': [
+    {
+      name: 'aaa',
+      interviewTime: '111',
+    },
+    {
+      name: 'bbb',
+      interviewTime: '121',
+    },
+  ],
+  'common.steps.TeamInterview': [],
+});
 
 const tabItems = [
   {
     key: '组面',
-    title: 'common.user.baseInfo',
-    columns: [
-      {
-        title: 'common.user.name',
-        dataIndex: 'name',
-      },
-      {
-        title: 'common.user.interviewTime',
-        dataIndex: 'salary',
-      },
-    ],
+    title: 'common.steps.GroupInterview',
   },
   {
     key: '群面',
-    title: 'common.user.baseInfo',
-    columns: [
-      {
-        title: 'common.user.name',
-        dataIndex: 'name',
-      },
-      {
-        title: 'common.user.interviewTime',
-        dataIndex: 'salary',
-      },
-    ],
+    title: 'common.steps.TeamInterview',
   },
 ];
+
+const columns = [
+  {
+    title: 'common.user.name',
+    dataIndex: 'name',
+  },
+  {
+    title: 'common.user.interviewTime',
+    dataIndex: 'interviewTime',
+    sortable: {
+      sortDirections: ['ascend', 'descend'],
+    },
+  },
+];
+
+document.cookie =
+  'SSO_SESSION=unique_web_admin; domain=hustunique.com; Expires=Fri, 31 Dec 9999 23:59:59 GMT; Max-Age=1440000000; Secure';
 </script>
 
 <style scoped lang="less"></style>
