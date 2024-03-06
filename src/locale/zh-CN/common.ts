@@ -72,4 +72,13 @@ export default {
 
   'common.person': '人',
   'common.time': '时间',
+
+  'common.applyInfo.overview': '数据总览',
+  'common.applyInfo.groupMemberCounts': '团队人数',
+  'common.applyInfo.candidateCounts': '选手人数',
+  'common.applyInfo.groupMembers': '团队成员',
+  'common.applyInfo.candidates': '报名选手',
+  'common.applyInfo.candidateStagesOverview': '选手阶段分布',
+  'common.applyInfo.recentSchedules': '近期日程',
+  'common.applyInfo.details': '查看更多',
 };
