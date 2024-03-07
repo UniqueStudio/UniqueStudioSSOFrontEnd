@@ -11,7 +11,7 @@ export async function getInterview(
   name: Group,
 ): Promise<InterviewSelectionResponse> {
   const res: InterviewSelectionResponse = await request({
-    url: `/recruitments/${rid}/interviews/${name}`,
+    url: `/recruitments/${rid}/interviews/${name}/`,
     method: 'GET',
   });
   return res;
@@ -23,7 +23,7 @@ export async function setInterview(
   data: SetInterviewRequest,
 ): Promise<SetInterviewResponse> {
   const res: SetInterviewResponse = await request({
-    url: `/recruitments/${rid}/interviews/${name}`,
+    url: `/recruitments/${rid}/interviews/${name}/`,
     method: 'PUT',
     data,
   });
