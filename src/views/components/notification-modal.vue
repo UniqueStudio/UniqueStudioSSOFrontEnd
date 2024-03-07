@@ -27,6 +27,7 @@
           readonly
         />
       </a-form-item>
+
       <div class="flex gap-2 justify-between w-full">
         <a-form-item
           field="next"
@@ -45,6 +46,7 @@
             >
           </a-select>
         </a-form-item>
+
         <a-form-item
           field="time"
           :label="$t('common.time')"
@@ -53,6 +55,7 @@
         >
           <a-date-picker v-model="formData.time" show-time />
         </a-form-item>
+
         <a-form-item
           field="meeting_id"
           :label="$t('common.sms.meetingId')"
@@ -62,6 +65,7 @@
           <a-input v-model="formData.meeting_id" />
         </a-form-item>
       </div>
+
       <div class="flex gap-2 justify-between w-full">
         <a-form-item
           field="place"
@@ -80,6 +84,7 @@
           <a-input v-model="formData.rest" />
         </a-form-item>
       </div>
+
       <div class="rounded-md border-2 px-4 py-3">
         <i18n-t :keypath="preview.i18nKey" tag="div">
           <template #name>
