@@ -22,6 +22,11 @@ export default {
   'common.operation.searchByName': '搜索成员姓名',
   'common.operation.operate': '操作',
   'common.operation.refresh': '刷新',
+  'common.operation.createRecruitment': '发起招新',
+  'common.operation.userSetting': '用户设置',
+  'common.operation.quitAccount': '退出登录',
+  'common.operation.readAll': '全部已读',
+
   'common.result.deleteSuccess': '删除成功',
   'common.result.createSuccess': '创建成功',
   'common.result.sendSuccess': '发送成功',
@@ -81,4 +86,11 @@ export default {
   'common.applyInfo.candidateStagesOverview': '选手阶段分布',
   'common.applyInfo.recentSchedules': '近期日程',
   'common.applyInfo.details': '查看更多',
+
+  'common.createRec.recName': '招新名称',
+  'common.createRec.inputRecName': '请输入名称',
+  'common.createRec.recTimeRange': '招新起止时间',
+  'common.createRec.signupTimeRange': '报名起止时间',
+  'common.createRec.code': '验证码',
+  'common.createRec.inputCode': '请输入验证码',
 };
