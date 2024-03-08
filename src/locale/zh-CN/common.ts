@@ -78,10 +78,20 @@ export default {
   'common.person': '人',
   'common.time': '时间',
 
+  'common.applyInfo.overview': '数据总览',
+  'common.applyInfo.groupMemberCounts': '团队人数',
+  'common.applyInfo.candidateCounts': '选手人数',
+  'common.applyInfo.groupMembers': '团队成员',
+  'common.applyInfo.candidates': '报名选手',
+  'common.applyInfo.candidateStagesOverview': '选手阶段分布',
+  'common.applyInfo.recentSchedules': '近期日程',
+  'common.applyInfo.details': '查看更多',
+
   'common.createRec.recName': '招新名称',
   'common.createRec.inputRecName': '请输入名称',
   'common.createRec.recTimeRange': '招新起止时间',
   'common.createRec.signupTimeRange': '报名起止时间',
   'common.createRec.code': '验证码',
   'common.createRec.inputCode': '请输入验证码',
+
 };
