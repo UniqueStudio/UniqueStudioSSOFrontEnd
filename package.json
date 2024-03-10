@@ -27,6 +27,7 @@
   "dependencies": {
     "@arco-design/web-vue": "^2.48.0",
     "axios": "^1.4.0",
+    "http-proxy-middleware": "^2.0.6",
     "lodash": "^4.17.21",
     "mitt": "^3.0.1",
     "pinia": "^2.1.4",
