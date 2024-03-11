@@ -16,6 +16,7 @@ export default {
   'common.operation.sendNotification': '发送通知',
   'common.operation.notify': '通知',
   'common.operation.allocate': '分配',
+  'common.operation.allocateInterviewTime': '分配面试时间',
   'common.operation.confirmTerminate': '确认终止投递？',
   'common.operation.confirmDeleteComment': '确认删除该评论？',
   'common.operation.editContent': '编辑内容',

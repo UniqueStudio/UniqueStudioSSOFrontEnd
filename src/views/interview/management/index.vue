@@ -22,19 +22,22 @@
           <!-- 组面 or 群面 -->
           <div class="flex justify-between pb-5">
             <a-input-search
+              v-model="searchValue"
               class="w-80"
               :placeholder="$t('common.operation.searchByName')"
             />
+            <!-- 搜索框 -->
             <a-button type="outline" @click="showNotify = true">
               <template #icon> <icon-plus /> </template>
               {{ $t('common.operation.sendNotification') }}
             </a-button>
+            <!--  发送通知 -->
           </div>
 
           <a-table
             v-model:selectedKeys="selectedKeys"
             row-key="name"
-            :data="data[item.title]"
+            :data="data[item.title + '_' + currentGroup]"
             :row-selection="{
               type: 'checkbox',
               showCheckedAll: true,
@@ -50,7 +53,7 @@
                 :key="col.title"
                 :title="$t(col.title)"
                 :data-index="col.dataIndex"
-                :sortable="col.sortable"
+                :sortable="col.sortable as TableSortable"
               ></a-table-column>
               <!-- 除操作状态外的其他column -->
 
@@ -75,6 +78,7 @@
       </a-tabs>
     </div>
   </div>
+
   <notification-modal
     v-model:showNotify="showNotify"
     :candidates="[]"
@@ -83,15 +87,21 @@
     :type="'Accept'"
     :group="Group.Web"
   />
+  <!-- 发送通知 -->
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Group } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import NotificationModal from '@/views/components/notification-modal.vue';
 
 import useRecruitmentStore from '@/store/modules/recruitment';
+
+import { TableData, TableSortable } from '@arco-design/web-vue';
+import { getApplicationData } from './getData';
+
+document.cookie = 'SSO_SESSION=unique_web_admin;';
 
 const recStore = useRecruitmentStore();
 
@@ -99,19 +109,17 @@ const interviewType = ref('组面');
 const currentGroup = ref(Group.Web);
 const selectedKeys = ref([]);
 const showNotify = ref(false);
+const searchValue = ref('');
 
-const data = ref({
-  'common.steps.GroupInterview': [
-    {
-      name: 'aaa',
-      interviewTime: '111',
-    },
-    {
-      name: 'bbb',
-      interviewTime: '121',
-    },
-  ],
-  'common.steps.TeamInterview': [],
+type Data = {
+  [key: string]: TableData[];
+};
+const realData = ref({} as Data);
+const data = ref({} as Data);
+getApplicationData().then((res) => {
+  // console.log(res);
+  realData.value = res;
+  data.value = JSON.parse(JSON.stringify(realData.value));
 });
 
 const tabItems = [
@@ -139,8 +147,19 @@ const columns = [
   },
 ];
 
-document.cookie =
-  'SSO_SESSION=unique_web_admin; domain=hustunique.com; Expires=Fri, 31 Dec 9999 23:59:59 GMT; Max-Age=1440000000; Secure';
+// 搜索名字
+watch(searchValue, (val) => {
+  // console.log("newSearchValue", val);
+  // console.log(realData.value);
+  const stepTitle =
+    interviewType.value === '群面'
+      ? 'common.steps.TeamInterview'
+      : 'common.steps.GroupInterview';
+  const key = `${stepTitle}_${currentGroup.value}`;
+  data.value[key] = realData.value[key].filter((item) => {
+    return item.name.includes(val);
+  });
+});
 </script>
 
 <style scoped lang="less"></style>

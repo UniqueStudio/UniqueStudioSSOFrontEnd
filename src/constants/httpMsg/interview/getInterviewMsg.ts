@@ -10,6 +10,8 @@ export interface Interview {
   name: Group;
   slot_number: number;
   recruitment_id: string;
+  start: TimeString;
+  end: TimeString;
 }
 
 export type InterviewSelectionResponse = HttpRes<Interview[]>;
