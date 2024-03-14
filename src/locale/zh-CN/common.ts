@@ -23,6 +23,9 @@ export default {
   'common.operation.searchByName': '搜索成员姓名',
   'common.operation.operate': '操作',
   'common.operation.refresh': '刷新',
+  'common.operation.allocateTime': '分配时间',
+  'common.operation.candidateSeletedTime': '选手已选',
+
   'common.result.deleteSuccess': '删除成功',
   'common.result.createSuccess': '创建成功',
   'common.result.sendSuccess': '发送成功',
@@ -74,4 +77,8 @@ export default {
 
   'common.person': '人',
   'common.time': '时间',
+
+  'common.period.morning': '上午',
+  'common.period.afternoon': '下午',
+  'common.period.evening': '晚上',
 };

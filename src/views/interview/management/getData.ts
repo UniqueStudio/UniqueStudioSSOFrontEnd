@@ -12,18 +12,21 @@ type Data = {
 const groupInterview = 'common.steps.GroupInterview';
 const teamInterview = 'common.steps.TeamInterview';
 
-async function getLastestRid(): Promise<string> {
-  return (await getLatestRecruitment()).data.uid;
-}
-
-function dealTime(startTime: string, endTime: string): string {
+export function dealTime(startTime: string, endTime: string): string {
   // 处理面试时间
   const start = new Date(startTime);
   const end = new Date(endTime);
   // turn it to YYYY-MM-DD HH:MM-HH:MM
-  return `${start.getFullYear()}-${
-    start.getMonth() + 1
-  }-${start.getDate()} ${start.getHours()}:${start.getMinutes()}-${end.getHours()}:${end.getMinutes()}`;
+  //
+  return `${start.getFullYear()}-${(start.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}-${start.getDate().toString().padStart(2, '0')} ${start
+    .getHours()
+    .toString()
+    .padStart(2, '0')}:${start.getMinutes().toString().padStart(2, '0')}-${end
+    .getHours()
+    .toString()
+    .padStart(2, '0')}:${end.getMinutes().toString().padStart(2, '0')}`;
 }
 
 function dealData(
@@ -38,6 +41,7 @@ function dealData(
       interviewData && interviewData.uid
         ? dealTime(interviewData?.start, interviewData?.end)
         : i18n.global.t('common.status.waitForDistribution'),
+    aid: application.uid,
   };
 }
 
@@ -46,7 +50,7 @@ function getDataKey(step: string, group: string): string {
 }
 
 export default async function getApplicationData(): Promise<Data> {
-  // const nowRid = await getLastestRid();
+  // const nowRid = (await getLatestRecruitment()).data.uid; // TODO: 获取最新id
   const nowRid = 'ba10675e-22ae-4335-83c8-8e84a4a6855b'; // 调试
   const applicationData: Data = {
     groupInterview: [],
@@ -77,8 +81,10 @@ export default async function getApplicationData(): Promise<Data> {
       needDeal = true;
     } // 如果不是这两种就不需要处理
 
+    if (application.abandoned || application.rejected) needDeal = false;
+
     if (needDeal) {
-      const dataKey = getDataKey(stepName, application.group);
+      const dataKey = getDataKey(stepName as string, application.group);
       if (!applicationData[dataKey]) applicationData[dataKey] = [];
       applicationData[dataKey].push(dealData(application, interviewData));
     }

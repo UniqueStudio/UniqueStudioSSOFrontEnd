@@ -59,10 +59,12 @@
 
               <a-table-column :title="$t('common.operation.operate')">
                 <template #cell="{ record }">
+                  <!-- record are the data of the row -->
                   <a-button
                     type="text"
                     @click="
-                      $modal.info({ title: 'Name', content: record.name })
+                      showAllowcate = true;
+                      allowcateApplicationId = record.aid;
                     "
                     >{{ $t('common.operation.allocate') }}</a-button
                   >
@@ -88,6 +90,11 @@
     :group="Group.Web"
   />
   <!-- 发送通知 -->
+
+  <allowcate-modal
+    v-model:showAllowcate="showAllowcate"
+    :application-id="allowcateApplicationId"
+  />
 </template>
 
 <script setup lang="ts">
@@ -99,7 +106,8 @@ import NotificationModal from '@/views/components/notification-modal.vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
 
 import { TableData, TableSortable } from '@arco-design/web-vue';
-import { getApplicationData } from './getData';
+import AllowcateModal from './allowcate-modal.vue';
+import getApplicationData from './getData';
 
 document.cookie = 'SSO_SESSION=unique_web_admin;';
 
@@ -110,6 +118,8 @@ const currentGroup = ref(Group.Web);
 const selectedKeys = ref([]);
 const showNotify = ref(false);
 const searchValue = ref('');
+const showAllowcate = ref(false);
+const allowcateApplicationId = ref('' as string);
 
 type Data = {
   [key: string]: TableData[];
