@@ -14,6 +14,7 @@
       :rules="preview.rules"
     >
       <a-form-item>
+        <!-- 收信人 -->
         <template #label>
           <span>{{ $t('candidate.receiver') }}</span>
           <span
@@ -170,8 +171,6 @@ const props = defineProps({
         name: string;
         aid: string;
         step: Step;
-        abandoned: boolean;
-        rejected: boolean;
       }[]
     >,
     required: true,

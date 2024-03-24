@@ -27,7 +27,7 @@
               :placeholder="$t('common.operation.searchByName')"
             />
             <!-- 搜索框 -->
-            <a-button type="outline" @click="showNotify = true">
+            <a-button type="outline" @click="allocateSelect()">
               <template #icon> <icon-plus /> </template>
               {{ $t('common.operation.sendNotification') }}
             </a-button>
@@ -68,7 +68,7 @@
                     "
                     >{{ $t('common.operation.allocate') }}</a-button
                   >
-                  <a-button type="text" @click="showNotify = true">{{
+                  <a-button type="text" @click="allocateOne(record)">{{
                     $t('common.operation.notify')
                   }}</a-button>
                 </template>
@@ -83,17 +83,19 @@
 
   <notification-modal
     v-model:showNotify="showNotify"
-    :candidates="[]"
+    :candidates="selectData"
     :cur-step="0"
     :rec-name="recStore.currentRec?.name ?? ''"
     :type="'Accept'"
     :group="Group.Web"
   />
   <!-- 发送通知 -->
+  <!-- TODO 选中的选手 -->
 
   <allowcate-modal
     v-model:showAllowcate="showAllowcate"
     :application-id="allowcateApplicationId"
+    :interview-type="interviewType == '群面' ? 'team' : 'group'"
   />
 </template>
 
@@ -109,7 +111,7 @@ import { TableData, TableSortable } from '@arco-design/web-vue';
 import AllowcateModal from './allowcate-modal.vue';
 import getApplicationData from './getData';
 
-document.cookie = 'SSO_SESSION=unique_web_admin;';
+document.cookie = 'SSO_SESSION=unique_web_admin';
 
 const recStore = useRecruitmentStore();
 
@@ -120,6 +122,7 @@ const showNotify = ref(false);
 const searchValue = ref('');
 const showAllowcate = ref(false);
 const allowcateApplicationId = ref('' as string);
+const selectData = ref([] as { name: string; aid: string; step: number }[]);
 
 type Data = {
   [key: string]: TableData[];
@@ -170,6 +173,56 @@ watch(searchValue, (val) => {
     return item.name.includes(val);
   });
 });
+
+watch(selectedKeys, (newSelectedKeys) => {
+  return newSelectedKeys.map((key) => {
+    // console.log('%c [ key ]-178', 'font-size:13px; background:#d6a129; color:#ffe56d;', key);
+    const key1 = `${
+      interviewType.value === '组面'
+        ? 'common.steps.GroupInterview'
+        : 'common.steps.TeamInterview'
+    }_${currentGroup.value}`;
+    const nowData = data.value[key1].find((item) => item.name === key);
+    if (!nowData) return {};
+    return {
+      name: nowData.name,
+      aid: nowData.aid,
+      step: nowData.step,
+    };
+  });
+});
+
+const allocateOne = (rowData) => {
+  // console.log('%c [ rowData ]-74', 'font-size:13px; background:#38703a; color:#7cb47e;', rowData);
+  selectData.value.length = 0;
+  selectData.value.push({
+    name: rowData.name,
+    aid: rowData.aid,
+    step: rowData.step,
+  });
+  showNotify.value = true;
+};
+
+const allocateSelect = () => {
+  showNotify.value = true;
+  selectData.value = selectedKeys.value
+    .map((key) => {
+      // console.log('%c [ key ]-178', 'font-size:13px; background:#d6a129; color:#ffe56d;', key);
+      const key1 = `${
+        interviewType.value === '组面'
+          ? 'common.steps.GroupInterview'
+          : 'common.steps.TeamInterview'
+      }_${currentGroup.value}`;
+      const nowData = data.value[key1].find((item) => item.name === key);
+      if (!nowData) return null;
+      return {
+        name: nowData.name,
+        aid: nowData.aid,
+        step: nowData.step,
+      };
+    })
+    .filter((item) => item !== null);
+};
 </script>
 
 <style scoped lang="less"></style>

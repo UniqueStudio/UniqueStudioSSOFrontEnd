@@ -52,10 +52,7 @@ function getDataKey(step: string, group: string): string {
 export default async function getApplicationData(): Promise<Data> {
   // const nowRid = (await getLatestRecruitment()).data.uid; // TODO: 获取最新id
   const nowRid = 'ba10675e-22ae-4335-83c8-8e84a4a6855b'; // 调试
-  const applicationData: Data = {
-    groupInterview: [],
-    teamInterview: [],
-  };
+  const applicationData: Data = {};
 
   const totalData = await getRecruitment(nowRid);
   if (!totalData.data.applications) return applicationData;

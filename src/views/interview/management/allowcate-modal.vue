@@ -20,9 +20,12 @@
           </a-tag>
         </a-space>
       </a-form-item>
-      <a-form-item field="time" :label="$t('common.operation.allocateTime')">
+      <a-form-item
+        field="seleteInterviewId"
+        :label="$t('common.operation.allocateTime')"
+      >
         <a-cascader
-          v-model:input-value="form.time"
+          v-model="form.selectInterviewId"
           :options="timeOptions"
           expand-trigger="hover"
         />
@@ -33,7 +36,8 @@
 
 <script setup lang="ts">
 import { defineProps, watch, ref, defineModel } from 'vue';
-import { getLatestRecruitment, getRecruitment } from '@/api/recruitment';
+import { getRecruitment } from '@/api/recruitment';
+import { allocateApplicationInterview } from '@/api/application';
 import { CascaderOption } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 import { RecruitmentResponse } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
@@ -48,6 +52,11 @@ const props = defineProps({
     default: '',
     required: true,
   },
+  interviewType: {
+    type: String,
+    default: 'group',
+    required: true,
+  },
 });
 
 const showAllowcate = defineModel<boolean>('showAllowcate', {
@@ -56,7 +65,7 @@ const showAllowcate = defineModel<boolean>('showAllowcate', {
   required: true,
 });
 
-const form = ref({ time: '' as string });
+const form = ref({ selectInterviewId: '' as string });
 let totalData = {} as RecruitmentResponse;
 
 const dataEndIndex = 10;
@@ -85,17 +94,26 @@ const getTimeOptions = async () => {
   );
 
   // 面试分类 date->period->time
-  const optionsData = {} as { [key: string]: { [key: string]: string[] } };
+  const optionsData = {} as {
+    [key: string]: { [key: string]: { time: string; interviewId: string }[] };
+  };
   usefulInterview.forEach((interview) => {
     if (interview.start && interview.period) {
       const date = getDate(interview.start);
       const time = getTime(interview.start, interview.end);
       if (optionsData[date] && optionsData[date][interview.period]) {
-        optionsData[date][interview.period].push(time);
+        optionsData[date][interview.period].push({
+          time,
+          interviewId: interview.uid,
+        });
       } else if (optionsData[date]) {
-        optionsData[date][interview.period] = [time];
+        optionsData[date][interview.period] = [
+          { time, interviewId: interview.uid },
+        ];
       } else {
-        optionsData[date] = { [interview.period]: [time] };
+        optionsData[date] = {
+          [interview.period]: [{ time, interviewId: interview.uid }],
+        };
       }
     }
   });
@@ -105,10 +123,10 @@ const getTimeOptions = async () => {
     const DateChildren = [] as CascaderOption[];
     Object.entries(valueThisDate).forEach(([period, valueThisPeriod]) => {
       const periodChildren = [] as CascaderOption[];
-      valueThisPeriod.forEach((time) => {
+      valueThisPeriod.forEach(({ time, interviewId }) => {
         periodChildren.push({
           label: time,
-          value: time,
+          value: interviewId,
         });
       });
       DateChildren.push({
@@ -175,9 +193,19 @@ const handleCancel = () => {
   showAllowcate.value = false;
 };
 
+const submitSelectInterviewTime = async (selectInterviewId: string) => {
+  // console.log('%c [ selectInterviewId ]-185', 'font-size:13px; background:#e28e6b; color:#ffd2af;', selectInterviewId);
+  allocateApplicationInterview(
+    props.applicationId,
+    props.interviewType as 'group' | 'team',
+    { interview_id: selectInterviewId },
+  );
+  // TODO: 提交后刷新数据
+};
+
 const handleBeforeOk = async () => {
   // console.log(form);
-  // TODO: submitSelectInterviewTime(form.time);
+  submitSelectInterviewTime(form.value.selectInterviewId);
   return true;
 };
 </script>
