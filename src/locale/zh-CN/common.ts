@@ -32,6 +32,7 @@ export default {
   'common.operation.quitAccount': '退出登录',
   'common.operation.readAll': '全部已读',
   'common.operation.arrangeSchedule': '日程安排',
+  'common.operation.addSchedule': '添加日程',
 
   'common.result.deleteSuccess': '删除成功',
   'common.result.createSuccess': '创建成功',
