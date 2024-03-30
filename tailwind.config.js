@@ -38,9 +38,35 @@ export default {
       },
       padding: {
         '0.3vw': '0.3vw',
+        width: {
+          193: '48.25rem',
+          66: '16.5rem',
+        },
+        height: {
+          183: '45.75rem',
+          193: '48.25rem',
+        },
+        flex: {
+          4: '4 1 0%',
+        },
       },
-      flex: {
-        4: '4 1 0%',
+      minWidth: {
+        400: '400px',
+        500: '500px',
+      },
+      maxHeight: {
+        193: '48.25rem',
+        200: '50rem',
+        216: '54rem',
+        158: '39.5rem',
+        193: '48.25rem',
+        185.5: '46.375rem',
+        179: '44.75rem',
+      },
+      minHeight: {
+        158: '39.5rem',
+        193: '48.25rem',
+        185.5: '46.375rem',
       },
 <<<<<<< HEAD
       maxHeight: {
@@ -58,6 +84,7 @@ export default {
       },
 =======
     },
+<<<<<<< HEAD
     minWidth: {
       400: '400px',
       500: '500px',
@@ -80,3 +107,8 @@ export default {
   },
   plugins: [],
 };
+=======
+    plugins: [],
+  }
+};
+>>>>>>> 15303ad (schedule and calender 1.0)
