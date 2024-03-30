@@ -29,6 +29,7 @@ export default {
   'common.operation.userSetting': '用户设置',
   'common.operation.quitAccount': '退出登录',
   'common.operation.readAll': '全部已读',
+  'common.operation.addSchedule': '添加日程',
 
   'common.result.deleteSuccess': '删除成功',
   'common.result.createSuccess': '创建成功',
@@ -98,6 +99,7 @@ export default {
   'common.applyInfo.candidates': '报名选手',
   'common.applyInfo.candidateStagesOverview': '选手阶段分布',
   'common.applyInfo.recentSchedules': '近期日程',
+  'common.applyInfo.Schedules': '日程',
   'common.applyInfo.details': '查看更多',
 
   'common.createRec.recName': '招新名称',
