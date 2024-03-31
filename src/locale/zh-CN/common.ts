@@ -27,6 +27,7 @@ export default {
   'common.operation.quitAccount': '退出登录',
   'common.operation.readAll': '全部已读',
   'common.operation.addSchedule': '添加日程',
+  'common.operation.arrangeSchedule': '日程安排',
 
   'common.result.deleteSuccess': '删除成功',
   'common.result.createSuccess': '创建成功',
@@ -88,6 +89,7 @@ export default {
   'common.applyInfo.recentSchedules': '近期日程',
   'common.applyInfo.Schedules': '日程',
   'common.applyInfo.details': '查看更多',
+  'common.applyInfo.interviewName': '面试名称',
 
   'common.createRec.recName': '招新名称',
   'common.createRec.inputRecName': '请输入名称',
