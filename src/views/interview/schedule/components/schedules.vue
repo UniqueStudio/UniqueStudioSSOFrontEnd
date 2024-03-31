@@ -59,12 +59,33 @@
     <a-button
       v-if="schedulesLength(recents) > 5"
       type="dashed"
-      class="text-xl w-full py-0.5"
+      class="text-base w-full flex justify-center items-center align-bottom"
       @click="openModel"
     >
-      {{ $t('common.operation.addSchedule') }}</a-button
+      <icon-plus class="mr-3" />
+      <span class="mt-0.5">{{
+        $t('common.operation.addSchedule')
+      }}</span></a-button
     >
   </div>
+  <a-modal
+    v-model:visible="visible"
+    :closable="false"
+    :modal-style="{
+      maxHeight: '427px',
+      maxWidth: '464px',
+      borderRadius: '4px',
+    }"
+  >
+    <div class="text-[--color-text-1] text-xl font-bold">{{
+      $t('common.operation.arrangeSchedule')
+    }}</div>
+    <a-divider />
+    <span>操作人：周子涵</span>
+    <div class="text-[--color-text-1] text-lg font-bold">{{
+      $t('common.operation.arrangeSchedule')
+    }}</div>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -113,7 +134,33 @@ const schedules = [
     name: 'web组面',
     time: '13:00-13:30（0.5h）',
     location: '811',
-    player: '柴犬',
+    player: 'kid',
+    description: '没别的时间了',
+  },
+  {
+    date: new Date('2024-01-02'),
+    name: 'web组面',
+    time: '13:00-13:30（0.5h）',
+    location: '811',
+    player: '一架飞机',
+    description: '可以调时间',
+  },
+  {
+    date: new Date('2024-01-03'),
+    name: 'web组面',
+    time: '13:00-13:30（0.5h）',
+    location: '811',
+    player: '菜菜子',
+    description: '没别的时间了',
+  },
+]; // 测试
+const addplayer = [
+  {
+    date: new Date('2024-01-01'),
+    name: 'web组面',
+    time: '13:00-13:30（0.5h）',
+    location: '811',
+    player: 'kk',
     description: '没别的时间了',
   },
   {
@@ -121,7 +168,7 @@ const schedules = [
     name: 'web组面',
     time: '13:00-13:30（0.5h）',
     location: '811',
-    player: '柴犬',
+    player: 'wwb',
     description: '没别的时间了',
   },
   {
@@ -129,11 +176,10 @@ const schedules = [
     name: 'web组面',
     time: '13:00-13:30（0.5h）',
     location: '811',
-    player: '柴犬',
+    player: 'yj',
     description: '没别的时间了',
   },
-]; // 测试用
-
+];
 const filteredSchedules = (recent: any) => {
   return schedules
     .filter((schedule) => {
