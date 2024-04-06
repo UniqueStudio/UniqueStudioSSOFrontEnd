@@ -1,6 +1,6 @@
 <template>
   <div class="flex place-content-between gap-5">
-    <calender @@date-click="handleDateClick"></calender>
+    <calender @date-click="handleDateClick"></calender>
     <schedules :filtered-items="filteredItems"></schedules>
   </div>
 </template>

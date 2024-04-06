@@ -75,7 +75,6 @@ const props = defineProps<{
   filteredItems: Schedule[];
 }>();
 
-// console.log(props.filteredItems);
 const goManagement = () => {
   router.push({ name: 'interviewMangement' });
 };
