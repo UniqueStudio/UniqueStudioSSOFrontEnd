@@ -2,6 +2,7 @@
   <a-modal
     v-model:visible="showAllowcate"
     :title="$t('common.operation.allocateInterviewTime')"
+    :width="isMobile ? '90%' : ''"
     @cancel="handleCancel"
     @before-ok="handleBeforeOk"
   >
@@ -55,6 +56,11 @@ const props = defineProps({
   interviewType: {
     type: String,
     default: 'group',
+    required: true,
+  },
+  isMobile: {
+    type: Boolean,
+    default: false,
     required: true,
   },
 });

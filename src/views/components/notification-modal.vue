@@ -6,6 +6,7 @@
     :on-before-close="
       notifyFormRef?.resetFields(['time', 'place', 'rest', 'meeting_id'])
     "
+    :width="isMobile ? '90%' : '600px'"
   >
     <a-form
       ref="notifyFormRef"
@@ -28,7 +29,7 @@
           readonly
         />
       </a-form-item>
-      <div class="flex gap-2 justify-between w-full">
+      <div class="flex gap-2 justify-between w-full flex-col sm:flex-row">
         <a-form-item
           field="next"
           :label="$t('common.user.nextStage')"
@@ -63,7 +64,7 @@
           <a-input v-model="formData.meeting_id" />
         </a-form-item>
       </div>
-      <div class="flex gap-2 justify-between w-full">
+      <div class="flex gap-2 justify-between w-full flex-col sm:flex-row">
         <a-form-item
           field="place"
           :label="$t('common.sms.place')"
@@ -158,7 +159,7 @@
 import { ref, defineModel, defineProps, PropType, watch, computed } from 'vue';
 import { Group, recruitSteps, Step, SMSTemplate } from '@/constants/team';
 import { sendSms } from '@/api';
-import { groupBy } from 'lodash';
+import { groupBy, isMap } from 'lodash';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 
@@ -189,6 +190,10 @@ const props = defineProps({
   },
   group: {
     type: String as PropType<Group>,
+    required: true,
+  },
+  isMobile: {
+    type: Boolean,
     required: true,
   },
 });

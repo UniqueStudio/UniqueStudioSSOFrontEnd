@@ -3,85 +3,140 @@
     <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
       $t('menu.interview.management')
     }}</div>
-    <div class="flex justify-between w-full">
-      <a-tabs
+    <div class="flex flex-col justify-between w-full">
+      <!-- <a-tabs
         v-model:active-key="interviewType"
         class="w-full"
         type="rounded"
         size="medium"
-      >
-        <template #extra>
-          <team-group-radio v-model="currentGroup"></team-group-radio>
-        </template>
-        <a-tab-pane
-          v-for="item in tabItems"
-          :key="item.key"
-          :title="$t(item.title)"
+      > -->
+
+      <!-- <a-tab-pane
+        v-for="item in tabItems"
+        :key="item.key"
+        :title="$t(item.title)"
+      > -->
+      <div class="flex justify-between pb-5">
+        <a-select
+          v-model="displayType"
+          class="sm:hidden flex"
+          :bordered="false"
         >
-          <!-- 组面 or 群面 -->
-          <!-- TODO: 选项卡大小 -->
-          <div class="flex justify-between pb-5">
-            <a-input-search
-              v-model="searchValue"
-              class="sm:w-80 w-1/2 mr-5"
-              :placeholder="$t('common.operation.searchByName')"
-            />
-            <!-- 搜索框 -->
-            <a-button
-              type="outline"
-              class="sm:w-auto w-1/2"
-              @click="allocateSelect()"
-            >
-              <template #icon> <icon-plus /> </template>
-              {{ $t('common.operation.sendNotification') }}
-            </a-button>
-            <!--  发送通知 -->
-          </div>
+          <a-option v-for="item in displayTypeItems" :key="item" :value="item">
+            {{ $t(item) }}
+          </a-option>
+        </a-select>
+        <!-- 移动端 选择显示类型 信息or操作 -->
 
-          <a-table
-            v-model:selectedKeys="selectedKeys"
-            row-key="name"
-            :data="data[item.title + '_' + currentGroup]"
-            :row-selection="{
-              type: 'checkbox',
-              showCheckedAll: true,
-              onlyCurrent: false,
-            }"
-            :pagination="{
-              pageSize: 10,
-            }"
-          >
-            <template #columns>
-              <a-table-column
-                v-for="col in columns"
-                :key="col.title"
-                :title="$t(col.title)"
-                :data-index="col.dataIndex"
-                :sortable="col.sortable as TableSortable"
-              ></a-table-column>
-              <!-- 除操作状态外的其他column -->
+        <a-select
+          v-model="interviewType"
+          class="sm:hidden flex"
+          :bordered="false"
+        >
+          <a-option v-for="item in tabItems" :key="item" :value="item">
+            {{ $t(item) }}
+          </a-option>
+        </a-select>
+        <!-- 移动端 选择面试类别 -->
 
-              <a-table-column :title="$t('common.operation.operate')">
-                <template #cell="{ record }">
-                  <!-- record are the data of the row -->
-                  <a-button
-                    type="text"
-                    @click="
-                      showAllowcate = true;
-                      allowcateApplicationId = record.aid;
-                    "
-                    >{{ $t('common.operation.allocate') }}</a-button
-                  >
-                  <a-button type="text" @click="allocateOne(record)">{{
-                    $t('common.operation.notify')
-                  }}</a-button>
-                </template>
-              </a-table-column>
-              <!-- 操作column -->
+        <a-radio-group v-model="interviewType" class="hidden sm:flex">
+          <a-radio v-for="item in tabItems" :key="item" :value="item">
+            <template #radio="{ checked }">
+              <a-tag
+                :checked="checked"
+                checkable
+                size="large"
+                :class="
+                  checked
+                    ? 'px-5 rounded-full text-[rgb(var(--primary-6))]'
+                    : 'px-5 rounded-full'
+                "
+                >{{ $t(item) }}</a-tag
+              >
             </template>
-          </a-table>
-        </a-tab-pane>
-      </a-tabs>
+          </a-radio>
+        </a-radio-group>
+        <!-- PC端 选择面试类别 -->
+
+        <team-group-radio v-model="currentGroup"></team-group-radio>
+        <!-- 选择组 -->
+      </div>
+
+      <div class="flex justify-between pb-5">
+        <a-input-search
+          v-model="searchValue"
+          class="sm:w-80 w-1/2 mr-5"
+          :placeholder="$t('common.operation.searchByName')"
+        />
+        <!-- 搜索框 -->
+        <a-button
+          type="outline"
+          class="sm:w-auto w-1/2"
+          @click="allocateSelect()"
+        >
+          <template #icon> <icon-plus /> </template>
+          {{ $t('common.operation.sendNotification') }}
+        </a-button>
+        <!--  发送通知 -->
+      </div>
+
+      <a-table
+        v-model:selectedKeys="selectedKeys"
+        row-key="name"
+        :data="data[interviewType + '_' + currentGroup]"
+        :row-selection="{
+          type: 'checkbox',
+          showCheckedAll: true,
+          onlyCurrent: false,
+        }"
+        :pagination="{
+          pageSize: 10,
+        }"
+        column-resizable
+      >
+        <template #columns>
+          <a-table-column
+            key="common.user.name"
+            :title="$t('common.user.name')"
+            data-index="name"
+            :width="isMobile ? 75 : undefined"
+          ></a-table-column>
+          <!-- 姓名 -->
+
+          <a-table-column
+            v-if="!isMobile || displayType === 'common.information'"
+            key="common.user.interviewTime"
+            :title="$t('common.user.interviewTime')"
+            data-index="interviewTime"
+            :sortable="{
+              sortDirections: ['ascend', 'descend'],
+            }"
+          ></a-table-column>
+          <!-- 面试时间 -->
+
+          <a-table-column
+            v-if="!isMobile || displayType === 'common.operation.operate'"
+            :title="$t('common.operation.operate')"
+          >
+            <template #cell="{ record }">
+              <!-- record are the data of the row -->
+              <a-button
+                class="px-2"
+                type="text"
+                @click="
+                  showAllowcate = true;
+                  allowcateApplicationId = record.aid;
+                "
+                >{{ $t('common.operation.allocate') }}</a-button
+              >
+              <a-button class="px-2" type="text" @click="allocateOne(record)">{{
+                $t('common.operation.notify')
+              }}</a-button>
+            </template>
+          </a-table-column>
+          <!-- 操作column -->
+        </template>
+      </a-table>
     </div>
   </div>
 
@@ -92,6 +147,7 @@
     :rec-name="recStore.currentRec?.name ?? ''"
     :type="'Accept'"
     :group="Group.Web"
+    :is-mobile="isMobile"
   />
   <!-- 发送通知 -->
 
@@ -99,6 +155,7 @@
     v-model:showAllowcate="showAllowcate"
     :application-id="allowcateApplicationId"
     :interview-type="interviewType == '群面' ? 'team' : 'group'"
+    :is-mobile="isMobile"
   />
 </template>
 
@@ -110,7 +167,7 @@ import NotificationModal from '@/views/components/notification-modal.vue';
 
 import useRecruitmentStore from '@/store/modules/recruitment';
 
-import { TableData, TableSortable } from '@arco-design/web-vue';
+import { TableData } from '@arco-design/web-vue';
 import AllowcateModal from './allowcate-modal.vue';
 import getApplicationData from './getData';
 
@@ -125,7 +182,9 @@ const showNotify = ref(false);
 const searchValue = ref('');
 const showAllowcate = ref(false);
 const allowcateApplicationId = ref('' as string);
-const selectData = ref([] as { name: string; aid: string; step: number }[]);
+const selectData = ref([] as { name: string; aid: string; step: any }[]);
+const displayType = ref('common.information');
+const isMobile = ref(false);
 
 type Data = {
   [key: string]: TableData[];
@@ -138,30 +197,9 @@ getApplicationData().then((res) => {
   data.value = JSON.parse(JSON.stringify(realData.value));
 });
 
-const tabItems = [
-  {
-    key: 'common.steps.GroupInterview',
-    title: 'common.steps.GroupInterview',
-  },
-  {
-    key: 'common.steps.TeamInterview',
-    title: 'common.steps.TeamInterview',
-  },
-];
+const tabItems = ['common.steps.GroupInterview', 'common.steps.TeamInterview'];
 
-const columns = [
-  {
-    title: 'common.user.name',
-    dataIndex: 'name',
-  },
-  {
-    title: 'common.user.interviewTime',
-    dataIndex: 'interviewTime',
-    sortable: {
-      sortDirections: ['ascend', 'descend'],
-    },
-  },
-];
+const displayTypeItems = ['common.information', 'common.operation.operate'];
 
 // 搜索名字
 watch(searchValue, (val) => {
@@ -218,6 +256,15 @@ const allocateSelect = () => {
     })
     .filter((item) => item !== null);
 };
+
+// 移动端适配
+const mediaQuery = window.matchMedia('(min-width: 640px)');
+function handleTabletChange(e: MediaQueryListEvent) {
+  if (e.matches) isMobile.value = false;
+  else isMobile.value = true;
+}
+mediaQuery.onchange = handleTabletChange;
+handleTabletChange(mediaQuery);
 </script>
 
 <style scoped lang="less"></style>

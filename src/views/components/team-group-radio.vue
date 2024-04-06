@@ -8,6 +8,7 @@
       item
     }}</a-option>
   </a-select>
+  <!-- 移动端 -->
 
   <a-radio-group v-model="currentGroup" class="bg-white hidden sm:flex">
     <template v-for="(item, index) in groups" :key="item">

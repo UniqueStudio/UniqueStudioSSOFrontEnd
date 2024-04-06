@@ -81,4 +81,6 @@ export default {
   'common.period.morning': '上午',
   'common.period.afternoon': '下午',
   'common.period.evening': '晚上',
+
+  'common.information': '信息',
 };
