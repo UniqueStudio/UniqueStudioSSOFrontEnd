@@ -26,7 +26,6 @@ export default {
   'common.operation.userSetting': '用户设置',
   'common.operation.quitAccount': '退出登录',
   'common.operation.readAll': '全部已读',
-  'common.operation.addSchedule': '添加日程',
   'common.operation.arrangeSchedule': '日程安排',
 
   'common.result.deleteSuccess': '删除成功',
@@ -55,6 +54,7 @@ export default {
   'common.user.name': '姓名',
   'common.user.group': '组别',
   'common.user.interviewTime': '面试时间',
+  'common.user.description': '备注',
 
   'common.steps.SignUp': '报名',
   'common.steps.WrittenTest': '笔试',
@@ -90,6 +90,7 @@ export default {
   'common.applyInfo.Schedules': '日程',
   'common.applyInfo.details': '查看更多',
   'common.applyInfo.interviewName': '面试名称',
+  'common.applyInfo.date': '日期',
 
   'common.createRec.recName': '招新名称',
   'common.createRec.inputRecName': '请输入名称',
