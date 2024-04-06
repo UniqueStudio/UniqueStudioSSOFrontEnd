@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white w-full h-full p-5">
-    <div class="text-[--color-text-1] text-xl pb-5">{{
+    <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
       $t('menu.interview.management')
     }}</div>
     <div class="flex justify-between w-full">
@@ -13,21 +13,25 @@
         <template #extra>
           <team-group-radio v-model="currentGroup"></team-group-radio>
         </template>
-        <!-- 组别 -->
         <a-tab-pane
           v-for="item in tabItems"
           :key="item.key"
           :title="$t(item.title)"
         >
           <!-- 组面 or 群面 -->
+          <!-- TODO: 选项卡大小 -->
           <div class="flex justify-between pb-5">
             <a-input-search
               v-model="searchValue"
-              class="w-80"
+              class="sm:w-80 w-1/2 mr-5"
               :placeholder="$t('common.operation.searchByName')"
             />
             <!-- 搜索框 -->
-            <a-button type="outline" @click="allocateSelect()">
+            <a-button
+              type="outline"
+              class="sm:w-auto w-1/2"
+              @click="allocateSelect()"
+            >
               <template #icon> <icon-plus /> </template>
               {{ $t('common.operation.sendNotification') }}
             </a-button>
@@ -90,7 +94,6 @@
     :group="Group.Web"
   />
   <!-- 发送通知 -->
-  <!-- TODO 选中的选手 -->
 
   <allowcate-modal
     v-model:showAllowcate="showAllowcate"
@@ -115,7 +118,7 @@ document.cookie = 'SSO_SESSION=unique_web_admin';
 
 const recStore = useRecruitmentStore();
 
-const interviewType = ref('组面');
+const interviewType = ref('common.steps.GroupInterview');
 const currentGroup = ref(Group.Web);
 const selectedKeys = ref([]);
 const showNotify = ref(false);
@@ -137,11 +140,11 @@ getApplicationData().then((res) => {
 
 const tabItems = [
   {
-    key: '组面',
+    key: 'common.steps.GroupInterview',
     title: 'common.steps.GroupInterview',
   },
   {
-    key: '群面',
+    key: 'common.steps.TeamInterview',
     title: 'common.steps.TeamInterview',
   },
 ];
@@ -177,11 +180,7 @@ watch(searchValue, (val) => {
 watch(selectedKeys, (newSelectedKeys) => {
   return newSelectedKeys.map((key) => {
     // console.log('%c [ key ]-178', 'font-size:13px; background:#d6a129; color:#ffe56d;', key);
-    const key1 = `${
-      interviewType.value === '组面'
-        ? 'common.steps.GroupInterview'
-        : 'common.steps.TeamInterview'
-    }_${currentGroup.value}`;
+    const key1 = `${interviewType.value}_${currentGroup.value}`;
     const nowData = data.value[key1].find((item) => item.name === key);
     if (!nowData) return {};
     return {
@@ -208,11 +207,7 @@ const allocateSelect = () => {
   selectData.value = selectedKeys.value
     .map((key) => {
       // console.log('%c [ key ]-178', 'font-size:13px; background:#d6a129; color:#ffe56d;', key);
-      const key1 = `${
-        interviewType.value === '组面'
-          ? 'common.steps.GroupInterview'
-          : 'common.steps.TeamInterview'
-      }_${currentGroup.value}`;
+      const key1 = `${interviewType.value}_${currentGroup.value}`;
       const nowData = data.value[key1].find((item) => item.name === key);
       if (!nowData) return null;
       return {

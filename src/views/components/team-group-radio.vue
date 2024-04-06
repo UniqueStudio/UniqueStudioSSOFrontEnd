@@ -1,5 +1,15 @@
 <template>
-  <a-radio-group v-model="currentGroup" class="bg-white">
+  <a-select
+    v-model="currentGroup"
+    class="w-150 text-right sm:hidden flex"
+    :bordered="false"
+  >
+    <a-option v-for="item in groups" :key="item" :value="item">{{
+      item
+    }}</a-option>
+  </a-select>
+
+  <a-radio-group v-model="currentGroup" class="bg-white hidden sm:flex">
     <template v-for="(item, index) in groups" :key="item">
       <a-radio :value="item">
         <template #radio="{ checked }">
@@ -24,6 +34,12 @@ import { Group } from '@/constants/team';
 const groups = computed(() =>
   Object.values(Group).filter((x) => x !== Group.Unique),
 );
+console.log(
+  '%c [ groups ]-33',
+  'font-size:13px; background:#2d4095; color:#7184d9;',
+  groups.value,
+);
+
 const currentGroup = defineModel<Group>({
   required: true,
 });
