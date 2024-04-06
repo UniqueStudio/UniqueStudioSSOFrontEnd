@@ -102,24 +102,6 @@
       }}</span></a-button
     >
   </div>
-  <a-modal
-    v-model:visible="visible"
-    :closable="false"
-    :modal-style="{
-      maxHeight: '427px',
-      maxWidth: '464px',
-      borderRadius: '4px',
-    }"
-  >
-    <div class="text-[--color-text-1] text-xl font-bold">{{
-      $t('common.operation.arrangeSchedule')
-    }}</div>
-    <a-divider />
-    <span>操作人：周子涵</span>
-    <div class="text-[--color-text-1] text-lg font-bold">{{
-      $t('common.operation.arrangeSchedule')
-    }}</div>
-  </a-modal>
 </template>
 
 <script setup lang="ts">
