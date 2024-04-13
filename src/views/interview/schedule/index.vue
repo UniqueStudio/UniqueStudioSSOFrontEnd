@@ -21,6 +21,9 @@ import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import calender from './components/calendar.vue';
 import schedules from './components/schedules.vue';
+// import useRecruitmentStore from '@/store/modules/recruitment';
+
+// const recStore = useRecruitmentStore();
 
 // 格式化日期
 const formatToday = (date: Date) => {
