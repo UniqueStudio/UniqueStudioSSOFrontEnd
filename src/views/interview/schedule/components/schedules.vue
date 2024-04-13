@@ -1,9 +1,29 @@
 <template>
   <div class="flex-1 bg-white rounded p-5 max-h-216">
     <a-scrollbar type="embed" class="overflow-y-auto max-h-193 mb-5">
-      <div class="w-full font-normal mb-5 text-lg">{{
-        $t('common.applyInfo.Schedules')
-      }}</div>
+      <div class="w-full font-normal mb-5 text-xl flex justify-between">
+        <span>{{ $t('common.applyInfo.Schedules') }}</span>
+        <!-- <a-select v-model="uploadData.group" 
+          class="text-[--color-text-2] text-2xl w-28 bg-transparent" 
+        >
+          <a-option v-for="item in groups" :key="item"> {{ item }} </a-option>
+        </a-select> -->
+        <a-dropdown>
+          <div class="cursor-pointer text-[--color-text-2] text-base">
+            <span class="mr-1"> {{ currentGroup }} </span>
+            <icon-down />
+          </div>
+          <template #content>
+            <a-doption
+              v-for="item in groups"
+              :key="item"
+              @click="handleGroupClick(item)"
+            >
+              {{ item }}
+            </a-doption>
+          </template>
+        </a-dropdown>
+      </div>
       <div class="flex flex-col">
         <li
           v-for="schedule in props.filteredItems"
@@ -61,6 +81,8 @@
 
 <script setup lang="ts">
 import router from '@/router';
+import { Group } from '@/constants/team';
+import { ref, computed } from 'vue';
 
 interface Schedule {
   name: string;
@@ -75,7 +97,16 @@ const props = defineProps<{
   filteredItems: Schedule[];
 }>();
 
+const currentGroup = ref(Group.Web);
+const groups = computed(() =>
+  Object.values(Group).filter((x) => x !== Group.Unique),
+);
+
 const goManagement = () => {
   router.push({ name: 'interviewMangement' });
+};
+
+const handleGroupClick = (item: any) => {
+  currentGroup.value = item;
 };
 </script>

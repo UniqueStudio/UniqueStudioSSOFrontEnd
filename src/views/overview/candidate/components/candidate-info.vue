@@ -11,7 +11,8 @@
         @change="handleChangeAll"
         >{{ $t('common.operation.selectAll') }}
       </a-checkbox>
-      <div v-if="selectedApplications.length" class="flex items-center">
+      <!-- 渲染选中人数，清空选择 -->
+      <div v-if="selectedApplications.length" class="flex pr-2 items-center">
         <a-descriptions
           :label-style="{ padding: '0 10px' }"
           :value-style="{ padding: '0' }"
