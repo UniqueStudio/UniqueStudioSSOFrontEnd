@@ -9,8 +9,16 @@
 import { ref, computed } from 'vue';
 import calender from './components/calendar.vue';
 import schedules from './components/schedules.vue';
+// import useRecruitmentStore from '@/store/modules/recruitment';
+
+// const recStore = useRecruitmentStore();
 
 const selectedDate = ref<string>('2024-01-01');
+// const curSchedule = computed(() =>
+//   recStore.curApplications?.schedules.find(
+//     (schedule) => schedule.date === selectedDate.value,
+//   ),
+// );
 const schedulesEg = [
   {
     date: new Date('2024-01-01'),
