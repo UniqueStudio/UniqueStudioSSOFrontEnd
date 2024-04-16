@@ -158,7 +158,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { recruitSteps, GenderMap } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
 import comment from './comment.vue';

@@ -34,7 +34,8 @@
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
     v-model="selectedApplications"
-    class="grid grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5"
+    class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5 grow"
+    style="scrollbar-width: thin"
     @change="handleChange"
   >
     <candidate-info-card
@@ -44,7 +45,7 @@
       :checked="selectedApplications.includes(candidate.uid)"
     ></candidate-info-card>
   </a-checkbox-group>
-  <div class="flex justify-between flex-row-reverse">
+  <div class="flex justify-between flex-row-reverse justify-self-end">
     <edit-buttons
       :candidates="candidates"
       :cur-step="curStep"
