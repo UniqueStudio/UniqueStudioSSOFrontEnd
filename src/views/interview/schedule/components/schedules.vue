@@ -116,7 +116,6 @@ interface CandidateInfo {
   group: string;
   interviewPeriod: string;
 }
-
 const props = defineProps<{
   infos: CandidateInfo[];
 }>();
@@ -129,10 +128,6 @@ const currentGroup = defineModel<Group>({
 
 const groups = computed(() =>
   Object.values(Group).filter((x) => x !== Group.Unique),
-);
-
-const goManagement = () => {
-  router.push({ name: 'interviewMangement' });
 };
 
 const handleGroupClick = (item: any) => {
