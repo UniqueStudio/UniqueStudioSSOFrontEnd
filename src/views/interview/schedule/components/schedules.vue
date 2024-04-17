@@ -26,42 +26,42 @@
       </div>
       <div class="flex flex-col">
         <li
-          v-for="schedule in props.filteredItems"
-          :key="schedule.name"
+          v-for="info in props.infos"
+          :key="info.name"
           class="list-none mb-2.5"
         >
-          <div class="overflow-hidden">
+          <div class="overflow-hidden flex items-center mb-1">
             <icon-calendar
               class="w-9 h-9 text-xl rounded-full border-2 p-2 bg-gray-100 text-blue-600 float-left mr-2.5"
             />
-            <span class="float-left leading-10">{{ schedule.name }}</span>
+            <span class="float-left">{{ info.name }}</span>
           </div>
-          <div class="overflow-hidden">
+          <div class="overflow-hidden flex items-center">
             <icon-clock-circle
               class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
             <span class="float-left leading-10 text-slate-500">{{
-              schedule.time
+              info.groupInterviewStart
             }}</span>
           </div>
-          <div class="overflow-hidden">
+          <div class="overflow-hidden flex items-center">
             <icon-location
               class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
             <span class="float-left leading-10 text-slate-500">{{
-              schedule.location
+              'Room 101'
             }}</span>
           </div>
-          <div class="overflow-hidden">
+          <div class="overflow-hidden flex items-center">
             <icon-user
               class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
             <span class="float-left leading-10 text-slate-500">{{
-              schedule.player
+              'Room 101'
             }}</span>
           </div>
           <span class="float-left pl-2 leading-10 text-slate-400 text-sm">{{
-            schedule.description
+            'Room 101'
           }}</span>
         </li>
       </div>
@@ -84,20 +84,21 @@ import router from '@/router';
 import { Group } from '@/constants/team';
 import { ref, computed } from 'vue';
 
-interface Schedule {
+interface CandidateInfo {
   name: string;
-  time: string;
-  date: Date;
-  location: string;
-  player: string;
-  description: string;
+  step: string;
+  groupInterviewEnd: string;
+  groupInterviewStart: string;
+  teamInterviewEnd: string;
+  teamInterviewStart: string;
 }
-
 const props = defineProps<{
-  filteredItems: Schedule[];
+  infos: CandidateInfo[];
 }>();
 
 const currentGroup = ref(Group.Web);
+defineExpose({ currentGroup }); // expose currentGroup to parent component
+
 const groups = computed(() =>
   Object.values(Group).filter((x) => x !== Group.Unique),
 );
