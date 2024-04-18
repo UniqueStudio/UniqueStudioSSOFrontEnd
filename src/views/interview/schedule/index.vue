@@ -1,16 +1,49 @@
 <template>
   <div class="flex place-content-between gap-5">
     <calender @date-click="handleDateClick"></calender>
-    <schedules ref="curGroup" :infos="candidates"> </schedules>
+    <schedules v-model:currentGroup="currentGroup" :infos="candidates">
+    </schedules>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { recruitSteps } from '@/constants/team';
+import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import calender from './components/calendar.vue';
 import schedules from './components/schedules.vue';
+
+// 格式化日期
+const formatToday = (date: Date) => {
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// ISO 8601日期
+function parseDate(dateString: string): Date {
+  return new Date(dateString);
+}
+
+function formateDate(dateString: string) {
+  return formatToday(parseDate(dateString));
+}
+function formatTime(date: Date): string {
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
+
+function calculateDuration(start: Date, end: Date): string {
+  const diffInMs = end.getTime() - start.getTime();
+  const diffInMinutes = Math.round(diffInMs / 1000 / 60);
+  const hours = Math.floor(diffInMinutes / 60);
+  const minutes = diffInMinutes % 60;
+  return hours === 0 ? `${minutes}min` : `${hours}h ${minutes}min`;
+}
 
 const props = defineProps({
   curStep: {
@@ -20,104 +53,77 @@ const props = defineProps({
   },
 });
 
-const recStore = useRecruitmentStore();
-
+const currentGroup = ref(Group.Web);
 const selectedDate = ref<string>('2024-01-01');
-// 格式化日期
-const formatDate = (date: Date) => {
-  const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+const recStore = useRecruitmentStore();
 
 // 监听calendar组件的dateClick事件，更新选中日期
 const handleDateClick = (date: Date) => {
-  selectedDate.value = formatDate(date);
+  selectedDate.value = formatToday(date);
 };
 
-// 根据选中日期过滤对象数组
-// const filteredItems = computed(() => {
-//   if (!selectedDate.value) return [];
-//   const selectedDateValue = new Date(selectedDate.value);
-//   return schedulesEg.filter((schedule) => {
-//     const itemDate = new Date(schedule.date);
-//     return itemDate.getTime() === selectedDateValue.getTime();
-//   });
-// });
-const curGroup = ref(null);
+// 筛选当天，该组，组面或群面选手
 const filteredApps = computed(() =>
   recStore.curApplications.filter(
-    ({ step, group }) =>
-      (recruitSteps[3].value.includes(step) ||
-        recruitSteps[6].value.includes(step)) &&
-      group === curGroup.value.currentGroup,
+    ({
+      step,
+      group,
+      interview_allocations_group,
+      interview_allocations_team,
+    }) => {
+      const groupStartDate = interview_allocations_group?.start ?? '';
+      const teamStartDate = interview_allocations_team?.start ?? '';
+      const isStep =
+        recruitSteps[3].value.includes(step) ||
+        recruitSteps[6].value.includes(step);
+      const isTime =
+        step === 'GroupInterview'
+          ? selectedDate.value === formateDate(groupStartDate)
+          : selectedDate.value === formateDate(teamStartDate);
+      const isGroup = group === currentGroup.value;
+      return isStep && isGroup && isTime;
+    },
   ),
 );
 
 const candidates = computed(() => {
-  return filteredApps.value.map((app) => {
+  return filteredApps.value.flatMap((app) => {
+    const groupEndDate = parseDate(app.interview_allocations_group?.end ?? '');
+    const groupStartDate = parseDate(
+      app.interview_allocations_group?.start ?? '',
+    );
+    const groupInterviewPeriod = `${formatTime(groupStartDate)}-${formatTime(
+      groupEndDate,
+    )} 
+                                  (${calculateDuration(
+                                    groupStartDate,
+                                    groupEndDate,
+                                  )})`;
+
+    const teamEndDate = parseDate(app.interview_allocations_team?.end ?? '');
+    const teamStartDate = parseDate(
+      app.interview_allocations_team?.start ?? '',
+    );
+    const teamInterviewPeriod = `${formatTime(teamStartDate)}-${formatTime(
+      teamEndDate,
+    )} 
+                                (${calculateDuration(
+                                  teamStartDate,
+                                  teamEndDate,
+                                )})`;
+    const interviewPeriod =
+      app.step === 'GroupInterview'
+        ? groupInterviewPeriod
+        : teamInterviewPeriod;
+
     return {
       name: app.user_detail?.name ?? '',
       step: app.step ?? recruitSteps[props.curStep].value[0],
-      teamInterviewStart: app?.interview_allocations_group?.start ?? '',
-      teamInterviewEnd: app?.interview_allocations_group?.end ?? '',
-      groupInterviewStart: app?.interview_allocations_team?.start ?? '',
-      groupInterviewEnd: app?.interview_allocations_team?.end ?? '',
+      group: app.group ?? '',
+      interviewPeriod,
     };
   });
 });
-
-// const schedulesEg = [
-//   {
-//     date: new Date('2024-01-01'),
-//     name: 'PM组面',
-//     time: '13.00-14.00（1h）',
-//     location: '809',
-//     player: '苦瓜',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: new Date('2024-01-01'),
-//     name: 'Design组面',
-//     time: '19:00-21:00（2h）',
-//     location: '810',
-//     player: '周子涵',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: new Date('2024-01-01'),
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '柴犬',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: new Date('2024-01-02'),
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: 'kid',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: new Date('2024-01-02'),
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '一架飞机',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: new Date('2024-01-03'),
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '菜菜子',
-//     description: '没别的时间了',
-//   },
-// ]; // 测试
 </script>
 
 <style scoped lang="less"></style>
