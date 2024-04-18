@@ -22,6 +22,38 @@ import useRecruitmentStore from '@/store/modules/recruitment';
 import calender from './components/calendar.vue';
 import schedules from './components/schedules.vue';
 
+// 格式化日期
+const formatToday = (date: Date) => {
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// ISO 8601日期
+function parseDate(dateString: string): Date {
+  return new Date(dateString);
+}
+
+function formateDate(dateString: string) {
+  return formatToday(parseDate(dateString));
+}
+function formatTime(date: Date): string {
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
+
+function calculateDuration(start: Date, end: Date): string {
+  const diffInMs = end.getTime() - start.getTime();
+  const diffInMinutes = Math.round(diffInMs / 1000 / 60);
+  const hours = Math.floor(diffInMinutes / 60);
+  const minutes = diffInMinutes % 60;
+  return hours === 0 ? `${minutes}min` : `${hours}h ${minutes}min`;
+}
+
 const props = defineProps({
   curStep: {
     type: Number,
@@ -159,57 +191,6 @@ const candidates = computed(() => {
     };
   });
 });
-
-// const schedulesEg = [
-//   {
-//     date: new Date('2024-01-01'),
-//     name: 'PM组面',
-//     time: '13.00-14.00（1h）',
-//     location: '809',
-//     player: '苦瓜',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: new Date('2024-01-01'),
-//     name: 'Design组面',
-//     time: '19:00-21:00（2h）',
-//     location: '810',
-//     player: '周子涵',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: new Date('2024-01-01'),
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '柴犬',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: new Date('2024-01-02'),
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: 'kid',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: new Date('2024-01-02'),
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '一架飞机',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: new Date('2024-01-03'),
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '菜菜子',
-//     description: '没别的时间了',
-//   },
-// ]; // 测试
 </script>
 
 <style scoped lang="less"></style>

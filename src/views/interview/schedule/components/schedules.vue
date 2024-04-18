@@ -116,12 +116,12 @@ interface CandidateInfo {
   group: string;
   interviewPeriod: string;
 }
+
 const props = defineProps<{
   infos: CandidateInfo[];
 }>();
 
 const { t } = useI18n();
-
 const currentGroup = defineModel<Group>({
   required: true,
 });
