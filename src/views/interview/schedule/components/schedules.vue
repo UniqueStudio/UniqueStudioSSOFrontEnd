@@ -122,6 +122,7 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
+
 const currentGroup = defineModel<Group>({
   required: true,
 });
