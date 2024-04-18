@@ -3,11 +3,6 @@
     <a-scrollbar type="embed" class="overflow-y-auto max-h-193 mb-5">
       <div class="w-full font-normal mb-5 text-xl flex justify-between">
         <span>{{ $t('common.applyInfo.Schedules') }}</span>
-        <!-- <a-select v-model="uploadData.group" 
-          class="text-[--color-text-2] text-2xl w-28 bg-transparent" 
-        >
-          <a-option v-for="item in groups" :key="item"> {{ item }} </a-option>
-        </a-select> -->
         <a-dropdown>
           <div class="cursor-pointer text-[--color-text-2] text-base">
             <span class="mr-1"> {{ currentGroup }} </span>
@@ -34,30 +29,25 @@
             <icon-calendar
               class="w-9 h-9 text-xl rounded-full border-2 p-2 bg-gray-100 text-blue-600 float-left mr-2.5"
             />
-            <span class="float-left">{{ info.name }}</span>
+            <span class="float-left"
+              >{{ info.group }}{{ interviewType(info) }}</span
+            >
           </div>
           <div class="overflow-hidden flex items-center">
             <icon-clock-circle
               class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
             <span class="float-left leading-10 text-slate-500">{{
-              info.groupInterviewStart
+              info.interviewPeriod
             }}</span>
           </div>
-          <div class="overflow-hidden flex items-center">
-            <icon-location
-              class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
-            />
-            <span class="float-left leading-10 text-slate-500">{{
-              'Room 101'
-            }}</span>
-          </div>
+
           <div class="overflow-hidden flex items-center">
             <icon-user
               class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
             <span class="float-left leading-10 text-slate-500">{{
-              'Room 101'
+              info.name
             }}</span>
           </div>
           <span class="float-left pl-2 leading-10 text-slate-400 text-sm">{{
@@ -82,22 +72,24 @@
 <script setup lang="ts">
 import router from '@/router';
 import { Group } from '@/constants/team';
-import { ref, computed } from 'vue';
+import { defineModel, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 interface CandidateInfo {
   name: string;
   step: string;
-  groupInterviewEnd: string;
-  groupInterviewStart: string;
-  teamInterviewEnd: string;
-  teamInterviewStart: string;
+  group: string;
+  interviewPeriod: string;
 }
+
 const props = defineProps<{
   infos: CandidateInfo[];
 }>();
 
-const currentGroup = ref(Group.Web);
-defineExpose({ currentGroup }); // expose currentGroup to parent component
+const { t } = useI18n();
+const currentGroup = defineModel<Group>({
+  required: true,
+});
 
 const groups = computed(() =>
   Object.values(Group).filter((x) => x !== Group.Unique),
@@ -109,5 +101,11 @@ const goManagement = () => {
 
 const handleGroupClick = (item: any) => {
   currentGroup.value = item;
+};
+
+const interviewType = (info: CandidateInfo) => {
+  const groupInterview = 'common.steps.GroupInterview';
+  const teamInterview = 'common.steps.TeamInterview';
+  return t(info.step === 'GroupInterview' ? groupInterview : teamInterview);
 };
 </script>
