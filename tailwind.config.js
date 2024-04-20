@@ -38,35 +38,9 @@ export default {
       },
       padding: {
         '0.3vw': '0.3vw',
-        width: {
-          193: '48.25rem',
-          66: '16.5rem',
-        },
-        height: {
-          183: '45.75rem',
-          193: '48.25rem',
-        },
-        flex: {
-          4: '4 1 0%',
-        },
       },
-      minWidth: {
-        400: '400px',
-        500: '500px',
-      },
-      maxHeight: {
-        193: '48.25rem',
-        200: '50rem',
-        216: '54rem',
-        158: '39.5rem',
-        193: '48.25rem',
-        185.5: '46.375rem',
-        179: '44.75rem',
-      },
-      minHeight: {
-        158: '39.5rem',
-        193: '48.25rem',
-        185.5: '46.375rem',
+      flex: {
+        4: '4 1 0%',
       },
 <<<<<<< HEAD
       maxHeight: {
@@ -85,11 +59,18 @@ export default {
 =======
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f9b694f (calendar component default slot)
     minWidth: {
       400: '400px',
       500: '500px',
     },
     maxHeight: {
+<<<<<<< HEAD
+=======
+      158: '39.5rem',
+>>>>>>> f9b694f (calendar component default slot)
       193: '48.25rem',
       200: '50rem',
       216: '54rem',
@@ -102,6 +83,7 @@ export default {
       158: '39.5rem',
       193: '48.25rem',
       185.5: '46.375rem',
+<<<<<<< HEAD
 >>>>>>> 934de90 (responsive update 2.0)
     },
   },
@@ -110,5 +92,10 @@ export default {
 =======
     plugins: [],
   }
+=======
+    },
+  },
+  plugins: [],
+>>>>>>> f9b694f (calendar component default slot)
 };
 >>>>>>> 15303ad (schedule and calender 1.0)
