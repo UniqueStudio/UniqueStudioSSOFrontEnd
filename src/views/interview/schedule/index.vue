@@ -1,7 +1,7 @@
 <template>
   <div class="flex place-content-between gap-5">
-    <calender @date-click="handleDateClick"></calender>
-    <schedules v-model="currentGroup" :infos="candidates"> </schedules>
+    <calender :infos="overview" @date-click="handleDateClick"></calender>
+    <schedules v-model="currentGroup" :infos="candidates"></schedules>
   </div>
 </template>
 
@@ -61,6 +61,24 @@ const handleDateClick = (date: Date) => {
   selectedDate.value = formatToday(date);
 };
 
+// 本次招新面试日程overview
+const appInInterview = computed(() =>
+  recStore.curApplications.filter(({ step }) => {
+    const isStep =
+      recruitSteps[3].value.includes(step) ||
+      recruitSteps[6].value.includes(step);
+    return isStep;
+  }),
+);
+const overview = computed(() => {
+  return appInInterview.value.flatMap((app) => {
+    return {
+      step: app.step,
+      group: app.group ?? '',
+    };
+  });
+});
+
 // 筛选当天，该组，组面或群面选手
 const filteredApps = computed(() =>
   recStore.curApplications.filter(
@@ -98,7 +116,6 @@ const candidates = computed(() => {
                                     groupStartDate,
                                     groupEndDate,
                                   )})`;
-
     const teamEndDate = parseDate(app.interview_allocations_team?.end ?? '');
     const teamStartDate = parseDate(
       app.interview_allocations_team?.start ?? '',
