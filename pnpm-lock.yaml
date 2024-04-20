@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@arco-design/web-vue':
-    specifier: ^2.48.0
-    version: 2.48.0(vue@3.4.21)
+    specifier: ^2.55.1
+    version: 2.55.1(vue@3.4.21)
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -137,21 +137,21 @@ packages:
     dev: true
 
   /@arco-design/color@0.4.0:
-    resolution: {integrity: sha512-s7p9MSwJgHeL8DwcATaXvWT3m2SigKpxx4JA1BGPHL4gfvaQsmQfrLBDpjOJFJuJ2jG2dMt3R3P8Pm9E65q18g==}
+    resolution: {integrity: sha512-s7p9MSwJgHeL8DwcATaXvWT3m2SigKpxx4JA1BGPHL4gfvaQsmQfrLBDpjOJFJuJ2jG2dMt3R3P8Pm9E65q18g==, tarball: https://registry.npmmirror.com/@arco-design/color/-/color-0.4.0.tgz}
     dependencies:
       color: 3.2.1
     dev: false
 
-  /@arco-design/web-vue@2.48.0(vue@3.4.21):
-    resolution: {integrity: sha512-v9i2ID491RG4/q9Gm7Nq4Xa9LTiVU+VBqrHuZc/IaKLimFzot+RJ7ktGETI6IiKMTcdortpjlYoMX/2j0vqIww==}
+  /@arco-design/web-vue@2.55.1(vue@3.4.21):
+    resolution: {integrity: sha512-MI0mteI4B1+UAKAslCrV2zqRKHWwkjLjdOpOLAR36cAbYhtlj7Tel3yAjGHk5zsQ1ODZX60OFfRfl66pq6919A==, tarball: https://registry.npmmirror.com/@arco-design/web-vue/-/web-vue-2.55.1.tgz}
     peerDependencies:
       vue: ^3.1.0
     dependencies:
       '@arco-design/color': 0.4.0
       b-tween: 0.3.3
-      b-validate: 1.5.2
+      b-validate: 1.5.3
       compute-scroll-into-view: 1.0.20
-      dayjs: 1.11.9
+      dayjs: 1.11.10
       number-precision: 1.6.0
       resize-observer-polyfill: 1.5.1
       scroll-into-view-if-needed: 2.2.31
@@ -1471,11 +1471,11 @@ packages:
     dev: false
 
   /b-tween@0.3.3:
-    resolution: {integrity: sha512-oEHegcRpA7fAuc9KC4nktucuZn2aS8htymCPcP3qkEGPqiBH+GfqtqoG2l7LxHngg6O0HFM7hOeOYExl1Oz4ZA==}
+    resolution: {integrity: sha512-oEHegcRpA7fAuc9KC4nktucuZn2aS8htymCPcP3qkEGPqiBH+GfqtqoG2l7LxHngg6O0HFM7hOeOYExl1Oz4ZA==, tarball: https://registry.npmmirror.com/b-tween/-/b-tween-0.3.3.tgz}
     dev: false
 
-  /b-validate@1.5.2:
-    resolution: {integrity: sha512-zhIdocs1x9fJYBMc5Qe2kS3iJv8oRA55S3vV9ucdX+//ySV17PVuGGtwl6lwbbNvdjUt3Pt6ujL0GaVsXJy2ZA==}
+  /b-validate@1.5.3:
+    resolution: {integrity: sha512-iCvCkGFskbaYtfQ0a3GmcQCHl/Sv1GufXFGuUQ+FE+WJa7A/espLOuFIn09B944V8/ImPj71T4+rTASxO2PAuA==, tarball: https://registry.npmmirror.com/b-validate/-/b-validate-1.5.3.tgz}
     dev: false
 
   /balanced-match@1.0.2:
@@ -1600,7 +1600,7 @@ packages:
       normalize-path: 3.0.0
       readdirp: 3.6.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /cli-cursor@4.0.0:
@@ -1637,14 +1637,14 @@ packages:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
   /color-string@1.9.1:
-    resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
+    resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==, tarball: https://registry.npmmirror.com/color-string/-/color-string-1.9.1.tgz}
     dependencies:
       color-name: 1.1.4
       simple-swizzle: 0.2.2
     dev: false
 
   /color@3.2.1:
-    resolution: {integrity: sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==}
+    resolution: {integrity: sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==, tarball: https://registry.npmmirror.com/color/-/color-3.2.1.tgz}
     dependencies:
       color-convert: 1.9.3
       color-string: 1.9.1
@@ -1677,7 +1677,7 @@ packages:
     dev: true
 
   /compute-scroll-into-view@1.0.20:
-    resolution: {integrity: sha512-UCB0ioiyj8CRjtrvaceBLqqhZCVP+1B8+NWQhmdsm0VXOJtobBCf1dBQmebCCo34qZmUwZfIH2MZLqNHazrfjg==}
+    resolution: {integrity: sha512-UCB0ioiyj8CRjtrvaceBLqqhZCVP+1B8+NWQhmdsm0VXOJtobBCf1dBQmebCCo34qZmUwZfIH2MZLqNHazrfjg==, tarball: https://registry.npmmirror.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.20.tgz}
     dev: false
 
   /concat-map@0.0.1:
@@ -1754,8 +1754,8 @@ packages:
   /csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==, tarball: https://registry.npmmirror.com/csstype/-/csstype-3.1.3.tgz}
 
-  /dayjs@1.11.9:
-    resolution: {integrity: sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==}
+  /dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==, tarball: https://registry.npmmirror.com/dayjs/-/dayjs-1.11.10.tgz}
     dev: false
 
   /de-indent@1.0.2:
@@ -2447,8 +2447,8 @@ packages:
     resolution: {integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=}
     dev: true
 
-  /fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==, tarball: https://registry.npmmirror.com/fsevents/-/fsevents-2.3.2.tgz}
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==, tarball: https://registry.npmmirror.com/fsevents/-/fsevents-2.3.3.tgz}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
@@ -2706,7 +2706,7 @@ packages:
     dev: true
 
   /is-arrayish@0.3.2:
-    resolution: {integrity: sha512-eVRqCvVlZbuw3GrM63ovNSNAeA1K16kaR/LRY/92w0zxQ5/1YzwblUX652i4Xs9RwAGjW9d9y6X88t8OaAJfWQ==}
+    resolution: {integrity: sha512-eVRqCvVlZbuw3GrM63ovNSNAeA1K16kaR/LRY/92w0zxQ5/1YzwblUX652i4Xs9RwAGjW9d9y6X88t8OaAJfWQ==, tarball: https://registry.npmmirror.com/is-arrayish/-/is-arrayish-0.3.2.tgz}
     dev: false
 
   /is-bigint@1.0.4:
@@ -2950,10 +2950,8 @@ packages:
       image-size: 0.5.5
       make-dir: 2.1.0
       mime: 1.6.0
-      needle: 3.2.0
+      needle: 3.3.1
       source-map: 0.6.1
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /levn@0.4.1:
@@ -3182,17 +3180,14 @@ packages:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
     dev: true
 
-  /needle@3.2.0:
-    resolution: {integrity: sha512-oUvzXnyLiVyVGoianLijF9O/RecZUf7TkBfimjGrLM4eQhXyeJwM6GeAWccwfQ9aa4gMCZKqhAOuLaMIcQxajQ==, tarball: https://registry.npmmirror.com/needle/-/needle-3.2.0.tgz}
+  /needle@3.3.1:
+    resolution: {integrity: sha512-6k0YULvhpw+RoLNiQCRKOl09Rv1dPLr8hHnVjHqdolKwDrdNyk+Hmrthi4lIGPPz3r39dLx0hsF5s40sZ3Us4Q==, tarball: https://registry.npmmirror.com/needle/-/needle-3.3.1.tgz}
     engines: {node: '>= 4.4.x'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      debug: 3.2.7
       iconv-lite: 0.6.3
       sax: 1.2.4
-    transitivePeerDependencies:
-      - supports-color
     dev: true
     optional: true
 
@@ -3231,7 +3226,7 @@ packages:
     dev: true
 
   /number-precision@1.6.0:
-    resolution: {integrity: sha512-05OLPgbgmnixJw+VvEh18yNPUo3iyp4BEWJcrLu4X9W05KmMifN7Mu5exYvQXqxxeNWhvIF+j3Rij+HmddM/hQ==}
+    resolution: {integrity: sha512-05OLPgbgmnixJw+VvEh18yNPUo3iyp4BEWJcrLu4X9W05KmMifN7Mu5exYvQXqxxeNWhvIF+j3Rij+HmddM/hQ==, tarball: https://registry.npmmirror.com/number-precision/-/number-precision-1.6.0.tgz}
     dev: false
 
   /object-assign@4.1.1:
@@ -3589,7 +3584,7 @@ packages:
     dev: true
 
   /resize-observer-polyfill@1.5.1:
-    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
+    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==, tarball: https://registry.npmmirror.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz}
     dev: false
 
   /resolve-from@4.0.0:
@@ -3648,7 +3643,7 @@ packages:
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /run-applescript@5.0.0:
@@ -3695,7 +3690,7 @@ packages:
     optional: true
 
   /scroll-into-view-if-needed@2.2.31:
-    resolution: {integrity: sha512-dGCXy99wZQivjmjIqihaBQNjryrz5rueJY7eHfTdyWEiR4ttYpsajb14rn9s5d4DY4EcY6+4+U/maARBXJedkA==}
+    resolution: {integrity: sha512-dGCXy99wZQivjmjIqihaBQNjryrz5rueJY7eHfTdyWEiR4ttYpsajb14rn9s5d4DY4EcY6+4+U/maARBXJedkA==, tarball: https://registry.npmmirror.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.31.tgz}
     dependencies:
       compute-scroll-into-view: 1.0.20
     dev: false
@@ -3753,7 +3748,7 @@ packages:
     dev: true
 
   /simple-swizzle@0.2.2:
-    resolution: {integrity: sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=}
+    resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==, tarball: https://registry.npmmirror.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz}
     dependencies:
       is-arrayish: 0.3.2
     dev: false
@@ -4148,7 +4143,7 @@ packages:
       postcss: 8.4.26
       rollup: 3.26.2
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /vue-demi@0.14.5(vue@3.4.21):
