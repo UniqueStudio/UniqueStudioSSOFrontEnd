@@ -35,7 +35,7 @@ function parseDate(dateString: string): Date {
   return new Date(dateString);
 }
 
-function formateDate(dateString: string) {
+function formatDate(dateString: string) {
   return formatToday(parseDate(dateString));
 }
 function formatTime(date: Date): string {
