@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, provide } from 'vue';
 import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import calender from './components/calendar.vue';
@@ -25,7 +25,7 @@ function parseDate(dateString: string): Date {
   return new Date(dateString);
 }
 
-function formateDate(dateString: string) {
+function formatDate(dateString: string) {
   return formatToday(parseDate(dateString));
 }
 function formatTime(date: Date): string {
@@ -52,6 +52,9 @@ const props = defineProps({
   },
 });
 
+provide('formatToday', formatToday);
+provide('parseDate', parseDate);
+
 const currentGroup = ref(Group.Web);
 const selectedDate = ref<string>('2024-01-01');
 const recStore = useRecruitmentStore();
@@ -72,9 +75,14 @@ const appInInterview = computed(() =>
 );
 const overview = computed(() => {
   return appInInterview.value.flatMap((app) => {
+    const interviewDate =
+      app.step === 'GroupInterview'
+        ? parseDate(app.interview_allocations_group?.start ?? '')
+        : parseDate(app.interview_allocations_team?.start ?? '');
     return {
       step: app.step,
       group: app.group ?? '',
+      date: interviewDate,
     };
   });
 });
@@ -95,8 +103,8 @@ const filteredApps = computed(() =>
         recruitSteps[6].value.includes(step);
       const isTime =
         step === 'GroupInterview'
-          ? selectedDate.value === formateDate(groupStartDate)
-          : selectedDate.value === formateDate(teamStartDate);
+          ? selectedDate.value === formatDate(groupStartDate)
+          : selectedDate.value === formatDate(teamStartDate);
       const isGroup = group === currentGroup.value;
       return isStep && isGroup && isTime;
     },
