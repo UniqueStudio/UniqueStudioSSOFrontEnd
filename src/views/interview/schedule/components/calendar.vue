@@ -14,12 +14,12 @@
               0,
               2,
             )"
-            :key="formatToday(info.date)"
+            :key="info.date.getTime()"
           >
-            <div v-if="index < 2" class="flex items-center mb-1">
+            <div class="flex items-center mb-1">
               <a-badge
                 class="float-left mr-2 flex items-center justify-center"
-                :color="COLORS[index % COLORS.length]"
+                :color="COLORS[index]"
               ></a-badge>
               <span class="float-left text-sm"
                 >{{ info.group }}{{ interviewType(info) }}</span
@@ -31,27 +31,6 @@
               `剩余${filteredInfos(year, month, date).length - 2}个日程`
             }}</span>
           </div>
-          <!-- <div v-for="(info, index) in filteredInfos(year, month, date).slice(0,2)" :key="info.date">
-            <div
-              v-if="index < 2"
-              class="flex items-center mb-1"
-            >
-              <a-badge
-                class="float-left mr-2 flex items-center justify-center"
-                :color="COLORS[index % COLORS.length]"
-              ></a-badge>
-              <span class="float-left text-sm"
-                >{{ info.name }}</span
-              >
-            </div>
-          </div>
-          <div
-            v-if="hasMoreThanTwoInfos(year, month, date)"
-          >
-            <span class="float-left text-blue-600 text-sm">{{
-              `剩余${filteredInfos(year,month,date).length - 2}个日程`
-            }}</span>
-          </div> -->
         </div>
       </template>
     </a-calendar>
@@ -59,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, inject } from 'vue';
+import { ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 interface InterviewInfo {
@@ -96,10 +75,18 @@ const interviewType = (info: InterviewInfo) => {
   return t(info.step === 'GroupInterview' ? groupInterview : teamInterview);
 };
 
+// 优化 filteredInfos 性能
+const cache = new Map<string, InterviewInfo[]>();
+
 const filteredInfos = (year: number, month: number, date: number) => {
-  return props.infos.filter(
-    (info) => formatToday(info.date) === formatDate(year, month, date),
-  );
+  const key = formatDate(year, month, date);
+  if (!cache.has(key)) {
+    cache.set(
+      key,
+      props.infos.filter((info) => formatToday(info.date) === key),
+    );
+  }
+  return cache.get(key) as InterviewInfo[];
 };
 
 const hasMoreThanTwoInfos = (
@@ -107,102 +94,9 @@ const hasMoreThanTwoInfos = (
   month: number,
   date: number,
 ): boolean => {
-  const limitedInfos = filteredInfos(year, month, date).slice(0, 2);
-  return (
-    props.infos.filter(
-      (info) => formatToday(info.date) === formatDate(year, month, date),
-    ).length > limitedInfos.length
-  );
+  const filteredInfosList = filteredInfos(year, month, date);
+  return filteredInfosList.length > 2;
 };
-// const schedulesEg = [
-//   {
-//     date: '2024-01-01',
-//     name: 'PM组面',
-//     time: '13.00-14.00（1h）',
-//     player: '苦瓜',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: '2024-01-01',
-//     name: 'Design组面',
-//     time: '19:00-21:00（2h）',
-//     location: '810',
-//     player: '周子涵',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: '2024-01-01',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '柴犬',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: '2024-01-02',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: 'kid',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: '2024-01-02',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '一架飞机',
-//     description: '可以调时间',
-//   },
-//   {
-//     date: '2024-01-03',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '菜菜子',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: '2024-01-03',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '菜菜子',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: '2024-01-03',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '菜菜子',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: '2024-01-03',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '菜菜子',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: '2024-01-03',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '菜菜子',
-//     description: '没别的时间了',
-//   },
-//   {
-//     date: '2024-01-03',
-//     name: 'web组面',
-//     time: '13:00-13:30（0.5h）',
-//     location: '811',
-//     player: '菜菜子',
-//     description: '没别的时间了',
-//   },
-// ]; // 测试
 </script>
 
 <style scoped lang="less">
