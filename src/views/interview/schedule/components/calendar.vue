@@ -24,7 +24,7 @@
             <div class="flex items-center">
               <a-badge
                 class="float-left mr-2 flex items-center justify-center"
-                :color="COLORS[index]"
+                :color="COLORS[index % COLORS.length]"
               ></a-badge>
               <span class="float-left text-sm text-[var(--color-neutral-10)]"
                 >{{ info.group }}{{ interviewType(info) }}</span
@@ -36,6 +36,13 @@
               remainingSchedules(year, month, date)
             }}</span>
           </div>
+          <div
+            v-if="hasMoreThanTwoInfos(year, month, date)"
+          >
+            <span class="float-left text-blue-600 text-sm">{{
+              `剩余${filteredInfos(year,month,date).length - 2}个日程`
+            }}</span>
+          </div> -->
         </div>
       </template>
     </a-calendar>
@@ -43,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from 'vue';
+import { computed, ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 interface InterviewInfo {
