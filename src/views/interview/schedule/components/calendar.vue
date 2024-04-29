@@ -24,7 +24,7 @@
             <div class="flex items-center">
               <a-badge
                 class="float-left mr-2 flex items-center justify-center"
-                :color="COLORS[index % COLORS.length]"
+                :color="COLORS[index]"
               ></a-badge>
               <span class="float-left text-sm text-[var(--color-neutral-10)]"
                 >{{ info.group }}{{ interviewType(info) }}</span
@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, inject } from 'vue';
+import { ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 interface InterviewInfo {
@@ -89,9 +89,14 @@ const interviewType = (info: InterviewInfo) => {
 
 // 优化 filteredInfos 性能
 const filteredInfos = (year: number, month: number, date: number) => {
-  return props.infos.filter(
-    (info) => formatToday(info.date) === formatDate(year, month, date),
-  );
+  const key = formatDate(year, month, date);
+  if (!cache.has(key)) {
+    cache.set(
+      key,
+      props.infos.filter((info) => formatToday(info.date) === key),
+    );
+  }
+  return cache.get(key) as InterviewInfo[];
 };
 
 const hasMoreThanTwoInfos = (
