@@ -101,7 +101,7 @@ const hasMoreThanTwoInfos = (
 
 <style scoped lang="less">
 .month-row {
-  :deep(.arco-calendar-month-row) {
+  :deep(.arco-calendar-month .arco-calendar-month-row) {
     height: 115px;
   }
 }
