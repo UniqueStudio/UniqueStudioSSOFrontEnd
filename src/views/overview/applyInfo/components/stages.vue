@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-white w-full p-5 mt-5">
+  <div class="bg-[--color-bg-1] w-full p-5 mt-5">
     <div class="flex justify-between">
       <div class="text-[--color-text-1] text-xl font-bold p-3">{{
         $t('common.applyInfo.candidateStagesOverview')
       }}</div>
-      <a-select v-model="currentGroup" class="w-28 h-10 bg-white">
+      <a-select v-model="currentGroup" class="w-28 h-10 bg-[--color-bg-1]">
         <a-option>PM</a-option>
         <a-option>Design</a-option>
         <a-option>AI</a-option>

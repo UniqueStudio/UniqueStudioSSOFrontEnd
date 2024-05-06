@@ -3,7 +3,7 @@
     <div class="text-[--color-text-1] pb-5">
       {{ $t('common.user.comment') }}
     </div>
-    <div class="flex gap-2">
+    <div class="flex gap-2 flex-wrap">
       <div
         v-for="comment in applyStore.data?.comments?.flat() ?? []"
         :key="comment.uid"
@@ -16,7 +16,8 @@
           }`
         }}</span>
         <span
-          class="transition-opacity opacity-0 group-hover:opacity-100 leading-4 ml-1 w-4 h-4 rounded-full hover:bg-[--color-fill-3] text-center"
+          v-if="comment.member_id === userStore.data?.uid"
+          class="inline-block leading-4 ml-1 w-4 h-4 rounded-full hover:bg-[--color-fill-3] text-center"
           @click="handleDeleteComment(comment.uid)"
         >
           <icon-close />
@@ -29,7 +30,7 @@
           v-for="(item, index) in EvaluationMap"
           :key="item"
           :value="index"
-          >{{ item }}</a-option
+          >{{ item || $t('common.void') }}</a-option
         >
       </a-select>
       <a-input
@@ -54,12 +55,14 @@ import { ref } from 'vue';
 import { Evaluation, EvaluationMap } from '@/constants/team';
 import { deleteComment, createComment } from '@/api';
 import useApplicationStore from '@/store/modules/application';
+import useUserStore from '@/store/modules/user';
 import { Modal, Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
 const applyStore = useApplicationStore();
+const userStore = useUserStore();
 
 const curComment = ref({
   application_id: applyStore.data?.uid ?? '',
@@ -68,13 +71,14 @@ const curComment = ref({
 });
 
 const handleCreateComment = async () => {
-  if (!curComment.value.content) {
+  if (!curComment.value.content && !curComment.value.evaluation) {
     Message.error(t('common.result.commentNotNull'));
     return;
   }
   await createComment(curComment.value);
   await applyStore.getApplication(curComment.value.application_id);
   Message.success(t('common.result.createSuccess'));
+  curComment.value.content = '';
 };
 const handleDeleteComment = async (cid: string) => {
   Modal.confirm({
