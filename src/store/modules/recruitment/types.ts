@@ -1,17 +1,7 @@
 import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
 import { Recruitment } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
-import { ReplaceKeys } from '@/utils/types';
-import { Comment } from '@/constants/httpMsg/comment/createCommentMsg';
 
-export type CommentInfo = [Comment[], Comment[], Comment[]];
-
-export type CandidateInfo = ReplaceKeys<
-  Application,
-  'comments',
-  {
-    comments: CommentInfo;
-  }
->;
+export type CandidateInfo = Application;
 
 export interface RecruitmentState {
   data: Recruitment[];
@@ -20,5 +10,10 @@ export interface RecruitmentState {
 }
 
 export type { Recruitment };
-export type { UpdateRecruitmentRequest as UpdateParams } from '@/constants/httpMsg/recruitment/updateRecruitmentMsg';
+export type {
+  UpdateRecruitmentRequest as UpdateParams,
+  SetStressTestTimeRequest as SetTimeParams,
+} from '@/constants/httpMsg/recruitment/updateRecruitmentMsg';
 export type { CreateRecruitmentRequest as CreateParams } from '@/constants/httpMsg/recruitment/createRecruitmentMsg';
+
+export { Group } from '@/constants/team';

@@ -12,7 +12,10 @@ export default {
   'common.operation.submitComment': '发表评论',
   'common.operation.switchStage': '转移阶段',
   'common.operation.terminate': '终止投递',
-  'common.operation.uploadTest': '上传笔试题',
+  'common.operation.uploadTest': '上传笔试/问卷',
+  'common.operation.uploadFile': '上传文件',
+  'common.operation.uploadFileFirst': '请先上传文件',
+  'common.operation.setStressTestTime': '设置熬测时间',
   'common.operation.sendNotification': '发送通知',
   'common.operation.notify': '通知',
   'common.operation.allocate': '分配',
@@ -30,7 +33,11 @@ export default {
   'common.result.deleteSuccess': '删除成功',
   'common.result.createSuccess': '创建成功',
   'common.result.sendSuccess': '发送成功',
-  'common.result.commentNotNull': '评论不能为空',
+  'common.result.switchStageSuccess': '转移阶段成功',
+  'common.result.terminateSuccess': '终止投递成功',
+  'common.result.commentNotNull': '评论与评价不能同时为空',
+  'common.result.uploadFileSuccess': '上传文件成功',
+  'common.result.setStressTestTimeSuccess': '设置熬测时间成功',
 
   'common.user.phone': '手机号码',
   'common.user.email': '邮箱',
@@ -47,12 +54,13 @@ export default {
   'common.user.currentStage': '当前阶段',
   'common.user.nextStage': '下一阶段',
   'common.user.baseInfo': '基本信息',
-  'common.user.resume': '简历/作品集',
+  'common.user.resume': '附件简历',
   'common.user.intro': '自我介绍',
   'common.user.comment': '评论',
   'common.user.name': '姓名',
   'common.user.group': '组别',
   'common.user.interviewTime': '面试时间',
+  'common.user.isQuick': '是否快通',
 
   'common.steps.SignUp': '报名',
   'common.steps.WrittenTest': '笔试',
@@ -76,7 +84,12 @@ export default {
   'common.sms.rest': '补充信息',
 
   'common.person': '人',
+  'common.date': '日期',
   'common.time': '时间',
+  'common.candidate': '选手',
+  'common.yes': '是',
+  'common.no': '否',
+  'common.void': '无',
 
   'common.applyInfo.overview': '数据总览',
   'common.applyInfo.groupMemberCounts': '团队人数',
@@ -93,5 +106,4 @@ export default {
   'common.createRec.signupTimeRange': '报名起止时间',
   'common.createRec.code': '验证码',
   'common.createRec.inputCode': '请输入验证码',
-
 };

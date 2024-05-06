@@ -32,12 +32,13 @@ export enum Group {
 }
 
 export enum Evaluation {
-  Good = 0,
-  Normal = 1,
-  Bad = 2,
+  Undefined = 0,
+  Good = 1,
+  Normal = 2,
+  Bad = 3,
 }
 
-export const EvaluationMap = ['😘', '🤔', '😅'];
+export const EvaluationMap = ['', '😘', '🤔', '😅'];
 
 export enum Step {
   SignUp = 'SignUp', // 报名
