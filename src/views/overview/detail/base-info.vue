@@ -126,7 +126,7 @@ const applyStore = useApplicationStore();
 const user = computed(() => applyStore.data?.user_detail);
 const showIntroDetail = ref(false);
 
-const { widthType } = useWindowResize();
-</script>
 
-<style scoped lang="less"></style>
+const { widthType } = useWindowResize();
+
+</script>
