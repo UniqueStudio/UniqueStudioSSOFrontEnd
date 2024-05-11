@@ -6,6 +6,7 @@ export interface Comment {
   created_at: TimeString;
   updated_at: TimeString;
   application_id: string;
+  member_id: string;
   member_name: string;
   content: string;
   evaluation: Evaluation;

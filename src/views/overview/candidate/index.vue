@@ -1,24 +1,27 @@
 <template>
-  <div class="flex flex-col bg-white w-full h-full p-5 overflow-hidden">
-    <div class="text-[--color-text-1] text-xl pb-5">{{
+  <div
+    class="flex flex-col sm:bg-[--color-bg-1] w-full h-full pt-9 sm:p-5 overflow-hidden"
+  >
+    <div class="text-[--color-text-1] text-xl pb-5 hidden sm:block">{{
       $t('menu.overview.candidate')
     }}</div>
-    <div class="flex justify-between">
-      <a-steps
-        v-model:current="currentStep"
-        class="flex-1 max-w-4xl"
-        changeable
-        small
-      >
-        <a-step
-          v-for="(item, index) in recruitSteps"
-          :key="item.i18Key"
-          :description="`${stepCnt[index]}${$t('common.person')}`"
-        >
-          <span :title="$t(item.i18Key)">{{ $t(item.i18Key) }}</span>
-        </a-step>
-      </a-steps>
-      <div class="flex">
+    <div class="justify-between w-full hidden sm:flex">
+      <a-scrollbar
+        outer-class="w-[calc(100%-220px)] shrink"
+        class="overflow-x-auto overflow-y-hidden pb-3"
+        ><a-steps v-model:current="currentStep" changeable small>
+          <a-step
+            v-for="(item, index) in recruitSteps"
+            :key="item.i18Key"
+            class="min-w-min"
+            :description="`${stepCnt[index]}${$t('common.person')}`"
+          >
+            <span :title="$t(item.i18Key)">{{ $t(item.i18Key) }}</span>
+          </a-step>
+        </a-steps>
+      </a-scrollbar>
+
+      <div class="flex shrink-0">
         <a-step
           class="step-fail"
           :description="`${failCnt}${$t('common.person')}`"
@@ -39,8 +42,8 @@
         >
       </div>
     </div>
-    <a-divider />
-    <candidate-info class="" :cur-step="currentStep - 1"></candidate-info>
+    <a-divider class="hidden sm:block" />
+    <candidate-info v-model="currentStep"></candidate-info>
   </div>
 </template>
 
