@@ -15,6 +15,7 @@
               2,
             )"
             :key="info.date.getTime()"
+            class="mt-1.5"
           >
             <div class="flex items-center mb-1">
               <a-badge
