@@ -89,14 +89,9 @@ const interviewType = (info: InterviewInfo) => {
 
 // 优化 filteredInfos 性能
 const filteredInfos = (year: number, month: number, date: number) => {
-  const key = formatDate(year, month, date);
-  if (!cache.has(key)) {
-    cache.set(
-      key,
-      props.infos.filter((info) => formatToday(info.date) === key),
-    );
-  }
-  return cache.get(key) as InterviewInfo[];
+  return props.infos.filter(
+    (info) => formatToday(info.date) === formatDate(year, month, date),
+  );
 };
 
 const hasMoreThanTwoInfos = (
