@@ -1,13 +1,13 @@
 <template>
   <div class="flex-4 bg-white rounded-sm h-full">
-    <a-calendar v-model="curDate" class="month-row">
+    <a-calendar v-model="curDate" class="month-min">
       <template #default="{ year, month, date }">
         <div
           class="arco-calendar-date"
           @click="handleCellClick(year, month, date)"
         >
           <div class="arco-calendar-date-value">
-            <div class="arco-calendar-date-circle">{{ date }}</div>
+            <div class="arco-calendar-date-circle lg:text-lg">{{ date }}</div>
           </div>
           <div
             v-for="(info, index) in filteredInfos(year, month, date).slice(
@@ -15,7 +15,7 @@
               2,
             )"
             :key="info.date.getTime()"
-            class="mt-1.5"
+            class="mt-1.5 hidden lg:block"
           >
             <div class="flex items-center mb-1">
               <a-badge
@@ -94,9 +94,39 @@ const hasMoreThanTwoInfos = (
 </script>
 
 <style scoped lang="less">
-.month-row {
+.month-min {
   :deep(.arco-calendar-month .arco-calendar-month-row) {
-    height: 115px;
+    height: 50px;
+  }
+
+  :deep(.arco-calendar-header) {
+    padding: 24px 12px;
+    white-space: nowrap;
+
+    &-icon {
+      width: 21px;
+
+      &:not(:first-child) {
+        margin: 0 10px;
+      }
+    }
+  }
+
+  :deep(.arco-btn-size-small) {
+    padding: 0 10px;
+  }
+
+  :deep(.arco-calendar-week-list-item) {
+    padding: 10px 0;
+    text-align: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .month-min {
+    :deep(.arco-calendar-month .arco-calendar-month-row) {
+      height: 115px;
+    }
   }
 }
 </style>
