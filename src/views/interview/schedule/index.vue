@@ -51,7 +51,9 @@ function calculateDuration(start: Date, end: Date): string {
   const diffInMinutes = Math.round(diffInMs / 1000 / 60);
   const hours = Math.floor(diffInMinutes / 60);
   const minutes = diffInMinutes % 60;
-  return hours === 0 ? `${minutes}min` : `${hours}h ${minutes}min`;
+  if (!hours) return `${minutes}min`;
+  if (!minutes) return `${hours}h`;
+  return `${hours}h${minutes}min`;
 }
 
 const props = defineProps({
