@@ -1,6 +1,10 @@
 <template>
-  <div class="flex place-content-between gap-5">
-    <calender :infos="overview" @date-click="handleDateClick"></calender>
+  <div class="lg:flex lg:place-content-between lg:gap-5">
+    <calender
+      :infos="overview"
+      class="mb-4"
+      @date-click="handleDateClick"
+    ></calender>
     <schedules v-model="currentGroup" :infos="candidates"></schedules>
   </div>
 </template>
@@ -41,7 +45,9 @@ function calculateDuration(start: Date, end: Date): string {
   const diffInMinutes = Math.round(diffInMs / 1000 / 60);
   const hours = Math.floor(diffInMinutes / 60);
   const minutes = diffInMinutes % 60;
-  return hours === 0 ? `${minutes}min` : `${hours}h ${minutes}min`;
+  if (!hours) return `${minutes}min`;
+  if (!minutes) return `${hours}h`;
+  return `${hours}h${minutes}min`;
 }
 
 const props = defineProps({
