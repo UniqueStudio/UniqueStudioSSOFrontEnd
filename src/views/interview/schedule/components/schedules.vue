@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 bg-white rounded p-5 h-193 relative">
+  <div class="bg-white rounded p-5 relative">
     <div class="w-full font-normal mb-5 text-xl flex justify-between">
       <span>{{ $t('common.applyInfo.Schedules') }}</span>
       <a-dropdown>

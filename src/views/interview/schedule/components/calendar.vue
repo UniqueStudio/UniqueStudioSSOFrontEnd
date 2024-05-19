@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-4 bg-white rounded-sm h-full">
+  <div class="bg-white rounded-sm">
     <a-calendar v-model="curDate" class="month-min">
       <template #default="{ year, month, date }">
         <div
@@ -17,7 +17,7 @@
             :key="info.date.getTime()"
             class="mt-1.5 hidden lg:block"
           >
-            <div class="flex items-center mb-1">
+            <div class="flex items-center mb-0.5">
               <a-badge
                 class="float-left mr-2 flex items-center justify-center"
                 :color="COLORS[index]"
@@ -105,9 +105,9 @@ const hasMoreThanTwoInfos = (
 
     &-icon {
       width: 21px;
-
+      margin-right: 8px;
       &:not(:first-child) {
-        margin: 0 10px;
+        margin: 0 8px;
       }
     }
   }
@@ -125,7 +125,7 @@ const hasMoreThanTwoInfos = (
 @media (min-width: 1024px) {
   .month-min {
     :deep(.arco-calendar-month .arco-calendar-month-row) {
-      height: 115px;
+      height: 99px;
     }
   }
 }
