@@ -18,18 +18,24 @@ export default {
         '2vw': '2vw',
         '2.5vw': '2.5vw',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 59db7e9 (responsive update 2.0)
         '183': '45.75rem',
         '193': '48.25rem',
         '158': '39.5rem',
         '206': '51.5rem',
         '234.5': '58.65rem',
         '174': '43.5rem',
+<<<<<<< HEAD
 =======
         183: '45.75rem',
         193: '48.25rem',
         158: '39.5rem',
         206: '51.5rem',
 >>>>>>> 934de90 (responsive update 2.0)
+=======
+>>>>>>> 59db7e9 (responsive update 2.0)
       },
       width: {
         '2vw': '2vw',
@@ -43,6 +49,9 @@ export default {
         4: '4 1 0%',
       },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 59db7e9 (responsive update 2.0)
       maxHeight: {
         158: '39.5rem',
         179: '44.75rem',
@@ -56,6 +65,7 @@ export default {
         193: '48.25rem',
         185.5: '46.375rem',
       },
+<<<<<<< HEAD
 =======
     },
 <<<<<<< HEAD
@@ -99,3 +109,9 @@ export default {
 >>>>>>> f9b694f (calendar component default slot)
 };
 >>>>>>> 15303ad (schedule and calender 1.0)
+=======
+    },
+  },
+  plugins: [],
+};
+>>>>>>> 59db7e9 (responsive update 2.0)
