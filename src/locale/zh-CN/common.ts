@@ -61,6 +61,7 @@ export default {
   'common.user.name': '姓名',
   'common.user.group': '组别',
   'common.user.interviewTime': '面试时间',
+  'common.user.description': '备注',
   'common.user.isQuick': '是否快通',
   'common.user.description': '备注',
 
