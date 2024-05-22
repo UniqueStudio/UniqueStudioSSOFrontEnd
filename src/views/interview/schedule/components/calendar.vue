@@ -15,9 +15,9 @@
               2,
             )"
             :key="info.date.getTime()"
-            class="mt-1.5 hidden lg:block"
+            class="mt-0.5 hidden lg:block"
           >
-            <div class="flex items-center mb-0.5">
+            <div class="flex items-center">
               <a-badge
                 class="float-left mr-2 flex items-center justify-center"
                 :color="COLORS[index]"
@@ -29,7 +29,7 @@
           </div>
           <div v-if="hasMoreThanTwoInfos(year, month, date)">
             <span class="float-left text-blue-600 text-sm">{{
-              `剩余${filteredInfos(year, month, date).length - 2}个日程`
+              remainingSchedules(year, month, date)
             }}</span>
           </div>
         </div>
@@ -90,6 +90,11 @@ const hasMoreThanTwoInfos = (
 ): boolean => {
   const filteredInfosList = filteredInfos(year, month, date);
   return filteredInfosList.length > 2;
+};
+
+const remainingSchedules = (year: number, month: number, date: number) => {
+  const count = filteredInfos(year, month, date).length - 2;
+  return count > 0 ? t('common.result.remainingSchedules', { count }) : '';
 };
 </script>
 
