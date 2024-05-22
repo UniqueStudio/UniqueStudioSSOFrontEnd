@@ -29,6 +29,7 @@ export default {
   'common.operation.userSetting': '用户设置',
   'common.operation.quitAccount': '退出登录',
   'common.operation.readAll': '全部已读',
+  'common.operation.arrangeSchedule': '日程安排',
 
   'common.result.deleteSuccess': '删除成功',
   'common.result.createSuccess': '创建成功',
@@ -38,6 +39,7 @@ export default {
   'common.result.commentNotNull': '评论与评价不能同时为空',
   'common.result.uploadFileSuccess': '上传文件成功',
   'common.result.setStressTestTimeSuccess': '设置熬测时间成功',
+  'common.result.remainingSchedules': '剩余{count}个日程',
 
   'common.user.phone': '手机号码',
   'common.user.email': '邮箱',
@@ -98,7 +100,10 @@ export default {
   'common.applyInfo.candidates': '报名选手',
   'common.applyInfo.candidateStagesOverview': '选手阶段分布',
   'common.applyInfo.recentSchedules': '近期日程',
+  'common.applyInfo.Schedules': '日程',
   'common.applyInfo.details': '查看更多',
+  'common.applyInfo.interviewName': '面试名称',
+  'common.applyInfo.date': '日期',
 
   'common.createRec.recName': '招新名称',
   'common.createRec.inputRecName': '请输入名称',

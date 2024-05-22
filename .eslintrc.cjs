@@ -67,6 +67,7 @@ module.exports = {
     'no-debugger': 0,
     'no-param-reassign': 0,
     'prefer-regex-literals': 0,
+    'camelcase': 0,
   },
   // 用来解析@
   settings: {
