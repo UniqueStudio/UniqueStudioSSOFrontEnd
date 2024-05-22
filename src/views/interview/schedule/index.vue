@@ -46,14 +46,15 @@ function formatTime(date: Date): string {
   });
 }
 
-function calculateDuration(start: Date, end: Date): string {
+function Duration(start: Date, end: Date): string {
+  const timeRange = `${formatTime(start)}-${formatTime(end)}`;
   const diffInMs = end.getTime() - start.getTime();
   const diffInMinutes = Math.round(diffInMs / 1000 / 60);
   const hours = Math.floor(diffInMinutes / 60);
   const minutes = diffInMinutes % 60;
-  if (!hours) return `${minutes}min`;
-  if (!minutes) return `${hours}h`;
-  return `${hours}h${minutes}min`;
+  if (!hours) return `${timeRange}(${minutes}min)`;
+  if (!minutes) return `${timeRange}(${hours}h)`;
+  return `${timeRange}(${hours}h${minutes}min)`;
 }
 
 const props = defineProps({
@@ -129,24 +130,12 @@ const candidates = computed(() => {
     const groupStartDate = parseDate(
       app.interview_allocations_group?.start ?? '',
     );
-    const groupInterviewPeriod = `${formatTime(groupStartDate)}-${formatTime(
-      groupEndDate,
-    )} 
-                                  (${calculateDuration(
-                                    groupStartDate,
-                                    groupEndDate,
-                                  )})`;
+    const groupInterviewPeriod = `${Duration(groupStartDate, groupEndDate)}`;
     const teamEndDate = parseDate(app.interview_allocations_team?.end ?? '');
     const teamStartDate = parseDate(
       app.interview_allocations_team?.start ?? '',
     );
-    const teamInterviewPeriod = `${formatTime(teamStartDate)}-${formatTime(
-      teamEndDate,
-    )} 
-                                (${calculateDuration(
-                                  teamStartDate,
-                                  teamEndDate,
-                                )})`;
+    const teamInterviewPeriod = `${Duration(teamStartDate, teamEndDate)}`;
     const interviewPeriod =
       app.step === 'GroupInterview'
         ? groupInterviewPeriod

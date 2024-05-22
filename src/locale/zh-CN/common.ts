@@ -39,6 +39,7 @@ export default {
   'common.result.commentNotNull': '评论与评价不能同时为空',
   'common.result.uploadFileSuccess': '上传文件成功',
   'common.result.setStressTestTimeSuccess': '设置熬测时间成功',
+  'common.result.remainingSchedules': '剩余{count}个日程',
 
   'common.user.phone': '手机号码',
   'common.user.email': '邮箱',
@@ -61,9 +62,7 @@ export default {
   'common.user.name': '姓名',
   'common.user.group': '组别',
   'common.user.interviewTime': '面试时间',
-  'common.user.description': '备注',
   'common.user.isQuick': '是否快通',
-  'common.user.description': '备注',
 
   'common.steps.SignUp': '报名',
   'common.steps.WrittenTest': '笔试',
