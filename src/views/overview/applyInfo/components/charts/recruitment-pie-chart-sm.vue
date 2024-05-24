@@ -1,5 +1,5 @@
 <template>
-  <div id="pieChart" class="h-80"></div>
+  <div id="pieChart1" class="h-80"></div>
 </template>
 
 <script setup lang="ts">
@@ -15,7 +15,7 @@ onMounted(() => {
   const recStore = useRecruitmentStore();
 
   watchEffect(() => {
-    const myChart = echarts.init(document.getElementById('pieChart'));
+    const myChart = echarts.init(document.getElementById('pieChart1'));
     const allGroupMemberCounts = recStore.curApplications.length;
     const groupMemberCounts = (targetGroup: string) => {
       return (

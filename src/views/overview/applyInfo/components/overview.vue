@@ -3,8 +3,8 @@
     <div class="text-[--color-text-1] text-xl p-5 font-bold">{{
       $t('common.applyInfo.overview')
     }}</div>
-    <div class="flex p-5 justify-evenly">
-      <div class="flex mr-96">
+    <div class="p-5 flex justify-around">
+      <div class="flex">
         <icon-close-circle-fill
           class="pt-3 pr-5 text-7xl"
         ></icon-close-circle-fill>
@@ -15,7 +15,7 @@
           <span class="font-bold text-4xl"> 0 </span>
         </div>
       </div>
-      <div class="flex mr-24">
+      <div class="flex">
         <icon-close-circle-fill
           class="pt-3 pr-5 text-7xl"
         ></icon-close-circle-fill>
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="flex w-full">
+    <div class="hidden sm:flex sm:w-full">
       <div class="w-1/2">
         <group-pie-chart></group-pie-chart>
       </div>
@@ -37,6 +37,18 @@
         <recruitment-pie-chart></recruitment-pie-chart>
       </div>
     </div>
+    <a-carousel
+      class="h-80 sm:hidden"
+      indicator-position="outer"
+      indicator-type="line"
+    >
+      <a-carousel-item>
+        <group-pie-chart-sm></group-pie-chart-sm>
+      </a-carousel-item>
+      <a-carousel-item>
+        <recruitment-pie-chart-sm></recruitment-pie-chart-sm>
+      </a-carousel-item>
+    </a-carousel>
   </div>
 </template>
 
@@ -45,6 +57,8 @@ import { computed } from 'vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import groupPieChart from './charts/group-pie-chart.vue';
 import recruitmentPieChart from './charts/recruitment-pie-chart.vue';
+import groupPieChartSm from './charts/group-pie-chart-sm.vue';
+import recruitmentPieChartSm from './charts/recruitment-pie-chart-sm.vue';
 
 const recStore = useRecruitmentStore();
 const allGroupMemberCounts = computed(() => recStore.curApplications.length);

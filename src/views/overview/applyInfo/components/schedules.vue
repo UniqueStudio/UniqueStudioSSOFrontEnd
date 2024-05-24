@@ -4,18 +4,18 @@
       v-model="pickerValue"
       default-value="2024-03-01"
       hide-trigger
-      class="w-full"
+      class="hidden sm:block sm:w-full"
     />
   </div>
   <div>
-    <div class="text-[--color-text-1] text-xl font-bold mt-10 ml-5">{{
+    <div class="text-[--color-text-1] text-lg font-bold mt-15 ml-5 pt-5">{{
       $t('common.applyInfo.recentSchedules')
     }}</div>
     <div>
       <li
         v-for="date in recents"
         :key="date.toDateString()"
-        class="block list-none ml-5 mb-6"
+        class="block list-none ml-5"
       >
         <div
           v-if="
@@ -24,28 +24,34 @@
             )
           "
         >
-          <div class="text-gray-600 mt-5 ml-5 text-lg">
+          <div class="text-gray-600 mt-5 ml-5 sm:text-xl">
             {{ date.getMonth() + 1 }}.{{ date.getDate() }}
           </div>
           <li
             v-for="schedule in filteredDateSchedules(date, true)"
             :key="schedule.name"
-            class="block list-none p-7"
+            class="block list-none p-3"
           >
-            <div class="w-10 h-10 rounded-full border-2 float-left mr-3 p-2">
-              <icon-calendar class="text-xl" />
+            <div class="flex justify-between">
+              <div class="flex">
+                <div
+                  class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 mr-3 flex items-center justify-center"
+                >
+                  <icon-calendar class="sm:text-xl" />
+                </div>
+                <span class="sm:text-xl mt-1">{{ schedule.name }}</span>
+              </div>
+              <span class="text-blue-600 mr-8 sm:text-lg">{{
+                schedule.time
+              }}</span>
             </div>
-            <span class="text-xl float-left mt-1">{{ schedule.name }}</span>
-            <span class="text-blue-600 float-right mt-3">{{
-              schedule.time
-            }}</span>
           </li>
         </div>
       </li>
       <a-button
         v-if="schedulesLength(recents) > 5"
         type="primary"
-        class="w-4/5 h-12 ml-16 mt-4 text-xl"
+        class="w-4/5 sm:h-2.5vw ml-1/8 mt-4 sm:text-1vw"
         @click="openModel"
       >
         {{ $t('common.applyInfo.details') }}</a-button

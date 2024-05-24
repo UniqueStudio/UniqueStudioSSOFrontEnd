@@ -12,7 +12,7 @@
         </div>
       </a-layout-sider>
       <a-layout class="bg-[--color-fill-2]">
-        <a-layout-content class="overflow-hidden">
+        <a-layout-content class="">
           <page-layout />
         </a-layout-content>
       </a-layout>

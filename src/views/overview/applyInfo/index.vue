@@ -1,11 +1,13 @@
 <template>
-  <div class="flex">
-    <div class="flex flex-col w-2/3">
-      <overview></overview>
-      <stages></stages>
-    </div>
-    <div class="w-1/3 bg-white ml-5">
-      <schedules></schedules>
+  <div class="overflow-scroll">
+    <div class="sm:flex">
+      <div class="flex flex-col w-full sm:w-2/3 sm:min-w-500">
+        <overview></overview>
+        <stages></stages>
+      </div>
+      <div class="w-full bg-white mt-5 sm:w-1/3 sm:ml-5 sm:min-w-400">
+        <schedules></schedules>
+      </div>
     </div>
   </div>
 </template>

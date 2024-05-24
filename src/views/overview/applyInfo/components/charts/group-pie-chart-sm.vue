@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div id="group-pie-chart" class="h-80"></div>
+    <div id="group-pie-chart1" class="h-80"></div>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 onMounted(() => {
-  const myChart = echarts.init(document.getElementById('group-pie-chart'));
+  const myChart = echarts.init(document.getElementById('group-pie-chart1'));
   myChart.setOption({
     title: {
       text: t('common.applyInfo.groupMembers'),
