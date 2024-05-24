@@ -31,6 +31,19 @@ const DASHBOARD = {
         // roles: ['*'],
       },
     },
+    {
+      path: 'candidate/detail/:id',
+      name: 'detail',
+      props: true,
+      component: () => import('@/views/overview/candidate/detail/index.vue'),
+      meta: {
+        locale: 'menu.overview.candidate',
+        requiresAuth: true,
+        activeMenu: 'candidate',
+        hideInMenu: true,
+        // roles: ['*'],
+      },
+    },
   ],
 };
 

@@ -8,6 +8,7 @@
       <div class="w-full bg-white mt-5 sm:w-1/3 sm:ml-5 sm:min-w-400">
         <schedules></schedules>
       </div>
+
     </div>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <a-radio-group v-model="currentGroup" class="bg-white">
+  <a-radio-group v-model="currentGroup" class="bg-[--color-bg-1]">
     <template v-for="(item, index) in groups" :key="item">
       <a-radio :value="item">
         <template #radio="{ checked }">

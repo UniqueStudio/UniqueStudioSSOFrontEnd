@@ -131,10 +131,14 @@
 import CreateNewrecModal from '@/components/navbar/components/create-newrec-modal.vue';
 import LogoSVG from '@/assets/svg/logo.svg';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import useUserStore from '@/store/modules/user';
+
 import { ref } from 'vue';
 
 const recruitmentStore = useRecruitmentStore();
 recruitmentStore.getAllRecruitments();
+const userStore = useUserStore();
+userStore.getUserInfo();
 
 const statu = ref('day');
 const changeDayNight = () => {

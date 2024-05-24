@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white w-full p-5 pb-10">
+  <div class="bg-[--color-bg-1] w-full p-5 pb-10">
     <div class="text-[--color-text-1] text-xl p-5 font-bold">{{
       $t('common.applyInfo.overview')
     }}</div>

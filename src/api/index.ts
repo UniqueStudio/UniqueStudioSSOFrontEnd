@@ -10,6 +10,9 @@ export {
   getLatestRecruitment,
   createRecruitment,
   updateRecruitment,
+  uploadTest,
+  SetStressTestTime,
+  getTest,
 } from './recruitment';
 
 export {

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white w-full h-full p-5">
+  <div class="bg-[--color-bg-1] w-full h-full p-5">
     <div class="text-[--color-text-1] text-xl pb-5">{{
       $t('menu.overview.candidate')
     }}</div>

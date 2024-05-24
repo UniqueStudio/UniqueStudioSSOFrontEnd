@@ -5,13 +5,18 @@ import {
   getRecruitment,
   createRecruitment,
   updateRecruitment,
+  uploadTest,
+  SetStressTestTime,
+  getTest,
 } from '@/api';
 import { Evaluation } from '@/constants/team';
 import {
   RecruitmentState,
   UpdateParams,
+  SetTimeParams,
   CreateParams,
   CandidateInfo,
+  Group,
 } from './types';
 
 const useRecruitmentStore = defineStore('recruitment', {
@@ -57,23 +62,22 @@ const useRecruitmentStore = defineStore('recruitment', {
       }
       this.getAllRecruitments();
     },
+    async uploadTest(rid: string, group: Group, data: File) {
+      const res = await uploadTest(rid, group, data);
+      return res;
+    },
+    async SetStressTestTime(rid: string, data: SetTimeParams) {
+      const res = await SetStressTestTime(rid, data);
+      return res;
+    },
+    async getTest(rid: string, group: Group) {
+      const res = await getTest(rid, group);
+      return res.data;
+    },
   },
   getters: {
     curApplications(): CandidateInfo[] {
-      return (this.currentRec?.applications ?? []).map((app) => {
-        const comments = [
-          Evaluation.Good,
-          Evaluation.Normal,
-          Evaluation.Bad,
-        ].map(
-          (eva) =>
-            app.comments?.filter(({ evaluation }) => evaluation === eva) ?? [],
-        ) as unknown as CandidateInfo['comments'];
-        return {
-          ...app,
-          comments,
-        };
-      });
+      return this.currentRec?.applications ?? [];
     },
   },
 });
