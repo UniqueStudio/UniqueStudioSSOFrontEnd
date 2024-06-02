@@ -95,15 +95,13 @@ const getTimeOptions = async () => {
   if (!totalData.data.interviews) return;
 
   // 有效面试筛选
-  const usefulInterview = totalData.data.interviews.filter(
-    (interview) => interview.slot_number > interview.select_number,
-  );
+  const interviewArr = totalData.data.interviews;
 
   // 面试分类 date->period->time
   const optionsData = {} as {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
   };
-  usefulInterview.forEach((interview) => {
+  interviewArr.forEach((interview) => {
     if (interview.start && interview.period) {
       const date = getDate(interview.start);
       const time = getTime(interview.start, interview.end);

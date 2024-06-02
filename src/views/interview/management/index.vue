@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-white w-full h-full p-5">
+  <div v-if="!showDateManagement" class="bg-white w-full h-full p-5">
     <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
       $t('menu.interview.management')
     }}</div>
-    <div class="flex flex-col justify-between w-full">
+    <div class="flex flex-col justify-between w-full h-full pb-6">
       <!-- <a-tabs
         v-model:active-key="interviewType"
         class="w-full"
@@ -69,15 +69,6 @@
           :placeholder="$t('common.operation.searchByName')"
         />
         <!-- 搜索框 -->
-        <a-button
-          type="outline"
-          class="sm:w-auto w-1/2"
-          @click="allocateSelect()"
-        >
-          <template #icon> <icon-plus /> </template>
-          {{ $t('common.operation.sendNotification') }}
-        </a-button>
-        <!--  发送通知 -->
       </div>
 
       <a-table
@@ -137,8 +128,32 @@
           <!-- 操作column -->
         </template>
       </a-table>
+      <div class="flex justify-between pb-5 mt-auto">
+        <a-button
+          type="outline"
+          class="sm:w-auto w-1/2"
+          @click="showDateManagement = true"
+        >
+          {{ $t('common.operation.dateManagement') }}
+        </a-button>
+        <!-- 日程管理 -->
+        <a-button
+          type="outline"
+          class="sm:w-auto w-1/2"
+          @click="allocateSelect()"
+        >
+          <template #icon> <icon-plus /> </template>
+          {{ $t('common.operation.sendNotification') }}
+        </a-button>
+        <!-- 发送通知 -->
+      </div>
     </div>
   </div>
+
+  <date-management-modal
+    v-else
+    v-model:showDateManagement="showDateManagement"
+  />
 
   <notification-modal
     v-model:showNotify="showNotify"
@@ -149,7 +164,7 @@
     :group="Group.Web"
     :is-mobile="isMobile"
   />
-  <!-- 发送通知 -->
+  <!-- 发送通知弹窗 -->
 
   <allowcate-modal
     v-model:showAllowcate="showAllowcate"
@@ -157,6 +172,7 @@
     :interview-type="interviewType == '群面' ? 'team' : 'group'"
     :is-mobile="isMobile"
   />
+  <!-- 分配选手面试时间弹窗 -->
 </template>
 
 <script setup lang="ts">
@@ -169,6 +185,7 @@ import useRecruitmentStore from '@/store/modules/recruitment';
 
 import { TableData } from '@arco-design/web-vue';
 import AllowcateModal from './allowcate-modal.vue';
+import DateManagementModal from './date-management-modal.vue';
 import getApplicationData from './getData';
 
 document.cookie = 'SSO_SESSION=unique_web_admin';
@@ -185,17 +202,23 @@ const allowcateApplicationId = ref('' as string);
 const selectData = ref([] as { name: string; aid: string; step: any }[]);
 const displayType = ref('common.information');
 const isMobile = ref(false);
+const showDateManagement = ref(false);
 
 type Data = {
   [key: string]: TableData[];
 };
 const realData = ref({} as Data);
 const data = ref({} as Data);
-getApplicationData().then((res) => {
-  // console.log(res);
-  realData.value = res;
-  data.value = JSON.parse(JSON.stringify(realData.value));
-});
+watch(
+  () => recStore.currentRid,
+  (newRid) => {
+    getApplicationData(newRid).then((res) => {
+      // console.log(res);
+      realData.value = res;
+      data.value = JSON.parse(JSON.stringify(realData.value));
+    });
+  },
+);
 
 const tabItems = ['common.steps.GroupInterview', 'common.steps.TeamInterview'];
 
@@ -229,7 +252,8 @@ watch(selectedKeys, (newSelectedKeys) => {
   });
 });
 
-const allocateOne = (rowData) => {
+// 发送通知
+const allocateOne = (rowData: any) => {
   // console.log('%c [ rowData ]-74', 'font-size:13px; background:#38703a; color:#7cb47e;', rowData);
   selectData.value.length = 0;
   selectData.value.push({

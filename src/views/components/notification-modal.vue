@@ -159,7 +159,7 @@
 import { ref, defineModel, PropType, watch, computed } from 'vue';
 import { Group, recruitSteps, Step, SMSTemplate } from '@/constants/team';
 import { sendSms } from '@/api';
-import { groupBy, isMap } from 'lodash';
+import { groupBy } from 'lodash';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 

@@ -13,6 +13,8 @@ export default {
   'common.operation.switchStage': '转移阶段',
   'common.operation.terminate': '终止投递',
   'common.operation.uploadTest': '上传笔试题',
+  'common.operation.dateManagement': '日程管理',
+  'common.operation.returnInterviewManagement': '返回面试管理',
   'common.operation.sendNotification': '发送通知',
   'common.operation.notify': '通知',
   'common.operation.allocate': '分配',

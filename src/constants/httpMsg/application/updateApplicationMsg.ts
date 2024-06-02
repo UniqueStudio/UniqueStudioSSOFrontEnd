@@ -20,7 +20,7 @@ export interface UpdateApplicationStepRequest {
 }
 
 export interface AllocateApplicationInterviewRequest {
-  time: string;
+  interview_id: string;
 }
 
 export interface SelectApplicationInterviewRequest {

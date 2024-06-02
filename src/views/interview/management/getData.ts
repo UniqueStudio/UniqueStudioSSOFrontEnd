@@ -1,4 +1,4 @@
-import { getLatestRecruitment, getRecruitment } from '@/api/recruitment';
+import { getRecruitment } from '@/api/recruitment';
 import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
 import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 import { Step } from '@/constants/team';
@@ -49,11 +49,15 @@ function getDataKey(step: string, group: string): string {
   return `${step}_${group}`;
 }
 
-export default async function getApplicationData(): Promise<Data> {
-  // const nowRid = (await getLatestRecruitment()).data.uid; // TODO: 获取最新id
-  const nowRid = 'ba10675e-22ae-4335-83c8-8e84a4a6855b'; // 调试
+export default async function getApplicationData(
+  nowRid: string,
+): Promise<Data> {
+  console.log(
+    '%c [ nowRid ]',
+    'font-size:13px; background:#2e183b; color:#725c7f;',
+    nowRid,
+  );
   const applicationData: Data = {};
-
   const totalData = await getRecruitment(nowRid);
   if (!totalData.data.applications) return applicationData;
   totalData.data.applications.forEach((application) => {

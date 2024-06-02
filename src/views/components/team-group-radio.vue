@@ -35,11 +35,11 @@ import { Group } from '@/constants/team';
 const groups = computed(() =>
   Object.values(Group).filter((x) => x !== Group.Unique),
 );
-console.log(
-  '%c [ groups ]-33',
-  'font-size:13px; background:#2d4095; color:#7184d9;',
-  groups.value,
-);
+// console.log(
+//   '%c [ groups ]-33',
+//   'font-size:13px; background:#2d4095; color:#7184d9;',
+//   groups.value,
+// );
 
 const currentGroup = defineModel<Group>({
   required: true,
