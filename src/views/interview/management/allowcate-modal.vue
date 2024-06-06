@@ -6,7 +6,7 @@
     @cancel="handleCancel"
     @before-ok="handleBeforeOk"
   >
-    <a-form :model="form">
+    <a-form :model="form" :layout="isMobile ? 'vertical' : 'horizontal'">
       <a-form-item
         field="seletedTime"
         :label="$t('common.operation.candidateSeletedTime')"
@@ -37,13 +37,13 @@
 
 <script setup lang="ts">
 import { defineProps, watch, ref, defineModel } from 'vue';
-import { getRecruitment } from '@/api/recruitment';
 import { allocateApplicationInterview } from '@/api/application';
 import { CascaderOption } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
-import { RecruitmentResponse } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
+import { Recruitment } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
 import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
+import { getDate, getTime } from '@/views/interview/management/getData';
 
 const { t } = useI18n();
 
@@ -70,32 +70,19 @@ const showAllowcate = defineModel<boolean>('showAllowcate', {
   default: false,
   required: true,
 });
+const totalData = defineModel<Recruitment>('totalData', {
+  type: Object,
+  default: {},
+  required: true,
+});
 
 const form = ref({ selectInterviewId: '' as string });
-let totalData = {} as RecruitmentResponse;
-
-const dataEndIndex = 10;
-const getDate = (time: string): string => {
-  return time.substring(0, dataEndIndex);
-};
-const getTime = (startStr: string, endStr: string): string => {
-  const start = new Date(startStr);
-  const end = new Date(endStr);
-  return `${start.getHours().toString().padStart(2, '0')}:${start
-    .getMinutes()
-    .toString()
-    .padStart(2, '0')}-${end.getHours().toString().padStart(2, '0')}:${end
-    .getMinutes()
-    .toString()
-    .padStart(2, '0')}`;
-};
 
 const timeOptions = ref([] as CascaderOption[]);
 const getTimeOptions = async () => {
-  if (!totalData.data.interviews) return;
+  if (!totalData.value.interviews) return;
 
-  // 有效面试筛选
-  const interviewArr = totalData.data.interviews;
+  const interviewArr = totalData.value.interviews;
 
   // 面试分类 date->period->time
   const optionsData = {} as {
@@ -150,22 +137,23 @@ const getTimeOptions = async () => {
 };
 
 const getApplicationIndex = async (): Promise<number> => {
-  if (!totalData.data.applications) return -1;
-  return totalData.data.applications.findIndex(
+  if (!totalData.value.applications) return -1;
+  return totalData.value.applications.findIndex(
     (application) => application.uid === props.applicationId,
   );
 };
 
 const selectedInterview = ref([] as string[]);
 const getSelectedTime = async (applicationIndex: number) => {
+  // console.log('%c [ totalData.value ]-166', 'font-size:13px; background:#84bab3; color:#c8fef7;', totalData.value);
   if (
-    !(totalData.data.applications as Application[])[applicationIndex]
+    !(totalData.value.applications as Application[])[applicationIndex]
       .interview_selections
   )
     selectedInterview.value = [];
   else {
     selectedInterview.value = (
-      (totalData.data.applications as Application[])[applicationIndex]
+      (totalData.value.applications as Application[])[applicationIndex]
         .interview_selections as Interview[]
     ).map(
       (interview) =>
@@ -177,16 +165,13 @@ const getSelectedTime = async (applicationIndex: number) => {
   }
 };
 
-watch(showAllowcate, async (newVal) => {
-  if (newVal) {
-    const nowRid = 'ba10675e-22ae-4335-83c8-8e84a4a6855b'; // 调试
-    // TODO: 获取最新id (await getLatestRecruitment()).data.uid;
-    totalData = await getRecruitment(nowRid);
-    Object.freeze(totalData);
+watch(showAllowcate, async (newShowAllowcate) => {
+  if (newShowAllowcate) {
     const index = await getApplicationIndex();
     if (index === -1) {
       showAllowcate.value = false;
     } else {
+      timeOptions.value = [];
       await getTimeOptions();
       await getSelectedTime(index);
     }

@@ -8,11 +8,10 @@ export interface Interview {
   date: TimeString;
   period: Period;
   name: Group;
-  select_number: number;
-  slot_number: number;
-  recruitment_id: string;
   start: TimeString;
   end: TimeString;
+  slot_number: number;
+  recruitment_id: string;
 }
 
 export type InterviewSelectionResponse = HttpRes<Interview[]>;

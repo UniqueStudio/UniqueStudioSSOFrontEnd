@@ -1,21 +1,9 @@
 <template>
-  <div v-if="!showDateManagement" class="bg-white w-full h-full p-5">
+  <div v-if="!showDateManagement" class="bg-[--color-bg-1] w-full h-full p-5">
     <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
       $t('menu.interview.management')
     }}</div>
-    <div class="flex flex-col justify-between w-full h-full pb-6">
-      <!-- <a-tabs
-        v-model:active-key="interviewType"
-        class="w-full"
-        type="rounded"
-        size="medium"
-      > -->
-
-      <!-- <a-tab-pane
-        v-for="item in tabItems"
-        :key="item.key"
-        :title="$t(item.title)"
-      > -->
+    <div class="flex flex-col justify-between w-full h-full sm:pb-6">
       <div class="flex justify-between pb-5">
         <a-select
           v-model="displayType"
@@ -128,20 +116,16 @@
           <!-- 操作column -->
         </template>
       </a-table>
-      <div class="flex justify-between pb-5 mt-auto">
+      <div class="flex justify-between sm:pb-5 mt-auto">
         <a-button
           type="outline"
-          class="sm:w-auto w-1/2"
+          class="sm:w-auto"
           @click="showDateManagement = true"
         >
           {{ $t('common.operation.dateManagement') }}
         </a-button>
         <!-- 日程管理 -->
-        <a-button
-          type="outline"
-          class="sm:w-auto w-1/2"
-          @click="allocateSelect()"
-        >
+        <a-button type="outline" class="sm:w-auto" @click="allocateSelect()">
           <template #icon> <icon-plus /> </template>
           {{ $t('common.operation.sendNotification') }}
         </a-button>
@@ -151,8 +135,10 @@
   </div>
 
   <date-management-modal
-    v-else
     v-model:showDateManagement="showDateManagement"
+    v-model:totalData="totalData"
+    v-model:now-rid="recStore.currentRid"
+    :class="showDateManagement ? '' : 'hidden'"
   />
 
   <notification-modal
@@ -168,6 +154,7 @@
 
   <allowcate-modal
     v-model:showAllowcate="showAllowcate"
+    v-model:totalData="totalData"
     :application-id="allowcateApplicationId"
     :interview-type="interviewType == '群面' ? 'team' : 'group'"
     :is-mobile="isMobile"
@@ -184,6 +171,7 @@ import NotificationModal from '@/views/components/notification-modal.vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
 
 import { TableData } from '@arco-design/web-vue';
+import { Recruitment } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
 import AllowcateModal from './allowcate-modal.vue';
 import DateManagementModal from './date-management-modal.vue';
 import getApplicationData from './getData';
@@ -203,6 +191,7 @@ const selectData = ref([] as { name: string; aid: string; step: any }[]);
 const displayType = ref('common.information');
 const isMobile = ref(false);
 const showDateManagement = ref(false);
+const totalData = ref({} as Recruitment);
 
 type Data = {
   [key: string]: TableData[];
@@ -211,8 +200,9 @@ const realData = ref({} as Data);
 const data = ref({} as Data);
 watch(
   () => recStore.currentRid,
-  (newRid) => {
-    getApplicationData(newRid).then((res) => {
+  async (newRid) => {
+    totalData.value = await recStore.getRecruitment(newRid);
+    getApplicationData(totalData.value).then((res) => {
       // console.log(res);
       realData.value = res;
       data.value = JSON.parse(JSON.stringify(realData.value));
@@ -240,7 +230,6 @@ watch(searchValue, (val) => {
 
 watch(selectedKeys, (newSelectedKeys) => {
   return newSelectedKeys.map((key) => {
-    // console.log('%c [ key ]-178', 'font-size:13px; background:#d6a129; color:#ffe56d;', key);
     const key1 = `${interviewType.value}_${currentGroup.value}`;
     const nowData = data.value[key1].find((item) => item.name === key);
     if (!nowData) return {};
@@ -254,7 +243,6 @@ watch(selectedKeys, (newSelectedKeys) => {
 
 // 发送通知
 const allocateOne = (rowData: any) => {
-  // console.log('%c [ rowData ]-74', 'font-size:13px; background:#38703a; color:#7cb47e;', rowData);
   selectData.value.length = 0;
   selectData.value.push({
     name: rowData.name,

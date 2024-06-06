@@ -35,6 +35,7 @@ module.exports = {
     'vue/singleline-html-element-content-newline': 0,
     'vue/max-attributes-per-line': 0,
     'vue/multi-word-component-names': 0,
+    'vue/no-useless-template-attributes': 0,
     // vue的一些额外配置
     'vue/custom-event-name-casing': [2, 'camelCase'],
     'vue/no-v-text': 1,
@@ -66,6 +67,7 @@ module.exports = {
     'no-debugger': 0,
     'no-param-reassign': 0,
     'prefer-regex-literals': 0,
+    'camelcase': 0,
   },
   // 用来解析@
   settings: {

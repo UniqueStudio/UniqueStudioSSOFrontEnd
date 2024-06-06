@@ -29,7 +29,8 @@
           readonly
         />
       </a-form-item>
-      <div class="flex gap-2 justify-between w-full flex-col sm:flex-row">
+
+      <div class="flex sm:gap-2 justify-between w-full max-sm:flex-col">
         <a-form-item
           field="next"
           :label="$t('common.user.nextStage')"
@@ -47,14 +48,20 @@
             >
           </a-select>
         </a-form-item>
+
         <a-form-item
           field="time"
           :label="$t('common.time')"
           asterisk-position="end"
           validate-trigger="change"
         >
-          <a-date-picker v-model="formData.time" show-time />
+          <a-date-picker
+            v-model="formData.time"
+            show-time
+            format="YYYY-MM-DD hh:mm"
+          />
         </a-form-item>
+
         <a-form-item
           field="meeting_id"
           :label="$t('common.sms.meetingId')"
@@ -82,7 +89,11 @@
           <a-input v-model="formData.rest" />
         </a-form-item>
       </div>
-      <div class="rounded-md border-2 px-4 py-3">
+
+      <a-scrollbar
+        class="rounded-md border-2 px-4 py-3 break-all overflow-y-auto max-h-20"
+        outer-class=""
+      >
         <i18n-t :keypath="preview.i18nKey" tag="div">
           <template #name>
             <span class="text-[rgb(var(--primary-6))]">{{
@@ -150,7 +161,7 @@
             </i18n-t>
           </template>
         </i18n-t>
-      </div>
+      </a-scrollbar>
     </a-form>
   </a-modal>
 </template>

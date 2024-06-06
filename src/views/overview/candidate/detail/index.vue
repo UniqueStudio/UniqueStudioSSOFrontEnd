@@ -1,144 +1,114 @@
 <template>
   <div
     v-if="applyStore.data && user"
-    class="flex bg-white w-full h-full overflow-hidden"
+    class="bg-[--color-bg-1] w-full h-full overflow-hidden max-sm:mt-40"
   >
-    <div class="flex flex-col items-center gap-9 w-69 px-3 py-4">
-      <a-tag
-        color="transparent"
-        style="color: var(--color-text-3)"
-        class="self-start p-0 cursor-pointer"
-        size="large"
-        @click="$router.back()"
+    <div class="w-full h-full sm:relative sm:pb-10">
+      <a-scrollbar
+        class="w-full h-full overflow-y-auto overflow-x-hidden"
+        outer-class="w-full h-full hidden sm:block"
       >
-        <template #icon> <icon-left /> </template>
-        {{ $t('common.operation.back') }}
-      </a-tag>
+        <div class="pb-4 w-full h-auto hidden sm:flex">
+          <div class="flex flex-col items-center gap-9 w-69 px-3 py-4 shrink-0">
+            <a-tag
+              color="transparent"
+              style="color: var(--color-text-3)"
+              class="self-start p-0 cursor-pointer"
+              size="large"
+              @click="$router.back()"
+            >
+              <template #icon> <icon-left /> </template>
+              {{ $t('common.operation.back') }}
+            </a-tag>
 
-      <div class="flex flex-col items-center">
-        <a-avatar :size="64">{{ user.avatar_url || user.name || '' }}</a-avatar>
-        <div class="text-[--color-text-1] pt-3">{{ user.name ?? '' }}</div>
-        <div class="text-[--color-text-3]">{{ applyStore.data.group }}</div>
-      </div>
+            <profile />
 
-      <div class="flex flex-col justify-around gap-3 w-56 px-2">
-        <div class="flex gap-4">
-          <div
-            class="w-9 h-9 rounded-full flex justify-center items-center bg-[rgb(var(--gray-2))] shrink-0"
-          >
-            <icon-phone size="20" />
-          </div>
-          <div>
-            <div class="text-[--color-text-3]">
-              {{ $t('common.user.phone') }}
-            </div>
-            <div>{{ user.phone ?? '' }}</div>
-          </div>
-        </div>
-
-        <div class="flex gap-3">
-          <div
-            class="w-9 h-9 rounded-full flex justify-center items-center bg-[rgb(var(--gray-2))] shrink-0"
-          >
-            <icon-email size="20" />
-          </div>
-          <div>
-            <div class="text-[--color-text-3]">
-              {{ $t('common.user.email') }}
-            </div>
-            <div>{{ user.email ?? '' }}</div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="text-[--color-text-1] pb-5">
-          {{ $t('common.user.currentStage') }}
-        </div>
-        <a-steps
-          v-model:current="currentStep"
-          direction="vertical"
-          class="w-56 px-2"
-          :status="stepStatus.status"
-          :title="$t(stepStatus.title)"
-        >
-          <a-step
-            v-for="(item, index) in recruitSteps"
-            :key="index"
-            :description="''"
-            ><span class="text-sm">{{ $t(item.i18Key) }}</span>
-          </a-step>
-        </a-steps>
-      </div>
-    </div>
-    <a-divider direction="vertical" class="h-auto m-6" />
-    <div class="flex flex-col justify-between w-full px-6 py-4">
-      <a-tabs type="rounded" size="large">
-        <a-tab-pane key="1" :title="$t('common.user.baseInfo')">
-          <div class="flex flex-col gap-9">
-            <a-descriptions size="large" layout="inline-vertical" :column="3">
-              <a-descriptions-item :label="$t('common.user.gender')">
-                {{ $t(GenderMap[user.gender]) }}
-              </a-descriptions-item>
-              <a-descriptions-item :label="$t('common.user.institute')">
-                {{ applyStore.data.institute }}
-              </a-descriptions-item>
-              <a-descriptions-item :label="$t('common.user.major')">
-                {{ applyStore.data.major }}
-              </a-descriptions-item>
-              <a-descriptions-item :label="$t('common.user.grade')">
-                {{ applyStore.data.grade }}
-              </a-descriptions-item>
-              <a-descriptions-item :label="$t('common.user.rank')">
-                {{ applyStore.data.rank }}
-              </a-descriptions-item>
-              <a-descriptions-item :label="$t('common.user.referrer')">
-                {{ applyStore.data.referrer }}
-              </a-descriptions-item>
-            </a-descriptions>
             <div>
               <div class="text-[--color-text-1] pb-5">
-                {{ $t('common.user.intro') }}
+                {{ $t('common.user.currentStage') }}
               </div>
-              <div
-                class="text-[--color-neutral-8]"
-                :class="{ 'line-clamp-3': !showIntroDetail }"
+              <a-steps
+                v-model:current="currentStep"
+                direction="vertical"
+                class="w-56 px-2"
+                :status="stepStatus.status"
+                :title="$t(stepStatus.title)"
               >
-                {{ applyStore.data.intro }}
-              </div>
-              <div
-                class="text-sm text-[rgb(var(--primary-6))] cursor-pointer"
-                @click="showIntroDetail = !showIntroDetail"
-              >
-                {{
-                  $t(
-                    showIntroDetail
-                      ? 'common.operation.close'
-                      : 'common.operation.more',
-                  )
-                }}
-              </div>
+                <a-step
+                  v-for="(item, index) in recruitSteps"
+                  :key="index"
+                  :description="''"
+                  ><span class="text-sm">{{ $t(item.i18Key) }}</span>
+                </a-step>
+              </a-steps>
             </div>
-            <comment></comment>
           </div>
-        </a-tab-pane>
-        <a-button type="text" shape="round">{{
-          $t('common.user.baseInfo')
-        }}</a-button>
-      </a-tabs>
-      <edit-buttons
-        :candidates="[
-          {
-            name: user.name,
-            aid: applyStore.data.uid,
-            step: applyStore.data.step,
-            abandoned: applyStore.data.abandoned,
-            rejected: applyStore.data.rejected,
-          },
-        ]"
-        :group="applyStore.data.group"
-        :cur-step="currentStep"
-      ></edit-buttons>
+          <a-divider direction="vertical" class="h-auto m-6" />
+          <base-info />
+        </div>
+      </a-scrollbar>
+      <div class="sm:hidden h-full">
+        <div class="absolute top-0 left-0 bg-[--color-bg-1] z-10 w-full">
+          <div class="w-full relative px-3 py-3">
+            <icon-left
+              class="absolute left-3"
+              :size="20"
+              @click="$router.back()"
+            />
+            <span class="inline-block w-full text-center">{{
+              $t('menu.overview.candidate')
+            }}</span>
+          </div>
+          <profile />
+        </div>
+        <a-tabs default-active-key="1" class="pb-4 h-full">
+          <a-tab-pane
+            key="1"
+            :title="$t('common.user.currentStage')"
+            class="h-full w-full flex justify-center"
+          >
+            <a-steps
+              v-model:current="currentStep"
+              direction="vertical"
+              class="w-56 px-2 pb-48"
+              :status="stepStatus.status"
+              :title="$t(stepStatus.title)"
+            >
+              <a-step
+                v-for="(item, index) in recruitSteps"
+                :key="index"
+                :description="''"
+              >
+                <span class="text-sm">{{ $t(item.i18Key) }} </span>
+              </a-step>
+            </a-steps>
+          </a-tab-pane>
+          <a-tab-pane key="2" :title="$t('common.user.baseInfo')">
+            <a-scrollbar
+              class="w-full h-auto flex justify-center overflow-y-auto overflow-x-hidden"
+              outer-class="w-full h-min"
+            >
+              <base-info />
+            </a-scrollbar>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+
+      <div class="w-full p-4 absolute bottom-0 left-0 bg-[--color-bg-1]">
+        <edit-buttons
+          :candidates="[
+            {
+              name: user.name,
+              aid: applyStore.data.uid,
+              step: applyStore.data.step,
+              abandoned: applyStore.data.abandoned,
+              rejected: applyStore.data.rejected,
+            },
+          ]"
+          :group="applyStore.data.group"
+          :cur-step="currentStep"
+        ></edit-buttons>
+      </div>
     </div>
   </div>
   <a-result v-else status="404" :title="$t('candidate.applicationNotFound')">
@@ -158,11 +128,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { recruitSteps, GenderMap } from '@/constants/team';
+import { computed } from 'vue';
+import { recruitSteps } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
-import comment from './comment.vue';
 import editButtons from '../components/edit-buttons.vue';
+import profile from './profile.vue';
+import BaseInfo from './base-info.vue';
 
 const applyStore = useApplicationStore();
 
@@ -212,12 +183,17 @@ const stepStatus = computed<{
         title: 'common.steps.Pass',
       };
 });
-
-const showIntroDetail = ref(false);
 </script>
 
 <style scoped lang="less">
 :deep(.arco-steps-item:not(:last-child)) {
   min-height: 66px;
+}
+:deep(.arco-tabs-nav-tab) {
+  justify-content: center;
+}
+:deep(.arco-tabs-content) {
+  height: 90%;
+  overflow: auto;
 }
 </style>

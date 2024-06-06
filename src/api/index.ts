@@ -10,6 +10,9 @@ export {
   getLatestRecruitment,
   createRecruitment,
   updateRecruitment,
+  uploadTest,
+  SetStressTestTime,
+  getTest,
 } from './recruitment';
 
 export {
@@ -28,4 +31,4 @@ export {
 
 export { createComment, deleteComment } from './comment';
 
-export { getInterview, setInterview } from './interview';
+export { getInterview, deleteInterview, createInterview } from './interview';

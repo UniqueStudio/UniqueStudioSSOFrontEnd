@@ -1,7 +1,7 @@
 <template>
   <a-select
     v-model="currentGroup"
-    class="w-150 text-right sm:hidden flex"
+    class="text-right sm:hidden flex w-24"
     :bordered="false"
   >
     <a-option v-for="item in groups" :key="item" :value="item">{{
@@ -10,14 +10,18 @@
   </a-select>
   <!-- 移动端 -->
 
-  <a-radio-group v-model="currentGroup" class="bg-white hidden sm:flex">
+  <a-radio-group
+    v-model="currentGroup"
+    class="bg-[--color-bg-1] hidden sm:flex"
+  >
     <template v-for="(item, index) in groups" :key="item">
       <a-radio :value="item">
         <template #radio="{ checked }">
           <span
             :class="[
               'hover:text-[rgb(var(--primary-5))]',
-              checked && 'text-[rgb(var(--primary-6))]',
+              (checked && 'text-[rgb(var(--primary-6))]') ||
+                'text-[--color-text-1]',
               index && 'team-group-radio-item',
             ]"
             >{{ item }}</span

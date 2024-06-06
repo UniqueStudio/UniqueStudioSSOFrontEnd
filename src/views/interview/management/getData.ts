@@ -1,9 +1,9 @@
-import { getRecruitment } from '@/api/recruitment';
 import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
 import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 import { Step } from '@/constants/team';
 import { TableData } from '@arco-design/web-vue';
 import i18n from '@/locale';
+import { Recruitment } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
 
 type Data = {
   [key: string]: TableData[];
@@ -50,17 +50,11 @@ function getDataKey(step: string, group: string): string {
 }
 
 export default async function getApplicationData(
-  nowRid: string,
+  totalData: Recruitment,
 ): Promise<Data> {
-  console.log(
-    '%c [ nowRid ]',
-    'font-size:13px; background:#2e183b; color:#725c7f;',
-    nowRid,
-  );
   const applicationData: Data = {};
-  const totalData = await getRecruitment(nowRid);
-  if (!totalData.data.applications) return applicationData;
-  totalData.data.applications.forEach((application) => {
+  if (!totalData.applications) return applicationData;
+  totalData.applications.forEach((application) => {
     // console.log(application);
 
     let stepName;
@@ -92,3 +86,19 @@ export default async function getApplicationData(
   });
   return applicationData;
 }
+
+const dataEndIndex = 10;
+export const getDate = (time: string): string => {
+  return time.substring(0, dataEndIndex);
+};
+export const getTime = (startStr: string, endStr: string): string => {
+  const start = new Date(startStr);
+  const end = new Date(endStr);
+  return `${start.getHours().toString().padStart(2, '0')}:${start
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}-${end.getHours().toString().padStart(2, '0')}:${end
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}`;
+};
