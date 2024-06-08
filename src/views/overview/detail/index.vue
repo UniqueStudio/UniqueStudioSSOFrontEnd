@@ -128,10 +128,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onActivated, onDeactivated } from 'vue';
 import { recruitSteps } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
-import editButtons from '../components/edit-buttons.vue';
+import editButtons from '../candidate/components/edit-buttons.vue';
 import profile from './profile.vue';
 import BaseInfo from './base-info.vue';
 
@@ -144,7 +144,9 @@ const props = defineProps({
   },
 });
 
-applyStore.getApplication(props.id);
+onActivated(() => applyStore.getApplication(props.id));
+
+onDeactivated(() => applyStore.resetApplication());
 
 const user = computed(() => applyStore.data?.user_detail);
 
