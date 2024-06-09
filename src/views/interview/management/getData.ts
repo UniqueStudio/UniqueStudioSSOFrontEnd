@@ -87,9 +87,13 @@ export default async function getApplicationData(
   return applicationData;
 }
 
-const dataEndIndex = 10;
 export const getDate = (time: string): string => {
-  return time.substring(0, dataEndIndex);
+  const date = new Date(time);
+  return `${date.getFullYear().toString().padStart(2, '0')}-${(
+    date.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 };
 export const getTime = (startStr: string, endStr: string): string => {
   const start = new Date(startStr);

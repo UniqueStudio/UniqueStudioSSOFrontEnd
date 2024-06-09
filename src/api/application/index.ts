@@ -108,7 +108,7 @@ export async function allocateApplicationInterview(
   data: AllocateApplicationInterviewRequest,
 ): Promise<AllocateApplicationInterviewResponse> {
   const res: AllocateApplicationInterviewResponse = await request({
-    url: `/applications/${aid}/interview/${type}`,
+    url: `/applications/${aid}/interviews/${type}`,
     method: 'PUT',
     data,
   });

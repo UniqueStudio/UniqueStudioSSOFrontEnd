@@ -40,7 +40,7 @@ import { defineProps, watch, ref, defineModel } from 'vue';
 import { allocateApplicationInterview } from '@/api/application';
 import { CascaderOption } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
-import { Recruitment } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
+import useRecruitmentStore from '@/store/modules/recruitment';
 import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
 import { getDate, getTime } from '@/views/interview/management/getData';
@@ -70,19 +70,15 @@ const showAllowcate = defineModel<boolean>('showAllowcate', {
   default: false,
   required: true,
 });
-const totalData = defineModel<Recruitment>('totalData', {
-  type: Object,
-  default: {},
-  required: true,
-});
 
 const form = ref({ selectInterviewId: '' as string });
+const recStore = useRecruitmentStore();
 
 const timeOptions = ref([] as CascaderOption[]);
 const getTimeOptions = async () => {
-  if (!totalData.value.interviews) return;
+  if (!recStore.currentRec || !recStore.currentRec.interviews) return;
 
-  const interviewArr = totalData.value.interviews;
+  const interviewArr = recStore.currentRec.interviews;
 
   // 面试分类 date->period->time
   const optionsData = {} as {
@@ -137,23 +133,24 @@ const getTimeOptions = async () => {
 };
 
 const getApplicationIndex = async (): Promise<number> => {
-  if (!totalData.value.applications) return -1;
-  return totalData.value.applications.findIndex(
+  if (!recStore.currentRec || !recStore.currentRec.applications) return -1;
+  return recStore.currentRec.applications.findIndex(
     (application) => application.uid === props.applicationId,
   );
 };
 
 const selectedInterview = ref([] as string[]);
 const getSelectedTime = async (applicationIndex: number) => {
-  // console.log('%c [ totalData.value ]-166', 'font-size:13px; background:#84bab3; color:#c8fef7;', totalData.value);
+  // console.log('%c [ recStore.currentRec ]-166', 'font-size:13px; background:#84bab3; color:#c8fef7;', recStore.currentRec);
   if (
-    !(totalData.value.applications as Application[])[applicationIndex]
+    !recStore.currentRec ||
+    !(recStore.currentRec.applications as Application[])[applicationIndex]
       .interview_selections
   )
     selectedInterview.value = [];
   else {
     selectedInterview.value = (
-      (totalData.value.applications as Application[])[applicationIndex]
+      (recStore.currentRec.applications as Application[])[applicationIndex]
         .interview_selections as Interview[]
     ).map(
       (interview) =>
@@ -167,6 +164,7 @@ const getSelectedTime = async (applicationIndex: number) => {
 
 watch(showAllowcate, async (newShowAllowcate) => {
   if (newShowAllowcate) {
+    await recStore.refresh();
     const index = await getApplicationIndex();
     if (index === -1) {
       showAllowcate.value = false;

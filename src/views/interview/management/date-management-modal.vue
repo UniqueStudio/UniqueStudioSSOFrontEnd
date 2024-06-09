@@ -14,13 +14,11 @@
         <team-group-radio v-model="currentGroup"></team-group-radio>
       </div>
     </div>
-    <div
-      class="flex flex-row flex-wrap justify-between h-[99%] overflow-auto mt-4 mb-8"
-    >
+    <div class="flex flex-row flex-wrap h-[99%] overflow-auto mt-4 mb-8">
       <div
         v-for="info in infos"
         :key="info.uid"
-        class="flex flex-col bg-[--color-bg-1] p-4 mb-4 sm:w-[32%] w-full h-48"
+        class="flex flex-col bg-[--color-bg-1] p-4 mb-4 sm:mr-8 sm:w-[30%] w-full h-48"
       >
         <div class="overflow-hidden flex items-center mb-1">
           <icon-calendar
@@ -74,6 +72,11 @@
     </a-button>
     <!-- 添加日程 -->
 
+    <add-date-modal
+      v-model:visible="showAddDate"
+      :current-group-start="currentGroup"
+    />
+
     <a-modal
       v-model:visible="showComfirmDelete"
       :title="$t('common.operation.deleteDate')"
@@ -88,29 +91,24 @@
 
 <script setup lang="ts">
 import { defineModel, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { Group } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 import { getDate, getTime } from '@/views/interview/management/getData';
-import { Recruitment } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
+import useRecruitmentStore from '@/store/modules/recruitment';
 import { deleteInterview } from '@/api';
+import AddDateModal from './add-date-modal.vue';
 
-const { t } = useI18n();
 const currentGroup = ref(Group.Web);
 const infos = ref([] as Interview[]);
 const showAddDate = ref(false);
 const showComfirmDelete = ref(false);
 const delInterviewId = ref('');
+const recStore = useRecruitmentStore();
 
 const showDateManagement = defineModel<boolean>('showDateManagement', {
   type: Boolean,
   default: false,
-  required: true,
-});
-const totalData = defineModel<Recruitment>('totalData', {
-  type: Object,
-  default: {},
   required: true,
 });
 const nowRid = defineModel<string>('nowRid', {
@@ -120,26 +118,42 @@ const nowRid = defineModel<string>('nowRid', {
 });
 
 const getInterviewData = async () => {
-  if (totalData.value.interviews)
-    infos.value = totalData.value.interviews.filter(
-      (item) => item.name === currentGroup.value,
-    );
+  recStore.refresh();
+  if (!recStore.currentRec) {
+    infos.value = [];
+    return;
+  }
+  if (recStore.currentRec.interviews)
+    infos.value = recStore.currentRec.interviews
+      .filter((item) => item.name === currentGroup.value)
+      .sort((info1, info2) => (info1.start > info2.start ? 1 : -1));
   else infos.value = [];
+  console.log(
+    '%c [ infos ]-133',
+    'font-size:13px; background:#c35873; color:#ff9cb7;',
+    infos.value.length,
+  );
 };
 
 watch(
   () => showDateManagement.value + currentGroup.value,
-  async (val) => {
-    if (val) await getInterviewData();
+  () => {
+    if (showDateManagement.value) getInterviewData();
   },
 );
+
+watch(showAddDate, (newval) => {
+  if (!newval) {
+    setTimeout(() => getInterviewData(), 2000);
+  }
+});
 
 const comfirmDelOk = async () => {
   showComfirmDelete.value = false;
   if (delInterviewId.value === '') return;
-  deleteInterview(nowRid.value, currentGroup.value, [
+  await deleteInterview(nowRid.value, currentGroup.value, [
     { iid: delInterviewId.value },
   ]);
-  getInterviewData();
+  setTimeout(() => getInterviewData(), 2000);
 };
 </script>
