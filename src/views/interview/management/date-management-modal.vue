@@ -6,7 +6,7 @@
         {{ $t('common.operation.returnInterviewManagement') }}
       </a-button>
     </div>
-    <div class="bg-[--color-bg-1] w-full sm:p-5 py-3 px-5">
+    <div class="bg-[--color-bg-2] w-full sm:p-5 py-3 px-5">
       <div class="flex flex-row justify-between">
         <div class="text-[--color-text-1] text-xl">{{
           $t('common.operation.dateManagement')
@@ -14,51 +14,55 @@
         <team-group-radio v-model="currentGroup"></team-group-radio>
       </div>
     </div>
-    <div class="flex flex-row flex-wrap h-[99%] overflow-auto mt-4 mb-8">
-      <div
-        v-for="info in infos"
-        :key="info.uid"
-        class="flex flex-col bg-[--color-bg-1] p-4 mb-4 sm:mr-8 sm:w-[30%] w-full h-48"
-      >
-        <div class="overflow-hidden flex items-center mb-1">
-          <icon-calendar
-            class="w-10 h-10 text-xl rounded-full p-2.5 bg-[rgb(var(--arcoblue-1))] text-[rgb(var(--arcoblue-6))] float-left mr-2.5"
-          />
-          <span class="float-left text-[--color-text-1]">{{ info.name }}</span>
-        </div>
-        <!-- 组别 -->
-        <div class="overflow-hidden flex items-center">
-          <icon-calendar
-            class="w-10 h-10 text-xl p-2 float-left mr-2.5 text-gray-500"
-          />
-          <span class="float-left leading-10 text-slate-500">{{
-            getDate(info.start)
-          }}</span>
-        </div>
-        <!-- 日期 -->
-        <div class="overflow-hidden flex items-center">
-          <icon-clock-circle
-            class="w-10 h-10 text-xl p-2 float-left mr-2.5 text-gray-500"
-          />
-          <span class="float-left leading-10 text-slate-500">{{
-            getTime(info.start, info.end)
-          }}</span>
-        </div>
-        <!-- 时间 -->
-        <a-button
-          type="dashed"
-          class="mt-1"
-          @click="
-            showComfirmDelete = true;
-            delInterviewId = info.uid;
-          "
+    <div class="arco-scrollbar-container overflow-auto h-full">
+      <div class="flex flex-row flex-wrap mt-4 mb-8">
+        <div
+          v-for="info in infos"
+          :key="info.uid"
+          class="flex flex-col bg-[--color-bg-2] p-4 mb-4 sm:mr-6 sm:w-[30%] w-full h-48"
         >
-          <template #icon>
-            <icon-delete />
-          </template>
-          <template #default>Delete</template>
-        </a-button>
-        <!-- 删除 -->
+          <div class="overflow-hidden flex items-center mb-1">
+            <icon-calendar
+              class="w-10 h-10 text-xl rounded-full p-2.5 bg-[rgb(var(--arcoblue-1))] text-[rgb(var(--arcoblue-6))] float-left mr-2.5"
+            />
+            <span class="float-left text-[--color-text-1]">{{
+              info.name
+            }}</span>
+          </div>
+          <!-- 组别 -->
+          <div class="overflow-hidden flex items-center">
+            <icon-calendar
+              class="w-10 h-10 text-xl p-2 float-left mr-2.5 text-gray-500"
+            />
+            <span class="float-left leading-10 text-slate-500">{{
+              getDate(info.start)
+            }}</span>
+          </div>
+          <!-- 日期 -->
+          <div class="overflow-hidden flex items-center">
+            <icon-clock-circle
+              class="w-10 h-10 text-xl p-2 float-left mr-2.5 text-gray-500"
+            />
+            <span class="float-left leading-10 text-slate-500">{{
+              getTime(info.start, info.end)
+            }}</span>
+          </div>
+          <!-- 时间 -->
+          <a-button
+            type="dashed"
+            class="mt-1"
+            @click="
+              showComfirmDelete = true;
+              delInterviewId = info.uid;
+            "
+          >
+            <template #icon>
+              <icon-delete />
+            </template>
+            <template #default>Delete</template>
+          </a-button>
+          <!-- 删除 -->
+        </div>
       </div>
     </div>
 

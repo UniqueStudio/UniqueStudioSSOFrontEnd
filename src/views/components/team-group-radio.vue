@@ -12,7 +12,7 @@
 
   <a-radio-group
     v-model="currentGroup"
-    class="bg-[--color-bg-1] hidden sm:flex"
+    class="bg-[--color-bg-2] hidden sm:flex"
   >
     <template v-for="(item, index) in groups" :key="item">
       <a-radio :value="item">

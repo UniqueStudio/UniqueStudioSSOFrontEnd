@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!showDateManagement" class="bg-[--color-bg-1] w-full h-full p-5">
+  <div v-if="!showDateManagement" class="bg-[--color-bg-2] w-full h-full p-5">
     <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
       $t('menu.interview.management')
     }}</div>
