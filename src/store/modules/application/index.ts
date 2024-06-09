@@ -8,6 +8,9 @@ const useApplicationStore = defineStore('application', {
     data: undefined,
   }),
   actions: {
+    async resetApplication() {
+      this.data = undefined;
+    },
     async getApplication(aid: string) {
       const res = await getApplication(aid);
       this.data = res.data;

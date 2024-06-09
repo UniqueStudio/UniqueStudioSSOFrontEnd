@@ -58,7 +58,8 @@
           <a-date-picker
             v-model="formData.time"
             show-time
-            format="YYYY-MM-DD hh:mm"
+            format="YYYY-MM-DD HH:mm"
+            value-format="YYYY-MM-DD HH:mm"
           />
         </a-form-item>
 
