@@ -7,7 +7,11 @@
         <div class="text-[--color-text-1] pb-5">
           {{ $t('common.user.baseInfo') }}
         </div>
-        <a-descriptions size="large" layout="inline-vertical" :column="3">
+        <a-descriptions
+          size="large"
+          :layout="widthType === 'sm' ? 'inline-horizontal' : 'inline-vertical'"
+          :column="widthType === 'sm' ? 1 : 3"
+        >
           <a-descriptions-item :label="$t('common.user.gender')">
             {{ $t(GenderMap[user!.gender]) }}
           </a-descriptions-item>
@@ -89,11 +93,14 @@
 import { ref, computed } from 'vue';
 import { GenderMap } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
+import useWindowResize from '@/hooks/resize';
 import comment from './comment.vue';
 
 const applyStore = useApplicationStore();
 const user = computed(() => applyStore.data?.user_detail);
 const showIntroDetail = ref(false);
+
+const { widthType } = useWindowResize();
 </script>
 
 <style scoped lang="less"></style>

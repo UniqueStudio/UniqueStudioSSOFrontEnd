@@ -12,14 +12,14 @@ const router = createRouter({
       // 暂时重定向到总览
       redirect: '/overview',
     },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/views/login/index.vue'),
-      meta: {
-        requiresAuth: false,
-      },
-    },
+    // {
+    //   path: '/login',
+    //   name: 'login',
+    //   component: () => import('@/views/login/index.vue'),
+    //   meta: {
+    //     requiresAuth: false,
+    //   },
+    // },
     ...appRoutes,
     NO_PERMISSION,
     // DETAIL,
