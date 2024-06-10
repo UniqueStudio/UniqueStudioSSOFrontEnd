@@ -19,6 +19,7 @@ export {
   getAllApplications,
   getApplication,
   getApplicationResume,
+  getApplicationWrittenTestAnswer,
   getAvailableInterviewSelections,
   createApplication,
   updateApplication,
