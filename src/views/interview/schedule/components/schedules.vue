@@ -1,9 +1,11 @@
 <template>
-  <div class="bg-white rounded p-5 relative">
+  <div class="rounded p-5 relative bg-[--color-bg-2]">
     <div class="w-full font-normal mb-5 text-xl flex justify-between">
-      <span>{{ $t('common.applyInfo.Schedules') }}</span>
+      <span class="text-[--color-text-1]">{{
+        $t('common.applyInfo.Schedules')
+      }}</span>
       <a-dropdown>
-        <div class="cursor-pointer text-[--color-text-2] text-base">
+        <div class="cursor-pointer text-[--color-text-1] text-base">
           <span class="mr-1"> {{ currentGroup }} </span>
           <icon-down />
         </div>
@@ -27,9 +29,9 @@
         >
           <div class="overflow-hidden flex items-center mb-1">
             <icon-calendar
-              class="w-9 h-9 text-xl rounded-full border-2 p-2 bg-gray-100 text-blue-600 float-left mr-2.5"
+              class="w-9 h-9 text-xl rounded-full border-2 p-2 bg-gray-100 text-blue-600 float-left mr-3"
             />
-            <span class="float-left"
+            <span class="float-left text-[--color-text-1]"
               >{{ info.group }}{{ interviewType(info) }}</span
             >
           </div>
@@ -37,7 +39,7 @@
             <icon-clock-circle
               class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
-            <span class="float-left leading-10 text-slate-500">{{
+            <span class="float-left leading-10 text-[--color-text-3]">{{
               info.interviewPeriod
             }}</span>
           </div>
@@ -46,7 +48,7 @@
             <icon-user
               class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
-            <span class="float-left leading-10 text-slate-500">{{
+            <span class="float-left leading-10 text-[--color-text-3]">{{
               info.name
             }}</span>
           </div>
