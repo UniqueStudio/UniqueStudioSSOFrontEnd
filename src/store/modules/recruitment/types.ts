@@ -1,7 +1,9 @@
 import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
 import { Recruitment } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
+import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 
 export type CandidateInfo = Application;
+export type InterviewInfo = Interview;
 
 export interface RecruitmentState {
   data: Recruitment[];

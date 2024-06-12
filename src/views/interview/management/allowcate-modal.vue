@@ -2,18 +2,20 @@
   <a-modal
     v-model:visible="showAllowcate"
     :title="$t('common.operation.allocateInterviewTime')"
-    :width="isMobile ? '90%' : ''"
-    @cancel="handleCancel"
+    :width="widthType === 'sm' ? '90%' : ''"
     @before-ok="handleBeforeOk"
   >
-    <a-form :model="form" :layout="isMobile ? 'vertical' : 'horizontal'">
+    <a-form
+      :model="form"
+      :layout="widthType === 'sm' ? 'vertical' : 'horizontal'"
+    >
       <a-form-item
         field="seletedTime"
         :label="$t('common.operation.candidateSeletedTime')"
       >
         <a-space wrap>
           <a-tag
-            v-for="(time, index) in selectedInterview"
+            v-for="(time, index) in displayData.selectedTime"
             :key="index"
             color="arcoblue"
           >
@@ -27,7 +29,7 @@
       >
         <a-cascader
           v-model="form.selectInterviewId"
-          :options="timeOptions"
+          :options="displayData.timeOptions"
           expand-trigger="hover"
         />
       </a-form-item>
@@ -36,16 +38,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, watch, ref, defineModel } from 'vue';
+import { defineProps, ref, defineModel, computed } from 'vue';
 import { allocateApplicationInterview } from '@/api/application';
-import { CascaderOption } from '@arco-design/web-vue';
+import { CascaderOption, Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 import useRecruitmentStore from '@/store/modules/recruitment';
-import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
-import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
 import { getDate, getTime } from '@/views/interview/management/getData';
+import useWindowResize from '@/hooks/resize';
 
 const { t } = useI18n();
+const { widthType } = useWindowResize();
 
 const props = defineProps({
   applicationId: {
@@ -58,11 +60,6 @@ const props = defineProps({
     default: 'group',
     required: true,
   },
-  isMobile: {
-    type: Boolean,
-    default: false,
-    required: true,
-  },
 });
 
 const showAllowcate = defineModel<boolean>('showAllowcate', {
@@ -71,20 +68,17 @@ const showAllowcate = defineModel<boolean>('showAllowcate', {
   required: true,
 });
 
-const form = ref({ selectInterviewId: '' as string });
+const form = ref<{
+  selectInterviewId: string;
+}>({ selectInterviewId: '' });
 const recStore = useRecruitmentStore();
 
-const timeOptions = ref([] as CascaderOption[]);
-const getTimeOptions = async () => {
-  if (!recStore.currentRec || !recStore.currentRec.interviews) return;
-
-  const interviewArr = recStore.currentRec.interviews;
-
+const getTimeOptions = () => {
   // 面试分类 date->period->time
   const optionsData = {} as {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
   };
-  interviewArr.forEach((interview) => {
+  recStore.curInterviews.forEach((interview) => {
     if (interview.start && interview.period) {
       const date = getDate(interview.start);
       const time = getTime(interview.start, interview.end);
@@ -106,6 +100,7 @@ const getTimeOptions = async () => {
   });
 
   // 数据格式转换 change the data in optionsData to timeOptions
+  const timeOptionsTmp: CascaderOption[] = [];
   Object.entries(optionsData).forEach(([date, valueThisDate]) => {
     const DateChildren = [] as CascaderOption[];
     Object.entries(valueThisDate).forEach(([period, valueThisPeriod]) => {
@@ -122,77 +117,44 @@ const getTimeOptions = async () => {
         children: periodChildren,
       });
     });
-    timeOptions.value.push({
+    timeOptionsTmp.push({
       label: date,
       value: date,
       children: DateChildren,
     });
   });
 
-  // console.log('%c [ timeOptions ]-93', 'font-size:13px; background:#d93d60; color:#ff81a4;', timeOptions);
+  return timeOptionsTmp;
 };
 
-const getApplicationIndex = async (): Promise<number> => {
-  if (!recStore.currentRec || !recStore.currentRec.applications) return -1;
-  return recStore.currentRec.applications.findIndex(
-    (application) => application.uid === props.applicationId,
-  );
-};
-
-const selectedInterview = ref([] as string[]);
-const getSelectedTime = async (applicationIndex: number) => {
-  // console.log('%c [ recStore.currentRec ]-166', 'font-size:13px; background:#84bab3; color:#c8fef7;', recStore.currentRec);
-  if (
-    !recStore.currentRec ||
-    !(recStore.currentRec.applications as Application[])[applicationIndex]
-      .interview_selections
-  )
-    selectedInterview.value = [];
-  else {
-    selectedInterview.value = (
-      (recStore.currentRec.applications as Application[])[applicationIndex]
-        .interview_selections as Interview[]
-    ).map(
+const displayData = computed(() => {
+  const index =
+    recStore.curApplications.findIndex(
+      ({ uid }) => uid === props.applicationId,
+    ) ?? -1;
+  let timeOptions: CascaderOption[] = [];
+  let selectedTime: string[] = [];
+  timeOptions = getTimeOptions();
+  selectedTime =
+    recStore.curApplications[index]?.interview_selections?.map(
       (interview) =>
         `${getDate(interview.start)} ${getTime(
           interview.start,
           interview.end,
         )}`,
-    );
-  }
-};
-
-watch(showAllowcate, async (newShowAllowcate) => {
-  if (newShowAllowcate) {
-    await recStore.refresh();
-    const index = await getApplicationIndex();
-    if (index === -1) {
-      showAllowcate.value = false;
-    } else {
-      timeOptions.value = [];
-      await getTimeOptions();
-      await getSelectedTime(index);
-    }
-  }
+    ) ?? [];
+  return { timeOptions, selectedTime };
 });
 
-const handleCancel = () => {
-  showAllowcate.value = false;
-};
-
-const submitSelectInterviewTime = async (selectInterviewId: string) => {
-  // console.log('%c [ selectInterviewId ]-185', 'font-size:13px; background:#e28e6b; color:#ffd2af;', selectInterviewId);
+const handleBeforeOk = () => {
   allocateApplicationInterview(
     props.applicationId,
     props.interviewType as 'group' | 'team',
-    { interview_id: selectInterviewId },
-  );
-  // TODO: 提交后刷新数据
-};
-
-const handleBeforeOk = async () => {
-  // console.log(form);
-  submitSelectInterviewTime(form.value.selectInterviewId);
+    { interview_id: form.value.selectInterviewId },
+  ).then(() => {
+    recStore.refresh();
+    Message.success(t('common.operation.allocateInterviewSuccess'));
+  });
   return true;
 };
 </script>

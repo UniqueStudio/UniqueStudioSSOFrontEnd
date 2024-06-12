@@ -17,6 +17,7 @@ import {
   CreateParams,
   CandidateInfo,
   Group,
+  InterviewInfo,
 } from './types';
 
 const useRecruitmentStore = defineStore('recruitment', {
@@ -78,6 +79,9 @@ const useRecruitmentStore = defineStore('recruitment', {
   getters: {
     curApplications(): CandidateInfo[] {
       return this.currentRec?.applications ?? [];
+    },
+    curInterviews(): InterviewInfo[] {
+      return this.currentRec?.interviews ?? [];
     },
   },
 });

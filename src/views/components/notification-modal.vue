@@ -6,7 +6,7 @@
     :on-before-close="
       notifyFormRef?.resetFields(['time', 'place', 'rest', 'meeting_id'])
     "
-    :width="isMobile ? '90%' : '600px'"
+    :width="width < 666 ? '90%' : '600px'"
   >
     <a-form
       ref="notifyFormRef"
@@ -174,8 +174,10 @@ import { sendSms } from '@/api';
 import { groupBy } from 'lodash';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
+import useWindowResize from '@/hooks/resize';
 
 const { t } = useI18n();
+const { width } = useWindowResize();
 
 const props = defineProps({
   candidates: {
@@ -202,10 +204,6 @@ const props = defineProps({
   },
   group: {
     type: String as PropType<Group>,
-    required: true,
-  },
-  isMobile: {
-    type: Boolean,
     required: true,
   },
 });

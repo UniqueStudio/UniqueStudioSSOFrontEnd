@@ -20,8 +20,9 @@
           <span
             :class="[
               'hover:text-[rgb(var(--primary-5))]',
-              (checked && 'text-[rgb(var(--primary-6))]') ||
-                'text-[--color-text-1]',
+              checked
+                ? 'text-[rgb(var(--primary-6))]'
+                : 'text-[--color-text-1]',
               index && 'team-group-radio-item',
             ]"
             >{{ item }}</span
@@ -39,11 +40,6 @@ import { Group } from '@/constants/team';
 const groups = computed(() =>
   Object.values(Group).filter((x) => x !== Group.Unique),
 );
-// console.log(
-//   '%c [ groups ]-33',
-//   'font-size:13px; background:#2d4095; color:#7184d9;',
-//   groups.value,
-// );
 
 const currentGroup = defineModel<Group>({
   required: true,

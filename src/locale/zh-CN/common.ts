@@ -48,6 +48,9 @@ export default {
   'common.result.uploadFileSuccess': '上传文件成功',
   'common.result.setStressTestTimeSuccess': '设置熬测时间成功',
   'common.result.remainingSchedules': '剩余{count}个日程',
+  'common.result.allowcateTimeSuccess': '分配时间成功',
+  'common.result.deleteInterviewSuccess': '删除面试时间成功',
+  'common.result.addInterviewSuccess': '添加面试时间成功',
 
   'common.user.phone': '手机号码',
   'common.user.email': '邮箱',

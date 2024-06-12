@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <div>
-      <a-button class="pl-1 pr-2" @click="showDateManagement = false">
+      <a-button class="pl-1 pr-2" @click="show = false">
         <icon-left />
         {{ $t('common.operation.returnInterviewManagement') }}
       </a-button>
@@ -84,7 +84,6 @@
     <a-modal
       v-model:visible="showComfirmDelete"
       :title="$t('common.operation.deleteDate')"
-      @cancel="showComfirmDelete = false"
       @before-ok="comfirmDelOk"
     >
       <p>{{ $t('common.operation.comfirmDeleteDate') }}</p>
@@ -94,70 +93,50 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, ref, watch } from 'vue';
+import { ref, computed, onMounted, defineModel } from 'vue';
 import { Group } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
-import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 import { getDate, getTime } from '@/views/interview/management/getData';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import { deleteInterview } from '@/api';
+import { Message } from '@arco-design/web-vue';
+import { useI18n } from 'vue-i18n';
 import AddDateModal from './add-date-modal.vue';
 
 const currentGroup = ref(Group.Web);
-const infos = ref([] as Interview[]);
 const showAddDate = ref(false);
 const showComfirmDelete = ref(false);
 const delInterviewId = ref('');
 const recStore = useRecruitmentStore();
+const { t } = useI18n();
 
-const showDateManagement = defineModel<boolean>('showDateManagement', {
+const show = defineModel<boolean>('show', {
   type: Boolean,
   default: false,
   required: true,
 });
-const nowRid = defineModel<string>('nowRid', {
-  type: String,
-  default: '',
-  required: true,
-});
 
-const getInterviewData = async () => {
-  recStore.refresh();
-  if (!recStore.currentRec) {
-    infos.value = [];
-    return;
-  }
-  if (recStore.currentRec.interviews)
-    infos.value = recStore.currentRec.interviews
+const infos = computed(() => {
+  return (
+    recStore.curInterviews
       .filter((item) => item.name === currentGroup.value)
-      .sort((info1, info2) => (info1.start > info2.start ? 1 : -1));
-  else infos.value = [];
-  console.log(
-    '%c [ infos ]-133',
-    'font-size:13px; background:#c35873; color:#ff9cb7;',
-    infos.value.length,
+      .sort((info1, info2) => (info1.start > info2.start ? 1 : -1)) ?? []
   );
-};
-
-watch(
-  () => showDateManagement.value + currentGroup.value,
-  () => {
-    if (showDateManagement.value) getInterviewData();
-  },
-);
-
-watch(showAddDate, (newval) => {
-  if (!newval) {
-    setTimeout(() => getInterviewData(), 2000);
-  }
 });
 
-const comfirmDelOk = async () => {
-  showComfirmDelete.value = false;
-  if (delInterviewId.value === '') return;
-  await deleteInterview(nowRid.value, currentGroup.value, [
-    { iid: delInterviewId.value },
-  ]);
-  setTimeout(() => getInterviewData(), 2000);
+const comfirmDelOk = () => {
+  if (delInterviewId.value) {
+    deleteInterview(recStore.currentRid, currentGroup.value, [
+      { iid: delInterviewId.value },
+    ]).then((res) => {
+      if (res) Message.success(t('common.result.deleteInterviewSuccess'));
+      recStore.refresh();
+    });
+  }
+  return true;
 };
+
+onMounted(() => {
+  recStore.refresh();
+});
 </script>

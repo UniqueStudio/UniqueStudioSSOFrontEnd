@@ -49,11 +49,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel } from 'vue';
+import { ref, defineModel, PropType } from 'vue';
 import { Group, Period, PeriodDefineHour } from '@/constants/team';
 import { createInterview } from '@/api';
 import { CreateInterviewRequest } from '@/constants/httpMsg/interview/createInterviewMsg';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import { Message } from '@arco-design/web-vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const visible = defineModel<boolean>('visible', {
   type: Boolean,
@@ -62,15 +66,15 @@ const visible = defineModel<boolean>('visible', {
 });
 const props = defineProps({
   currentGroupStart: {
-    type: String,
+    type: String as PropType<Group>,
     default: Group.Web,
     required: true,
   },
 });
 
-const currentGroup = ref(props.currentGroupStart as Group);
-const interviewDate = ref('');
-const interviewTime = ref([] as string[]);
+const currentGroup = ref<Group>(props.currentGroupStart);
+const interviewDate = ref<string>('');
+const interviewTime = ref<string[]>([]);
 const recStore = useRecruitmentStore();
 
 const groupOptions = Object.keys(Group)
@@ -123,6 +127,7 @@ const handleCreate = async () => {
   } finally {
     if (res) {
       recStore.refresh();
+      Message.success(t('common.result.addInterviewSuccess'));
     }
   }
 };

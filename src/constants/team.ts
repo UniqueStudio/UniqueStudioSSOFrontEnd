@@ -25,6 +25,11 @@ export const PeriodDefineHour = {
   evening: [18, 24], // 18:00 - 24:00
 };
 
+export enum InterviewType {
+  Group = 'common.steps.GroupInterview',
+  Team = 'common.steps.TeamInterview',
+}
+
 export enum Group {
   Web = 'web',
   Lab = 'lab',

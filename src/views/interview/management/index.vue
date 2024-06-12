@@ -62,7 +62,7 @@
       <a-table
         v-model:selectedKeys="selectedKeys"
         row-key="name"
-        :data="data[interviewType + '_' + currentGroup]"
+        :data="data"
         :row-selection="{
           type: 'checkbox',
           showCheckedAll: true,
@@ -78,12 +78,12 @@
             key="common.user.name"
             :title="$t('common.user.name')"
             data-index="name"
-            :width="isMobile ? 75 : undefined"
+            :width="widthType === 'sm' ? 75 : undefined"
           ></a-table-column>
           <!-- 姓名 -->
 
           <a-table-column
-            v-if="!isMobile || displayType === 'common.information'"
+            v-if="widthType != 'sm' || displayType === 'common.information'"
             key="common.user.interviewTime"
             :title="$t('common.user.interviewTime')"
             data-index="interviewTime"
@@ -94,7 +94,9 @@
           <!-- 面试时间 -->
 
           <a-table-column
-            v-if="!isMobile || displayType === 'common.operation.operate'"
+            v-if="
+              widthType != 'sm' || displayType === 'common.operation.operate'
+            "
             :title="$t('common.operation.operate')"
           >
             <template #cell="{ record }">
@@ -135,9 +137,7 @@
   </div>
 
   <date-management-modal
-    v-model:showDateManagement="showDateManagement"
-    v-model:totalData="totalData"
-    v-model:now-rid="recStore.currentRid"
+    v-model:show="showDateManagement"
     :class="showDateManagement ? '' : 'hidden'"
   />
 
@@ -148,98 +148,87 @@
     :rec-name="recStore.currentRec?.name ?? ''"
     :type="'Accept'"
     :group="Group.Web"
-    :is-mobile="isMobile"
   />
   <!-- 发送通知弹窗 -->
 
   <allowcate-modal
     v-model:showAllowcate="showAllowcate"
-    v-model:totalData="totalData"
     :application-id="allowcateApplicationId"
-    :interview-type="interviewType == '群面' ? 'team' : 'group'"
-    :is-mobile="isMobile"
+    :interview-type="interviewType === InterviewType.Team ? 'team' : 'group'"
   />
   <!-- 分配选手面试时间弹窗 -->
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { Group } from '@/constants/team';
+import { ref, computed } from 'vue';
+import { Group, InterviewType, Step } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import NotificationModal from '@/views/components/notification-modal.vue';
-
 import useRecruitmentStore from '@/store/modules/recruitment';
-
-import { TableData } from '@arco-design/web-vue';
-import { Recruitment } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
+import useWindowResize from '@/hooks/resize';
+import { useI18n } from 'vue-i18n';
 import AllowcateModal from './allowcate-modal.vue';
 import DateManagementModal from './date-management-modal.vue';
-import getApplicationData from './getData';
+import { getTotalTime } from './getData';
 
 document.cookie = 'SSO_SESSION=unique_web_admin';
 
 const recStore = useRecruitmentStore();
+const { t } = useI18n();
+const { widthType } = useWindowResize();
 
-const interviewType = ref('common.steps.GroupInterview');
+const interviewType = ref(InterviewType.Group);
 const currentGroup = ref(Group.Web);
-const selectedKeys = ref([]);
-const showNotify = ref(false);
+const selectedKeys = ref<string[]>([]);
 const searchValue = ref('');
-const showAllowcate = ref(false);
-const allowcateApplicationId = ref('' as string);
-const selectData = ref([] as { name: string; aid: string; step: any }[]);
+const allowcateApplicationId = ref<string>('');
+const selectData = ref<{ name: string; aid: string; step: any }[]>([]);
 const displayType = ref('common.information');
-const isMobile = ref(false);
+
+const showAllowcate = ref(false);
+const showNotify = ref(false);
 const showDateManagement = ref(false);
-const totalData = ref({} as Recruitment);
 
-type Data = {
-  [key: string]: TableData[];
-};
-const realData = ref({} as Data);
-const data = ref({} as Data);
-watch(
-  () => recStore.currentRid,
-  async (newRid) => {
-    totalData.value = await recStore.getRecruitment(newRid);
-    getApplicationData(totalData.value).then((res) => {
-      // console.log(res);
-      realData.value = res;
-      data.value = JSON.parse(JSON.stringify(realData.value));
-    });
-  },
-);
-
-const tabItems = ['common.steps.GroupInterview', 'common.steps.TeamInterview'];
-
+const tabItems = [InterviewType.Group, InterviewType.Team];
 const displayTypeItems = ['common.information', 'common.operation.operate'];
 
-// 搜索名字
-watch(searchValue, (val) => {
-  // console.log("newSearchValue", val);
-  // console.log(realData.value);
-  const stepTitle =
-    interviewType.value === '群面'
-      ? 'common.steps.TeamInterview'
-      : 'common.steps.GroupInterview';
-  const key = `${stepTitle}_${currentGroup.value}`;
-  data.value[key] = realData.value[key].filter((item) => {
-    return item.name.includes(val);
-  });
-});
-
-watch(selectedKeys, (newSelectedKeys) => {
-  return newSelectedKeys.map((key) => {
-    const key1 = `${interviewType.value}_${currentGroup.value}`;
-    const nowData = data.value[key1].find((item) => item.name === key);
-    if (!nowData) return {};
-    return {
-      name: nowData.name,
-      aid: nowData.aid,
-      step: nowData.step,
-    };
-  });
-});
+const data = computed(() =>
+  recStore.curApplications
+    .filter((app) => {
+      if (app.group !== currentGroup.value) return false;
+      if (interviewType.value === InterviewType.Group) {
+        if (
+          app.step !== Step.GroupInterview &&
+          app.step !== Step.GroupTimeSelection
+        )
+          return false;
+      } else if (interviewType.value === InterviewType.Team) {
+        if (
+          app.step === Step.TeamInterview ||
+          app.step === Step.TeamTimeSelection
+        )
+          return false;
+      }
+      if (app.user_detail?.name.includes(searchValue.value)) return true;
+      return false;
+    })
+    .map((app, ind) => {
+      const interviewData =
+        interviewType.value === InterviewType.Group
+          ? app.interview_allocations_group
+          : app.interview_allocations_team;
+      return {
+        key: ind,
+        name: app.user_detail?.name ?? '',
+        interviewTime:
+          interviewData && interviewData.uid
+            ? getTotalTime(interviewData?.start, interviewData?.end)
+            : t('common.status.waitForDistribution'),
+        aid: app.uid,
+        step: app.step,
+      };
+    }),
+);
 
 // 发送通知
 const allocateOne = (rowData: any) => {
@@ -256,10 +245,8 @@ const allocateSelect = () => {
   showNotify.value = true;
   selectData.value = selectedKeys.value
     .map((key) => {
-      // console.log('%c [ key ]-178', 'font-size:13px; background:#d6a129; color:#ffe56d;', key);
-      const key1 = `${interviewType.value}_${currentGroup.value}`;
-      const nowData = data.value[key1].find((item) => item.name === key);
-      if (!nowData) return null;
+      const nowData = data.value.find((item) => item.name === key);
+      if (!nowData) return {} as { name: string; aid: string; step: any };
       return {
         name: nowData.name,
         aid: nowData.aid,
@@ -268,15 +255,6 @@ const allocateSelect = () => {
     })
     .filter((item) => item !== null);
 };
-
-// 移动端适配
-const mediaQuery = window.matchMedia('(min-width: 640px)');
-function handleTabletChange(e: MediaQueryListEvent) {
-  if (e.matches) isMobile.value = false;
-  else isMobile.value = true;
-}
-mediaQuery.onchange = handleTabletChange;
-handleTabletChange(mediaQuery);
 </script>
 
 <style scoped lang="less"></style>
