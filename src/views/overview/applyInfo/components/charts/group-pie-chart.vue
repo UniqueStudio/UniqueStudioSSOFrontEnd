@@ -40,8 +40,8 @@ onMounted(async () => {
     });
 
     const groupMemberCounts = (targetGroup: string) => {
-      // @ts-ignore
       return (
+        // @ts-ignore
         recruitmentData.group_details[targetGroup] / allGroupMemberCounts.value
       );
     };
