@@ -24,7 +24,7 @@
             )
           "
         >
-          <div class="text-gray-600 mt-5 ml-5 sm:text-xl">
+          <div class="text-[--color-text-1] mt-5 ml-5 sm:text-xl">
             {{ date.getMonth() + 1 }}.{{ date.getDate() }}
           </div>
           <li
@@ -37,9 +37,11 @@
                 <div
                   class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 mr-3 flex items-center justify-center"
                 >
-                  <icon-calendar class="sm:text-xl" />
+                  <icon-calendar class="sm:text-xl text-[--color-text-1]" />
                 </div>
-                <span class="sm:text-xl mt-1">{{ schedule.name }}</span>
+                <span class="sm:text-xl mt-1 text-[--color-text-1]">{{
+                  schedule.name
+                }}</span>
               </div>
               <span class="text-blue-600 mr-8 sm:text-lg">{{
                 schedule.time
@@ -80,7 +82,7 @@
             )
           "
         >
-          <div class="text-gray-600 mt-5 ml-5 text-lg">
+          <div class="text-[--color-text-1] mt-5 ml-5 text-lg">
             {{ date.getMonth() + 1 }}.{{ date.getDate() }}
           </div>
           <li
@@ -91,7 +93,9 @@
             <div class="w-10 h-10 rounded-full border-2 float-left mr-3 p-2">
               <icon-calendar class="text-xl" />
             </div>
-            <span class="text-xl float-left mt-1">{{ schedule.name }}</span>
+            <span class="text-xl float-left mt-1 text-[--color-text-1]">{{
+              schedule.name
+            }}</span>
             <span class="text-blue-600 float-right mt-3">{{
               schedule.time
             }}</span>
@@ -104,8 +108,59 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-// import useRecruitmentStore from '@/store/modules/recruitment';
-const pickerValue = ref('2024-03-01');
+import useRecruitmentStore from '@/store/modules/recruitment';
+
+const getToday = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const transformedTime = (start: string, end: string) => {
+  const startTime = new Date(start);
+  const endTime = new Date(end);
+
+  const startHours = startTime.getHours().toString().padStart(2, '0');
+  const startMinutes = startTime.getMinutes().toString().padStart(2, '0');
+  const endHours = endTime.getHours().toString().padStart(2, '0');
+  const endMinutes = endTime.getMinutes().toString().padStart(2, '0');
+
+  return `${startHours}:${startMinutes}-${endHours}:${endMinutes}`;
+};
+
+const pickerValue = ref(getToday());
+const schedules: any[] = [];
+
+const recStore = useRecruitmentStore();
+recStore.curApplications.forEach((e) => {
+  console.log(e.interview_allocations_group?.date);
+});
+recStore.curApplications.forEach((e) => {
+  const groupObj = {
+    // @ts-ignore
+    date: new Date(e.interview_allocations_group?.date),
+    name: `${e.group}组面(${e.user_detail?.name})`,
+    time: transformedTime(
+      e.interview_allocations_group!.start,
+      e.interview_allocations_group!.end,
+    ),
+  };
+
+  const teamObj = {
+    // @ts-ignore
+    date: new Date(e.interview_allocations_team?.date),
+    name: `${e.group}群面(${e.user_detail?.name})`,
+    time: transformedTime(
+      e.interview_allocations_team!.start,
+      e.interview_allocations_team!.end,
+    ),
+  };
+
+  schedules.push(groupObj, teamObj);
+});
+
 const visible = ref(false);
 const recents = computed(() => {
   const dateArray = [];
@@ -116,64 +171,6 @@ const recents = computed(() => {
   }
   return dateArray;
 });
-
-const schedules = [
-  {
-    date: new Date('2024-03-01'),
-    name: 'PM组面',
-    time: '19:00-21:00',
-  },
-  {
-    date: new Date('2024-03-01'),
-    name: 'Design组面',
-    time: '19:00-21:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-  {
-    date: new Date('2024-03-03'),
-    name: '选手报名截止',
-    time: '19:00',
-  },
-]; // 测试用
 
 const filteredSchedules = (recent: any) => {
   return schedules
