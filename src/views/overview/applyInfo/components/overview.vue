@@ -5,26 +5,26 @@
     }}</div>
     <div class="p-5 flex justify-around">
       <div class="flex">
-        <icon-close-circle-fill
-          class="pt-3 pr-5 text-7xl"
-        ></icon-close-circle-fill>
+        <icon-user-group
+          class="pt-3 pr-5 text-7xl text-[--color-text-1]"
+        ></icon-user-group>
         <div class="flex flex-col">
-          <span class="text-gray-500 pb-3 text-lg font-medium">{{
+          <span class="text-[--color-text-1] pb-3 text-lg font-medium">{{
             $t('common.applyInfo.groupMemberCounts')
           }}</span>
-          <span class="font-bold text-4xl"> 0 </span>
+          <span class="font-bold text-4xl text-[--color-text-1]">
+            {{ allGroupMemberCounts }}
+          </span>
         </div>
       </div>
       <div class="flex">
-        <icon-close-circle-fill
-          class="pt-3 pr-5 text-7xl"
-        ></icon-close-circle-fill>
+        <icon-user class="pt-3 pr-5 text-7xl text-[--color-text-1]"></icon-user>
         <div class="flex flex-col">
-          <span class="text-gray-500 pb-3 text-lg font-medium">{{
+          <span class="text-[--color-text-1] pb-3 text-lg font-medium">{{
             $t('common.applyInfo.candidateCounts')
           }}</span>
-          <span class="font-bold text-4xl">
-            {{ allGroupMemberCounts }}
+          <span class="font-bold text-4xl text-[--color-text-1]">
+            {{ allApplicationCounts }}
           </span>
         </div>
       </div>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import groupPieChart from './charts/group-pie-chart.vue';
 import recruitmentPieChart from './charts/recruitment-pie-chart.vue';
@@ -61,5 +61,17 @@ import groupPieChartSm from './charts/group-pie-chart-sm.vue';
 import recruitmentPieChartSm from './charts/recruitment-pie-chart-sm.vue';
 
 const recStore = useRecruitmentStore();
-const allGroupMemberCounts = computed(() => recStore.curApplications.length);
+const allApplicationCounts = computed(() => recStore.curApplications.length);
+const allGroupMemberCounts = ref(null);
+
+watchEffect(async () => {
+  const recruitmentData = await recStore.getLatestRecruitment();
+  // @ts-ignore
+  allGroupMemberCounts.value = computed(() => {
+    return Object.values(recruitmentData.group_details as any[]).reduce(
+      (sum, val) => sum + val,
+      0,
+    );
+  });
+});
 </script>
