@@ -16,14 +16,34 @@ onMounted(() => {
 
   watchEffect(() => {
     const myChart = echarts.init(document.getElementById('pieChart1'));
-    const allGroupMemberCounts = recStore.curApplications.length;
-    const groupMemberCounts = (targetGroup: string) => {
+    const allApplicationCounts = recStore.curApplications.length;
+
+    const groupMapping = {
+      PM: Group.Pm,
+      Design: Group.Design,
+      AI: Group.Ai,
+      Android: Group.Android,
+      Web: Group.Web,
+      IOS: Group.Ios,
+      Lab: Group.Lab,
+      Game: Group.Game,
+    };
+
+    const applicationCounts = (targetGroup: string) => {
       return (
         recStore.curApplications.filter(({ group }) => {
           return group === targetGroup;
-        }).length / allGroupMemberCounts
+        }).length / allApplicationCounts
       );
     };
+
+    const createDataObject = (group: string, name: string) => {
+      return {
+        value: applicationCounts(group),
+        name,
+      };
+    };
+
     const option = {
       tooltip: {
         formatter: '{b} : {d}%',
@@ -32,44 +52,16 @@ onMounted(() => {
         text: t('common.applyInfo.candidates'),
         left: 'center',
         top: 'center',
+        textStyle: {
+          color: '#a9aeb8',
+        },
       },
       series: [
         {
           type: 'pie',
-          data: [
-            {
-              value: groupMemberCounts(Group.Pm),
-              name: 'PM',
-            },
-            {
-              value: groupMemberCounts(Group.Design),
-              name: 'Design',
-            },
-            {
-              value: groupMemberCounts(Group.Ai),
-              name: 'AI',
-            },
-            {
-              value: groupMemberCounts(Group.Android),
-              name: 'Android',
-            },
-            {
-              value: groupMemberCounts(Group.Web),
-              name: 'Web',
-            },
-            {
-              value: groupMemberCounts(Group.Ios),
-              name: 'IOS',
-            },
-            {
-              value: groupMemberCounts(Group.Lab),
-              name: 'Lab',
-            },
-            {
-              value: groupMemberCounts(Group.Game),
-              name: 'Game',
-            },
-          ],
+          data: Object.entries(groupMapping).map(([name, group]) =>
+            createDataObject(group, name),
+          ),
           label: {
             show: true,
             formatter(params: any) {
