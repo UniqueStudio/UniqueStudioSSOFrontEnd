@@ -16,8 +16,10 @@
       </a-select>
     </div>
     <div class="pl-3 pt-3">
-      <span class="text-5xl font-bold mr-3">{{ groupMemberCounts }}</span
-      ><span class="text-gray-500 text-sm"
+      <span class="text-5xl font-bold mr-3 text-[--color-text-1]">{{
+        groupMemberCounts
+      }}</span
+      ><span class="text-[--color-text-1] text-sm"
         >{{ currentGroup }}{{ $t('common.applyInfo.candidateCounts') }}</span
       >
     </div>
