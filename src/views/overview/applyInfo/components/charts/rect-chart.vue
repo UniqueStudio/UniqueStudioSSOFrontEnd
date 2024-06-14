@@ -54,6 +54,7 @@ onMounted(() => {
           itemGap: 10,
           textStyle: {
             fontSize: 16,
+            color: '#a9aeb8',
           },
         },
         series: [
