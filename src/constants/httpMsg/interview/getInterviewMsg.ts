@@ -7,6 +7,8 @@ export interface Interview {
   updated_at: TimeString;
   date: TimeString;
   period: Period;
+  start: TimeString;
+  end: TimeString;
   name: Group;
   start: TimeString;
   end: TimeString;

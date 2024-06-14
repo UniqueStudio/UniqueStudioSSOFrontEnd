@@ -14,6 +14,17 @@ interface Statistics {
   web?: number;
 }
 
+interface GroupDetails {
+  ai?: number;
+  android?: number;
+  design?: number;
+  game?: number;
+  ios?: number;
+  lab?: number;
+  pm?: number;
+  web?: number;
+}
+
 export interface Recruitment {
   uid: string;
   created_at: TimeString;
@@ -23,6 +34,7 @@ export interface Recruitment {
   deadline: TimeString;
   end: TimeString;
   statistics?: Statistics;
+  group_details?: GroupDetails;
   applications?: Application[];
   interviews?: Interview[];
 }
