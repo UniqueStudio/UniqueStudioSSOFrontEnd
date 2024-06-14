@@ -1,10 +1,5 @@
 <template>
-  <div class="hidden sm:w-full">
-    <div id="pie-chart" class="h-80"></div>
-  </div>
-  <div class="w-full sm:hidden">
-    <div id="pie-chart1" class="h-80"></div>
-  </div>
+  <div id="pie-chart" class="h-80"></div>
 </template>
 
 <script setup lang="ts">
@@ -21,7 +16,6 @@ onMounted(() => {
 
   watchEffect(() => {
     const myChart = echarts.init(document.getElementById('pie-chart'));
-    const myChart1 = echarts.init(document.getElementById('pie-chart1'));
     const allApplicationCounts = recStore.curApplications.length;
 
     const groupMapping = {
@@ -79,7 +73,6 @@ onMounted(() => {
       ],
     };
     myChart.setOption(option);
-    myChart1.setOption(option);
     window.addEventListener('resize', () => {
       myChart.resize();
     });
