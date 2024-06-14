@@ -5,7 +5,7 @@
         <overview></overview>
         <stages></stages>
       </div>
-      <div class="w-full bg-white mt-5 sm:w-1/3 sm:ml-5 sm:min-w-400">
+      <div class="w-full bg-[--color-bg-2] mt-5 sm:w-1/3 sm:ml-5 sm:min-w-400">
         <schedules></schedules>
       </div>
 
