@@ -61,7 +61,7 @@
 
       <a-table
         v-model:selectedKeys="selectedKeys"
-        row-key="name"
+        row-key="aid"
         :data="data"
         :row-selection="{
           type: 'checkbox',
@@ -209,8 +209,7 @@ const data = computed(() =>
         )
           return false;
       }
-      if (app.user_detail?.name.includes(searchValue.value)) return true;
-      return false;
+      return app.user_detail?.name.includes(searchValue.value);
     })
     .map((app, ind) => {
       const interviewData =
@@ -245,7 +244,7 @@ const allocateSelect = () => {
   showNotify.value = true;
   selectData.value = selectedKeys.value
     .map((key) => {
-      const nowData = data.value.find((item) => item.name === key);
+      const nowData = data.value.find((item) => item.aid === key);
       if (!nowData) return {} as { name: string; aid: string; step: any };
       return {
         name: nowData.name,

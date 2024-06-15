@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineModel } from 'vue';
+import { ref, computed, defineModel } from 'vue';
 import { Group } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import { getDate, getTime } from '@/views/interview/management/getData';
@@ -135,8 +135,4 @@ const comfirmDelOk = () => {
   }
   return true;
 };
-
-onMounted(() => {
-  recStore.refresh();
-});
 </script>

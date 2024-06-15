@@ -128,15 +128,12 @@ const getTimeOptions = () => {
 };
 
 const displayData = computed(() => {
-  const index =
-    recStore.curApplications.findIndex(
-      ({ uid }) => uid === props.applicationId,
-    ) ?? -1;
-  let timeOptions: CascaderOption[] = [];
-  let selectedTime: string[] = [];
-  timeOptions = getTimeOptions();
-  selectedTime =
-    recStore.curApplications[index]?.interview_selections?.map(
+  const nowApplication = recStore.curApplications.find(
+    ({ uid }) => uid === props.applicationId,
+  );
+  const timeOptions: CascaderOption[] = getTimeOptions();
+  const selectedTime: string[] =
+    nowApplication?.interview_selections?.map(
       (interview) =>
         `${getDate(interview.start)} ${getTime(
           interview.start,
@@ -147,14 +144,14 @@ const displayData = computed(() => {
 });
 
 const handleBeforeOk = () => {
-  allocateApplicationInterview(
+  const res = allocateApplicationInterview(
     props.applicationId,
     props.interviewType as 'group' | 'team',
     { interview_id: form.value.selectInterviewId },
-  ).then(() => {
-    recStore.refresh();
-    Message.success(t('common.operation.allocateInterviewSuccess'));
-  });
+  );
+  if (!res) return false;
+  recStore.refresh();
+  Message.success(t('common.operation.allocateInterviewSuccess'));
   return true;
 };
 </script>

@@ -113,22 +113,15 @@ const handleCreate = async () => {
     },
   ];
 
-  let res;
-  try {
-    res = await createInterview(
-      recStore.currentRid,
-      currentGroup.value,
-      requestData,
-    );
-    visible.value = false;
-    return true;
-  } catch (err) {
-    return false;
-  } finally {
-    if (res) {
-      recStore.refresh();
-      Message.success(t('common.result.addInterviewSuccess'));
-    }
+  visible.value = false;
+  const res = await createInterview(
+    recStore.currentRid,
+    currentGroup.value,
+    requestData,
+  );
+  if (res) {
+    recStore.refresh();
+    Message.success(t('common.result.addInterviewSuccess'));
   }
 };
 </script>
