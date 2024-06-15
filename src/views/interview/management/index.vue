@@ -171,8 +171,6 @@ import AllowcateModal from './allowcate-modal.vue';
 import DateManagementModal from './date-management-modal.vue';
 import { getTotalTime } from './getData';
 
-document.cookie = 'SSO_SESSION=unique_web_admin';
-
 const recStore = useRecruitmentStore();
 const { t } = useI18n();
 const { widthType } = useWindowResize();
