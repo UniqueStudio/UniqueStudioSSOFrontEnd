@@ -21,6 +21,8 @@ module.exports = {
         193: '48.25rem',
         158: '39.5rem',
         206: '51.5rem',
+        234.5: '58.65rem',
+        174: '43.5rem',
       },
       width: {
         '2vw': '2vw',
@@ -33,14 +35,16 @@ module.exports = {
       flex: {
         4: '4 1 0%',
       },
+
+    },
+    maxHeight: {
+      158: '39.5rem',
+      158: '39.5rem',
+      179: '44.75rem',
     },
     minWidth: {
       400: '400px',
       500: '500px',
-    },
-    maxHeight: {
-      158: '39.5rem',
-      179: '44.75rem',
     },
     minHeight: {
       158: '39.5rem',
@@ -48,6 +52,5 @@ module.exports = {
       185.5: '46.375rem',
     },
   },
-
   plugins: [],
 };

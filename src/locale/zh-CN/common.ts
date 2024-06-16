@@ -57,6 +57,7 @@ export default {
   'common.user.nextStage': '下一阶段',
   'common.user.baseInfo': '基本信息',
   'common.user.resume': '附件简历',
+  'common.user.answer': '笔试题答卷',
   'common.user.intro': '自我介绍',
   'common.user.comment': '评论',
   'common.user.name': '姓名',
@@ -84,6 +85,7 @@ export default {
   'common.sms.place': '地点',
   'common.sms.meetingId': '在线会议id',
   'common.sms.rest': '补充信息',
+  'common.sms.example': '短信内容示例',
 
   'common.person': '人',
   'common.date': '日期',

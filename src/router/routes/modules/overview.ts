@@ -22,25 +22,25 @@ const DASHBOARD = {
       },
     },
     {
+      path: 'candidate-detail/:id',
+      name: 'detail',
+      props: true,
+      component: () => import('@/views/overview/detail/index.vue'),
+      meta: {
+        locale: 'menu.overview.candidate',
+        requiresAuth: true,
+        activeMenu: 'candidate',
+        hideInMenu: true,
+        // roles: ['*'],
+      },
+    },
+    {
       path: 'candidate',
       name: 'candidate',
       component: () => import('@/views/overview/candidate/index.vue'),
       meta: {
         locale: 'menu.overview.candidate',
         requiresAuth: true,
-        // roles: ['*'],
-      },
-    },
-    {
-      path: 'candidate/detail/:id',
-      name: 'detail',
-      props: true,
-      component: () => import('@/views/overview/candidate/detail/index.vue'),
-      meta: {
-        locale: 'menu.overview.candidate',
-        requiresAuth: true,
-        activeMenu: 'candidate',
-        hideInMenu: true,
         // roles: ['*'],
       },
     },

@@ -13,7 +13,7 @@
       layout="vertical"
       :rules="preview.rules"
     >
-      <a-form-item>
+      <a-form-item class="max-sm:mb-3">
         <template #label>
           <span>{{ $t('candidate.receiver') }}</span>
           <span
@@ -30,6 +30,7 @@
 
       <div class="flex sm:gap-2 justify-between w-full max-sm:flex-col">
         <a-form-item
+          class="max-sm:mb-3"
           field="next"
           :label="$t('common.user.nextStage')"
           asterisk-position="end"
@@ -48,6 +49,7 @@
         </a-form-item>
 
         <a-form-item
+          class="max-sm:mb-3"
           field="time"
           :label="$t('common.time')"
           asterisk-position="end"
@@ -56,11 +58,13 @@
           <a-date-picker
             v-model="formData.time"
             show-time
-            format="YYYY-MM-DD hh:mm"
+            format="YYYY-MM-DD HH:mm"
+            value-format="YYYY-MM-DD HH:mm:00"
           />
         </a-form-item>
 
         <a-form-item
+          class="max-sm:mb-3"
           field="meeting_id"
           :label="$t('common.sms.meetingId')"
           asterisk-position="end"
@@ -72,6 +76,7 @@
 
       <div class="flex gap-2 justify-between w-full">
         <a-form-item
+          class="max-sm:mb-3"
           field="place"
           :label="$t('common.sms.place')"
           asterisk-position="end"
@@ -80,6 +85,7 @@
           <a-input v-model="formData.place" />
         </a-form-item>
         <a-form-item
+          class="max-sm:mb-3"
           field="rest"
           :label="$t('common.sms.rest')"
           asterisk-position="end"
@@ -88,79 +94,80 @@
           <a-input v-model="formData.rest" />
         </a-form-item>
       </div>
-
-      <a-scrollbar
-        class="rounded-md border-2 px-4 py-3 break-all overflow-y-auto max-h-20"
-        outer-class=""
-      >
-        <i18n-t :keypath="preview.i18nKey" tag="div">
-          <template #name>
-            <span class="text-[rgb(var(--primary-6))]">{{
-              candidates[0]?.name || '{ }'
-            }}</span>
-          </template>
-          <template #recruitment_name>
-            <span class="text-[rgb(var(--primary-6))]">{{ recName }}</span>
-          </template>
-          <template #group>
-            <span class="text-[rgb(var(--primary-6))]">{{ group }}</span>
-          </template>
-          <template #current>
-            <span class="text-[rgb(var(--primary-6))]">{{
-              $t(recruitSteps[props.curStep].i18Key)
-            }}</span>
-          </template>
-          <template #next>
-            <span class="text-[rgb(var(--primary-6))]">{{
-              $t(`common.steps.${formData.next}`)
-            }}</span>
-          </template>
-          <template #meeting_id>
-            <span class="text-[rgb(var(--primary-6))]">{{
-              formData.meeting_id || '{ }'
-            }}</span>
-          </template>
-          <template #time>
-            <span class="text-[rgb(var(--primary-6))]">{{
-              formData.time || '{ }'
-            }}</span>
-          </template>
-          <template #place>
-            <span class="text-[rgb(var(--primary-6))]">{{
-              formData.place || '{ }'
-            }}</span>
-          </template>
-          <template #rest>
-            <span v-if="formData.rest" class="text-[rgb(var(--primary-6))]">{{
-              formData.rest
-            }}</span>
-            <i18n-t
-              v-else-if="props.type === 'Accept'"
-              :keypath="preview.restI18nKey"
-              tag="span"
-            >
-              <template #next>
-                <span class="text-[rgb(var(--primary-6))]">{{
-                  $t(`common.steps.${formData.next}`)
-                }}</span>
-              </template>
-              <template #time>
-                <span class="text-[rgb(var(--primary-6))]">{{
-                  formData.time || '{ }'
-                }}</span>
-              </template>
-              <template #place>
-                <span class="text-[rgb(var(--primary-6))]">{{
-                  formData.place || '{ }'
-                }}</span>
-              </template>
-              <template #group>
-                <span class="text-[rgb(var(--primary-6))]">{{ group }}</span>
-              </template>
-            </i18n-t>
-          </template>
-        </i18n-t>
-      </a-scrollbar>
+      <a-form-item class="max-sm:mb-3" :label="$t('common.sms.example')">
+        <a-scrollbar
+          class="rounded-md border-2 px-4 py-3 break-all overflow-y-auto max-h-20"
+          outer-class=""
+        >
+          <i18n-t :keypath="preview.i18nKey" tag="div">
+            <template #name>
+              <span class="text-[rgb(var(--primary-6))]">{{
+                candidates[0]?.name || '{ }'
+              }}</span>
+            </template>
+            <template #recruitment_name>
+              <span class="text-[rgb(var(--primary-6))]">{{ recName }}</span>
+            </template>
+            <template #group>
+              <span class="text-[rgb(var(--primary-6))]">{{ group }}</span>
+            </template>
+            <template #current>
+              <span class="text-[rgb(var(--primary-6))]">{{
+                $t(recruitSteps[props.curStep].i18Key)
+              }}</span>
+            </template>
+            <template #next>
+              <span class="text-[rgb(var(--primary-6))]">{{
+                $t(`common.steps.${formData.next}`)
+              }}</span>
+            </template>
+            <template #meeting_id>
+              <span class="text-[rgb(var(--primary-6))]">{{
+                formData.meeting_id || '{ }'
+              }}</span>
+            </template>
+            <template #time>
+              <span class="text-[rgb(var(--primary-6))]">{{
+                formData.time || '{ }'
+              }}</span>
+            </template>
+            <template #place>
+              <span class="text-[rgb(var(--primary-6))]">{{
+                formData.place || '{ }'
+              }}</span>
+            </template>
+            <template #rest>
+              <span v-if="formData.rest" class="text-[rgb(var(--primary-6))]">{{
+                formData.rest
+              }}</span>
+              <i18n-t
+                v-else-if="props.type === 'Accept'"
+                :keypath="preview.restI18nKey"
+                tag="span"
+              >
+                <template #next>
+                  <span class="text-[rgb(var(--primary-6))]">{{
+                    $t(`common.steps.${formData.next}`)
+                  }}</span>
+                </template>
+                <template #time>
+                  <span class="text-[rgb(var(--primary-6))]">{{
+                    formData.time || '{ }'
+                  }}</span>
+                </template>
+                <template #place>
+                  <span class="text-[rgb(var(--primary-6))]">{{
+                    formData.place || '{ }'
+                  }}</span>
+                </template>
+                <template #group>
+                  <span class="text-[rgb(var(--primary-6))]">{{ group }}</span>
+                </template>
+              </i18n-t>
+            </template>
+          </i18n-t>
+        </a-scrollbar>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>

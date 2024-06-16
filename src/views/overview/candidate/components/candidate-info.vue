@@ -214,7 +214,7 @@ const handleClearSelected = () => {
   handleChange(selectedApplications.value);
 };
 
-watch([() => curStep, currentGroup], handleClearSelected);
+watch([() => curStep, currentGroup, recStore], handleClearSelected);
 
 const uploadData = ref<{ group: Ref<Group>; data: FileItem[] }>({
   group: currentGroup,

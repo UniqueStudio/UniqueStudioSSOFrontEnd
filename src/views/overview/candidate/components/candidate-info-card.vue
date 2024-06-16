@@ -14,7 +14,9 @@
             style="scrollbar-width: none"
             class="flex justify-start gap-2 items-center overflow-y-auto"
           >
-            <a-link :href="`candidate/detail/${info.uid}`">
+            <a-link
+              @click="router.push({ path: `candidate-detail/${info.uid}` })"
+            >
               <a-avatar class="bg-[rgb(var(--primary-6))] mr-2" :size="24">
                 {{
                   info.user_detail?.avatar_url || info.user_detail?.name || ''
@@ -83,7 +85,9 @@
 import { PropType, computed } from 'vue';
 import { CandidateInfo } from '@/store/modules/recruitment/types';
 import { EvaluationMap, GenderMap } from '@/constants/team';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const props = defineProps({
   info: {
     type: Object as PropType<CandidateInfo>,
