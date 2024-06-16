@@ -16,3 +16,5 @@ export interface User {
 }
 
 export type UserInfoResponse = HttpRes<User>;
+
+export type PingResponse = HttpRes<object>;
