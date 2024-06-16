@@ -1,49 +1,48 @@
 <template>
-  <div id="pieChart1" class="h-80"></div>
+  <div id="pie-chart" ref="chartRef1" class="h-80"></div>
 </template>
 
 <script setup lang="ts">
 import * as echarts from 'echarts';
 import useRecruitmentStore from '@/store/modules/recruitment';
-import { Group } from '@/constants/team';
-import { onMounted, watchEffect } from 'vue';
+import { groupMapping } from '@/constants/team';
+import { onMounted, ref, onUnmounted, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+const recStore = useRecruitmentStore();
+
+const chartRef1 = ref(null);
+let myChart: echarts.ECharts | null = null;
 
 onMounted(() => {
-  const recStore = useRecruitmentStore();
+  myChart = echarts.init(chartRef1.value);
+});
 
-  watchEffect(() => {
-    const myChart = echarts.init(document.getElementById('pieChart1'));
-    const allApplicationCounts = recStore.curApplications.length;
+const resizeChart = () => {
+  myChart?.resize();
+};
 
-    const groupMapping = {
-      PM: Group.Pm,
-      Design: Group.Design,
-      AI: Group.Ai,
-      Android: Group.Android,
-      Web: Group.Web,
-      IOS: Group.Ios,
-      Lab: Group.Lab,
-      Game: Group.Game,
-    };
+const fetchData = async () => {
+  const recruitmentData = await recStore.getRecruitment(recStore.currentRid);
+  const allApplicationCounts = recruitmentData.applications?.length;
 
-    const applicationCounts = (targetGroup: string) => {
-      return (
-        recStore.curApplications.filter(({ group }) => {
+  const applicationCounts = (targetGroup: string) => {
+    return recruitmentData.applications
+      ? recruitmentData.applications.filter(({ group }) => {
           return group === targetGroup;
-        }).length / allApplicationCounts
-      );
-    };
+        }).length / allApplicationCounts!
+      : 0;
+  };
 
-    const createDataObject = (group: string, name: string) => {
-      return {
-        value: applicationCounts(group),
-        name,
-      };
+  const createDataObject = (group: string, name: string) => {
+    return {
+      value: applicationCounts(group),
+      name,
     };
+  };
 
+  const initChart = () => {
     const option = {
       tooltip: {
         formatter: '{b} : {d}%',
@@ -72,10 +71,18 @@ onMounted(() => {
         },
       ],
     };
-    myChart.setOption(option);
-    window.addEventListener('resize', () => {
-      myChart.resize();
-    });
-  });
+    myChart?.setOption(option);
+  };
+
+  initChart();
+};
+
+const stop = watchEffect(() => fetchData());
+window.addEventListener('resize', resizeChart);
+
+onUnmounted(() => {
+  myChart?.dispose();
+  stop();
+  window.removeEventListener('resize', resizeChart);
 });
 </script>

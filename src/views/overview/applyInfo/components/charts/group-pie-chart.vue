@@ -1,57 +1,58 @@
 <template>
   <div class="w-full">
-    <div id="group-pie-chart" class="h-80"></div>
+    <div id="group-pie-chart" ref="groupChartRef" class="h-80"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Group } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import * as echarts from 'echarts';
-import { watchEffect, onMounted, computed } from 'vue';
+import { onMounted, computed, ref, onUnmounted, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { GroupDetails } from '@/constants/httpMsg/recruitment/getRecruitmentMsg';
+import { groupMapping } from '@/constants/team';
 
 const { t } = useI18n();
+const recStore = useRecruitmentStore();
 
-onMounted(async () => {
-  const recStore = useRecruitmentStore();
+const groupChartRef = ref(null);
+let myChart: echarts.ECharts | null = null;
 
-  watchEffect(async () => {
-    const myChart = echarts.init(document.getElementById('group-pie-chart'));
-    const recruitmentData = await recStore.getLatestRecruitment();
+onMounted(() => {
+  myChart = echarts.init(groupChartRef.value);
+});
 
-    const groupMapping = {
-      PM: Group.Pm,
-      Design: Group.Design,
-      AI: Group.Ai,
-      Android: Group.Android,
-      Web: Group.Web,
-      IOS: Group.Ios,
-      Lab: Group.Lab,
-      Game: Group.Game,
+const resizeChart = () => {
+  myChart?.resize();
+};
+
+const fetchData = async () => {
+  const recruitmentData = await recStore.getRecruitment(recStore.currentRid);
+
+  const allGroupMemberCounts = computed(() => {
+    return Object.values(recruitmentData.group_details as any[]).reduce(
+      (sum, val) => sum + val,
+      0,
+    );
+  });
+
+  const groupMemberCounts = (targetGroup: string) => {
+    // 在group_details加上可选链后仍报错：对象可能为“未定义”，暂无法解决
+    return recruitmentData.group_details
+      ? // @ts-ignore
+        recruitmentData.group_details[targetGroup as keyof GroupDetails] /
+          allGroupMemberCounts.value
+      : 0;
+  };
+
+  const createDataObject = (group: string, name: string) => {
+    return {
+      value: groupMemberCounts(group),
+      name,
     };
+  };
 
-    // @ts-ignore
-    const allGroupMemberCounts: number = computed(() => {
-      return Object.values(recruitmentData.group_details as any[]).reduce(
-        (sum, val) => sum + val,
-        0,
-      );
-    });
-
-    const groupMemberCounts = (targetGroup: string) => {
-      return (
-        // @ts-ignore
-        recruitmentData.group_details[targetGroup] / allGroupMemberCounts.value
-      );
-    };
-
-    const createDataObject = (group: string, name: string) => {
-      return {
-        value: groupMemberCounts(group),
-        name,
-      };
-    };
+  const initChart = () => {
     const option = {
       title: {
         text: t('common.applyInfo.groupMembers'),
@@ -81,10 +82,21 @@ onMounted(async () => {
         },
       ],
     };
-    myChart.setOption(option);
-    window.addEventListener('resize', () => {
-      myChart.resize();
-    });
-  });
+    myChart?.setOption(option);
+  };
+
+  initChart();
+};
+
+const stop = watchEffect(() => {
+  fetchData();
+});
+
+window.addEventListener('resize', resizeChart);
+
+onUnmounted(() => {
+  myChart?.dispose();
+  stop();
+  window.removeEventListener('resize', resizeChart);
 });
 </script>
