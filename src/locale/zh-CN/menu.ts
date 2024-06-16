@@ -3,6 +3,7 @@ export default {
   'menu.dashboard.setRoles': '设置角色',
   'menu.user': '个人中心',
   'menu.user.editInfo': '编辑信息',
+  'menu.title.dashboard': '仪表盘',
   'menu.overview': '总览',
   'menu.overview.applyInfo': '报名数据',
   'menu.overview.candidate': '选手信息',

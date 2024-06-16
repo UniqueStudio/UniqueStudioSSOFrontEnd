@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
 
 module.exports = {
@@ -30,6 +31,7 @@ module.exports = {
   ],
   rules: {
     'prettier/prettier': 1,
+    'no-console': 1,
     // vue的一些覆盖配置
     'vue/require-default-prop': 0,
     'vue/singleline-html-element-content-newline': 0,

@@ -1,19 +1,21 @@
 <template>
   <a-modal
     v-model:visible="visible"
+    :width="modalWidth"
     :title="$t('common.operation.createRecruitment')"
     :on-before-ok="sendForm"
+    draggable
   >
     <a-space direction="vertical" size="mini">
       <a-form :model="formData" layout="vertical">
         <a-form-item
+          class="mt-8"
           field="rec_name"
           :label="$t('common.createRec.recName')"
           validate-trigger="change"
         >
           <a-input
             v-model="formData.name"
-            style="width: 400px; margin: 0 24px 24px 0"
             :placeholder="$t('common.createRec.inputRecName')"
           />
         </a-form-item>
@@ -24,7 +26,7 @@
           validate-trigger="change"
         >
           <a-range-picker
-            style="width: 400px; margin: 0 24px 24px 0"
+            :width="modalWidth"
             show-time
             :time-picker-props="{ defaultValue: ['00:00:00', '00:00:00'] }"
             format="YYYY-MM-DD HH:mm"
@@ -39,7 +41,7 @@
           validate-trigger="change"
         >
           <a-range-picker
-            style="width: 400px; margin: 0 24px 24px 0"
+            :width="modalWidth"
             show-time
             :time-picker-props="{ defaultValue: ['00:00:00', '00:00:00'] }"
             format="YYYY-MM-DD HH:mm"
@@ -56,6 +58,7 @@
 import { ref, defineModel } from 'vue';
 import { createRecruitment } from '@/api';
 
+const modalWidth = ref('auto');
 const visible = defineModel<boolean>('visible', {
   type: Boolean,
   default: false,
@@ -71,16 +74,20 @@ const formData = ref({
 
 const sendForm = async () => {
   const response = await createRecruitment(formData.value);
-  // if (response) console.log(response);
-  // else console.log('error');
+  if (response.data) {
+    /* eslint-disable no-console */
+    console.log('hello');
+  }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const onOk1 = (dateString: any, _date: any) => {
   // console.log('onOk: ', dateString);
   formData.value.beginning = new Date(dateString[0]).toISOString();
   formData.value.end = new Date(dateString[1]).toISOString();
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const onOk2 = (dateString: any, _date: any) => {
   formData.value.deadline = new Date(dateString[1]).toISOString();
   // console.log('formData: ', formData);
