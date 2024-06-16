@@ -1,8 +1,9 @@
 <template>
-  <div class="flex justify-end gap-2">
+  <div class="flex justify-end gap-2 items-center">
     <a-button
       type="primary"
       :disabled="props.curStep >= recruitSteps.length - 1 || !candidates.length"
+      :size="buttonSize"
       class="rounded-full sm:rounded-none"
       @click="openSwitchStage"
     >
@@ -11,6 +12,7 @@
     <a-button
       status="danger"
       :disabled="!candidates.length"
+      :size="buttonSize"
       class="rounded-full sm:rounded-none"
       @click="openTerminate"
     >
@@ -19,6 +21,7 @@
     <a-button
       type="outline"
       class="hidden sm:inline-block"
+      :size="buttonSize"
       :disabled="!candidates.length"
       @click="openNotify"
     >
@@ -28,6 +31,7 @@
     <a-button
       type="outline"
       class="sm:hidden rounded-full"
+      :size="buttonSize"
       :disabled="!candidates.length"
       @click="openNotify"
     >
@@ -41,38 +45,38 @@
     :title="$t('common.operation.switchStage')"
     :on-before-ok="handleSwitchStage"
   >
-    <div class="text-center">
-      <i18n-t keypath="candidate.switchStage" tag="div">
-        <template #num>
-          <span class="text-[rgb(var(--primary-6))]">{{
-            candidates.length
-          }}</span>
-        </template>
-        <template #cur>
-          <span class="text-[rgb(var(--primary-6))]">{{
-            $t(recruitSteps[curStep].i18Key)
-          }}</span>
-        </template>
-        <template #next>
+    <div>
+      <a-alert type="warning" class="mb-3">{{
+        $t('candidate.warnNotify')
+      }}</a-alert>
+      <a-form class="w-full" :model="{}" layout="vertical">
+        <a-form-item :label="$t('common.candidate')">
+          <a-input-tag v-model="candidateNames" :max-tag-count="4" readonly />
+        </a-form-item>
+        <a-form-item field="data">
+          <template #label>
+            <i18n-t keypath="candidate.switchStage" tag="div">
+              <template #cur>
+                <span class="text-[rgb(var(--primary-6))]">{{
+                  $t(recruitSteps[curStep].i18Key)
+                }}</span>
+              </template>
+            </i18n-t>
+          </template>
           <a-select
             v-model:model-value="nextStep"
-            :bordered="false"
-            class="text-[rgb(var(--primary-6))] w-auto"
+            class="text-[rgb(var(--primary-6))]"
           >
             <a-option
               v-for="item in nextValidSteps"
               :key="item"
               :value="item"
-              class="w-min"
               :title="$t(`common.steps.${item}`)"
               >{{ $t(`common.steps.${item}`) }}</a-option
             >
           </a-select>
-        </template>
-      </i18n-t>
-      <a-alert type="warning" class="mt-3">{{
-        $t('candidate.warnNotify')
-      }}</a-alert>
+        </a-form-item>
+      </a-form>
     </div>
   </a-modal>
   <a-modal
@@ -110,6 +114,12 @@ import { updateApplicationStep, rejectApplication } from '@/api';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
+import useWindowResize from '@/hooks/resize';
+
+const { widthType } = useWindowResize();
+const buttonSize = computed(() =>
+  widthType.value === 'sm' ? 'mini' : 'medium',
+);
 
 const { t } = useI18n();
 
@@ -137,7 +147,12 @@ const props = defineProps({
     type: String as PropType<Group>,
     required: true,
   },
+  onDone: {
+    type: Function,
+  },
 });
+
+const candidateNames = computed(() => props.candidates.map(({ name }) => name));
 
 const showSwitchStage = ref(false);
 const showTerminate = ref(false);
@@ -166,8 +181,9 @@ const openSwitchStage = () => {
 };
 
 const handleSwitchStage = async () => {
+  let res;
   try {
-    await Promise.all(
+    res = await Promise.all(
       props.candidates.map(({ aid, step }) =>
         updateApplicationStep(aid, {
           from: step,
@@ -179,6 +195,9 @@ const handleSwitchStage = async () => {
   } catch (err) {
     return false;
   } finally {
+    if (res?.every((x) => x))
+      Message.success(t('common.result.switchStageSuccess'));
+    props.onDone?.();
     recStore.refresh();
   }
 };
@@ -194,14 +213,18 @@ const openTerminate = () => {
 };
 
 const handleTerminate = async () => {
+  let res;
   try {
-    await Promise.all(
+    res = await Promise.all(
       props.candidates.map(({ aid }) => rejectApplication(aid)),
     );
     return true;
   } catch (err) {
     return false;
   } finally {
+    if (res?.every((x) => x))
+      Message.success(t('common.result.terminateSuccess'));
+    props.onDone?.();
     recStore.refresh();
   }
 };

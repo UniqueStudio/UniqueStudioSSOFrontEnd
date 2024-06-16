@@ -32,12 +32,13 @@ export enum Group {
 }
 
 export enum Evaluation {
-  Good = 0,
-  Normal = 1,
-  Bad = 2,
+  Undefined = 0,
+  Good = 1,
+  Normal = 2,
+  Bad = 3,
 }
 
-export const EvaluationMap = ['😘', '🤔', '😅'];
+export const EvaluationMap = ['', '😘', '🤔', '😅'];
 
 export enum Step {
   SignUp = 'SignUp', // 报名
@@ -102,12 +103,12 @@ export const SMSTemplate: {
   {
     i18nKey: 'sms.interview',
     match: [Step.GroupInterview, Step.TeamInterview],
-    required: ['time', 'place', 'next'],
+    required: ['place', 'next'],
   },
   {
     i18nKey: 'sms.onlineInterview',
     match: [Step.OnlineGroupInterview, Step.OnlineTeamInterview],
-    required: ['time', 'meeting_id'],
+    required: ['meeting_id'],
   },
   {
     i18nKey: 'sms.base',

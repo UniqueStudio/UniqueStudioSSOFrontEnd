@@ -42,11 +42,14 @@ export async function getApplication(
   return res;
 }
 
-export async function getApplicationResume(aid: string): Promise<void> {
-  await request({
-    url: `/applications/${aid}/resume`,
-    method: 'GET',
-  });
+export async function getApplicationResume(aid: string): Promise<Blob> {
+  return (await fetch(`/applications/${aid}/resume`)).blob();
+}
+
+export async function getApplicationWrittenTestAnswer(
+  aid: string,
+): Promise<Blob> {
+  return (await fetch(`/applications/${aid}/file/WrittenTest`)).blob();
 }
 
 export async function getAvailableInterviewSelections(

@@ -2,27 +2,16 @@
   <a-result
     status="403"
     :subtitle="$t('noPermission.subtitle')"
-    class="h-screen flex flex-col justify-center"
+    class="h-screen flex flex-col justify-center pb-40"
   >
     <template #icon>
-      <NoPermissionSVG />
-    </template>
-    <template #extra>
-      <a-space>
-        <a-button type="primary" @click="returnLogin">{{
-          $t('noPermission.back')
-        }}</a-button>
-      </a-space>
+      <NoPermissionSVG class="max-w-[min(404px,90%)]" />
     </template>
   </a-result>
 </template>
 
 <script setup lang="ts">
-import useUserStore from '@/store/modules/user';
 import NoPermissionSVG from '@/assets/svg/no-permission.svg';
-
-const userStore = useUserStore();
-const { returnLogin } = userStore;
 </script>
 
 <style scoped lang="less">

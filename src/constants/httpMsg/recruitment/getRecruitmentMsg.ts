@@ -32,3 +32,5 @@ export type AllRecruitmentsResponse = HttpRes<Recruitment[]>;
 export type RecruitmentResponse = HttpRes<Recruitment>;
 
 export type LatestRecruitmentResponse = HttpRes<Recruitment>;
+
+export type GetTestResponse = HttpRes<object>;

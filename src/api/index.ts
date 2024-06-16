@@ -1,8 +1,8 @@
 import sendSms from './sms';
 
-import getUserInfo from './user';
+export { sendSms };
 
-export { sendSms, getUserInfo };
+export { getUserInfo, ping } from './user';
 
 export {
   getAllRecruitments,
@@ -10,12 +10,16 @@ export {
   getLatestRecruitment,
   createRecruitment,
   updateRecruitment,
+  uploadTest,
+  SetStressTestTime,
+  getTest,
 } from './recruitment';
 
 export {
   getAllApplications,
   getApplication,
   getApplicationResume,
+  getApplicationWrittenTestAnswer,
   getAvailableInterviewSelections,
   createApplication,
   updateApplication,
