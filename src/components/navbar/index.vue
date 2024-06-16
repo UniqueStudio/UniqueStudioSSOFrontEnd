@@ -163,8 +163,8 @@
             </a-menu>
           </template>
         </a-dropdown>
-      </li> </ul
-    >-
+      </li>
+    </ul>
 
     <!--发起招新的模态框-->
     <create-newrec-modal v-model:visible="visible" />
@@ -226,7 +226,7 @@ const visible = ref(false);
   li {
     display: flex;
     align-items: center;
-    padding: 0, 0;
+    padding: 0 0;
   }
 }
 
