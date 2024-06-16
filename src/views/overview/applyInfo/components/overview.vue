@@ -61,17 +61,23 @@ import groupPieChartSm from './charts/group-pie-chart-sm.vue';
 import recruitmentPieChartSm from './charts/recruitment-pie-chart-sm.vue';
 
 const recStore = useRecruitmentStore();
-const allApplicationCounts = computed(() => recStore.curApplications.length);
-const allGroupMemberCounts = ref(null);
+const allApplicationCounts = ref();
+const allGroupMemberCounts = ref();
 
 watchEffect(async () => {
-  const recruitmentData = await recStore.getLatestRecruitment();
-  // @ts-ignore
-  allGroupMemberCounts.value = computed(() => {
-    return Object.values(recruitmentData.group_details as any[]).reduce(
-      (sum, val) => sum + val,
-      0,
-    );
-  });
+  const recruitmentData = await recStore.getRecruitment(recStore.currentRid);
+
+  allApplicationCounts.value = recruitmentData.applications
+    ? recruitmentData.applications.length
+    : 0;
+
+  allGroupMemberCounts.value = recruitmentData.group_details
+    ? computed(() => {
+        return Object.values(recruitmentData.group_details as any[]).reduce(
+          (sum, val) => sum + val,
+          0,
+        );
+      })
+    : 0;
 });
 </script>

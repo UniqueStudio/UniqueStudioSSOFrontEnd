@@ -5,14 +5,7 @@
         $t('common.applyInfo.candidateStagesOverview')
       }}</div>
       <a-select v-model="currentGroup" class="w-28 h-10 bg-[--color-bg-1]">
-        <a-option>PM</a-option>
-        <a-option>Design</a-option>
-        <a-option>AI</a-option>
-        <a-option>Android</a-option>
-        <a-option>Web</a-option>
-        <a-option>IOS</a-option>
-        <a-option>Lab</a-option>
-        <a-option>Game</a-option>
+        <a-option v-for="item in groups" :key="item">{{ item }}</a-option>
       </a-select>
     </div>
     <div class="pl-3 pt-3">
@@ -32,10 +25,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import { Group } from '@/constants/team';
 import rectChart from './charts/rect-chart.vue';
 
 const recStore = useRecruitmentStore();
 const currentGroup = ref('PM');
+const groups = Object.values(Group).filter((x) => x !== Group.Unique);
 const groupMemberCounts = computed(
   () =>
     recStore.curApplications.filter(({ group }) => {

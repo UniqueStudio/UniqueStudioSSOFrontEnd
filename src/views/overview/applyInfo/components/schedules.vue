@@ -2,7 +2,6 @@
   <div>
     <a-date-picker
       v-model="pickerValue"
-      default-value="2024-03-01"
       hide-trigger
       class="hidden sm:block sm:w-full"
     />
@@ -19,7 +18,7 @@
       >
         <div
           v-if="
-            filteredSchedules(recents).some(
+            filteredSchedules.some(
               (schedule) => schedule.date.getTime() === date.getTime(),
             )
           "
@@ -51,7 +50,7 @@
         </div>
       </li>
       <a-button
-        v-if="schedulesLength(recents) > 5"
+        v-if="schedulesLength > 5"
         type="primary"
         class="w-4/5 sm:h-2.5vw ml-1/8 mt-4 sm:text-1vw"
         @click="openModel"
@@ -109,60 +108,46 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import { getToday, transformedTime } from '@/utils';
+import { Schedule } from '../type';
 
-const getToday = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+const visible = ref(false);
 
-const transformedTime = (start: string, end: string) => {
-  const startTime = new Date(start);
-  const endTime = new Date(end);
-
-  const startHours = startTime.getHours().toString().padStart(2, '0');
-  const startMinutes = startTime.getMinutes().toString().padStart(2, '0');
-  const endHours = endTime.getHours().toString().padStart(2, '0');
-  const endMinutes = endTime.getMinutes().toString().padStart(2, '0');
-
-  return `${startHours}:${startMinutes}-${endHours}:${endMinutes}`;
+const openModel = () => {
+  visible.value = true;
 };
 
 const pickerValue = ref(getToday());
-const schedules: any[] = [];
 
 const recStore = useRecruitmentStore();
-recStore.curApplications.forEach((e) => {
-  console.log(e.interview_allocations_group?.date);
+
+const schedules = computed<Schedule[]>(() => {
+  const schedule: Schedule[] = [];
+  recStore.curApplications.forEach((e) => {
+    const groupObj = {
+      date: new Date(e.interview_allocations_group?.date as string),
+      name: `${e.group}组面(${e.user_detail?.name})`,
+      time: transformedTime(
+        e.interview_allocations_group!.start,
+        e.interview_allocations_group!.end,
+      ),
+    };
+
+    const teamObj = {
+      date: new Date(e.interview_allocations_team?.date as string),
+      name: `${e.group}群面(${e.user_detail?.name})`,
+      time: transformedTime(
+        e.interview_allocations_team!.start,
+        e.interview_allocations_team!.end,
+      ),
+    };
+
+    schedule.push(groupObj, teamObj);
+  });
+  return schedule;
 });
-recStore.curApplications.forEach((e) => {
-  const groupObj = {
-    // @ts-ignore
-    date: new Date(e.interview_allocations_group?.date),
-    name: `${e.group}组面(${e.user_detail?.name})`,
-    time: transformedTime(
-      e.interview_allocations_group!.start,
-      e.interview_allocations_group!.end,
-    ),
-  };
 
-  const teamObj = {
-    // @ts-ignore
-    date: new Date(e.interview_allocations_team?.date),
-    name: `${e.group}群面(${e.user_detail?.name})`,
-    time: transformedTime(
-      e.interview_allocations_team!.start,
-      e.interview_allocations_team!.end,
-    ),
-  };
-
-  schedules.push(groupObj, teamObj);
-});
-
-const visible = ref(false);
-const recents = computed(() => {
+const recents = computed<Date[]>(() => {
   const dateArray = [];
   for (let i = 0; i < 7; i += 1) {
     const today = new Date(pickerValue.value);
@@ -172,35 +157,33 @@ const recents = computed(() => {
   return dateArray;
 });
 
-const filteredSchedules = (recent: any) => {
-  return schedules
+const filteredSchedules = computed(() => {
+  return schedules.value
     .filter((schedule) => {
-      return recent.some(
+      return recents.value.some(
         (date: Date) => schedule.date.getTime() === date.getTime(),
       );
     })
     .slice(0, 5);
-};
+});
 
-const filteredDateSchedules = (date: Date, filtered: boolean) => {
-  return filtered
-    ? filteredSchedules(recents.value).filter((schedule) => {
-        return schedule.date.getTime() === date.getTime();
-      })
-    : schedules.filter((schedule) => {
-        return schedule.date.getTime() === date.getTime();
-      });
-};
+const filteredDateSchedules = computed(() => {
+  return (date: Date, filtered: boolean) => {
+    return filtered
+      ? filteredSchedules.value.filter((schedule) => {
+          return schedule.date.getTime() === date.getTime();
+        })
+      : schedules.value.filter((schedule) => {
+          return schedule.date.getTime() === date.getTime();
+        });
+  };
+});
 
-const schedulesLength = (recent: any) => {
-  return schedules.filter((schedule) => {
-    return recent.some(
+const schedulesLength = computed(() => {
+  return schedules.value.filter((schedule) => {
+    return recents.value.some(
       (date: Date) => schedule.date.getTime() === date.getTime(),
     );
   }).length;
-};
-
-const openModel = () => {
-  visible.value = true;
-};
+});
 </script>
