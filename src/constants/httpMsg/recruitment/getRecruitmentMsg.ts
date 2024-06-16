@@ -14,7 +14,7 @@ interface Statistics {
   web?: number;
 }
 
-interface GroupDetails {
+export interface GroupDetails {
   ai?: number;
   android?: number;
   design?: number;
