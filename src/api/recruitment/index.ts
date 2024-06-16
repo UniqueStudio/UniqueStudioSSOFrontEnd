@@ -15,7 +15,7 @@ import request from '../_request';
 
 export async function getAllRecruitments(): Promise<AllRecruitmentsResponse> {
   const res: AllRecruitmentsResponse = await request({
-    url: '/recruitments/',
+    url: '/recruitments',
     method: 'GET',
   });
   return res;

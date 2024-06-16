@@ -5,11 +5,11 @@
     </div>
     <ul class="right-side">
       <!--选择招新时间下拉栏以及发起招新-->
-      <li style="margin-right: 8px">
+      <li class="mr-4 sm:mr-4">
         <!-- @vue-ignore 由于逆变@change会报ts错误 -->
         <a-select
           v-model="recruitmentStore.current"
-          class="w-40 bg-transparent"
+          class="w-36 bg-transparent"
           default-value="2024春季招新"
           @change="recruitmentStore.setCurrentRecruitment"
         >
@@ -23,14 +23,13 @@
           <a-option>2023秋季招新</a-option>
           <a-option>2023夏令营招新</a-option>
           <template #footer>
-            <div style="padding: 6px 0; text-align: center">
+            <div class="py-1 text-center">
               <a-button
                 type="text"
-                class="w-32"
-                style="font-size: 16px; font-weight: 400"
+                class="w-32 text-base font-normal"
                 @click="visible = true"
               >
-                <IconPlus style="margin-right: 10px" />{{
+                <IconPlus class="mr-2" />{{
                   $t(`common.operation.createRecruitment`)
                 }}
               </a-button>
@@ -39,20 +38,22 @@
         </a-select>
       </li>
 
-      <a-space :size="24">
-        <!--调节日间模式和夜间模式-->
-        <li>
-          <icon-sun-fill
-            :size="18"
-            :value="statu"
-            :style="{ color: statu === 'day' ? '#000' : '#888' }"
-            @click="changeDayNight"
-          />
-        </li>
-        <!--消息-->
-        <a-dropdown trigger="hover" position="br">
-          <a-badge :count="3" dot :offset="[2, -2]">
+      <!--调节日间模式和夜间模式-->
+      <li class="hidden sm:flex sm:mr-8">
+        <icon-sun-fill
+          class="hidden sm:flex"
+          :size="18"
+          :value="statu"
+          :style="{ color: statu === 'day' ? '#000' : '#888' }"
+          @click="changeDayNight"
+        />
+      </li>
+      <!--消息-->
+      <li class="hidden sm:flex sm:mr-8">
+        <a-dropdown class="hidden sm:flex" trigger="hover" position="br">
+          <a-badge class="hidden sm:flex" :count="3" dot :offset="[2, -2]">
             <IconNotification
+              class="hidden sm:flex"
               :size="18"
               :style="{
                 color: '#888',
@@ -94,33 +95,76 @@
             >
           </template>
         </a-dropdown>
-        <!--头像及下拉栏-->
-        <li>
-          <a-dropdown>
-            <a-avatar
-              :size="32"
-              :style="{ marginRight: '8px', cursor: 'pointer' }"
+      </li>
+      <!--头像及下拉栏-->
+      <li class="mr-4 ml-4 sm:ml-0">
+        <a-dropdown>
+          <a-avatar :size="32"> B </a-avatar>
+          <template #content>
+            <a-doption>
+              <template #icon>
+                <icon-user />
+              </template>
+              {{ $t(`common.operation.userSetting`) }}
+            </a-doption>
+            <a-doption>
+              <template #icon>
+                <icon-export />
+              </template>
+              {{ $t(`common.operation.quitAccount`) }}
+            </a-doption>
+          </template>
+        </a-dropdown>
+      </li>
+      <!-- 仪表盘 -->
+      <li class="flex sm:hidden">
+        <a-dropdown
+          class="dashboard-dropdown flex sm:hidden"
+          trigger="click"
+          @click="icon = !icon"
+        >
+          <IconMenu v-if="icon" :size="24" class="flex sm:hidden" />
+          <icon-close v-if="!icon" :size="24" class="flex sm:hidden" />
+          <template #content>
+            <a-menu
+              class="dashboard-content"
+              :default-open-keys="['0']"
+              :default-selected-keys="['0_1']"
             >
-              B
-            </a-avatar>
-            <template #content>
-              <a-doption>
-                <template #icon>
-                  <icon-user />
-                </template>
-                {{ $t(`common.operation.userSetting`) }}
-              </a-doption>
-              <a-doption>
-                <template #icon>
-                  <icon-export />
-                </template>
-                {{ $t(`common.operation.quitAccount`) }}
-              </a-doption>
-            </template>
-          </a-dropdown>
-        </li>
-      </a-space>
-    </ul>
+              <a-menu-item key="0_0_0" data-obj="1">{{
+                $t('menu.title.dashboard')
+              }}</a-menu-item>
+              <a-sub-menu key="0">
+                <template #title>{{ $t('menu.overview') }}</template>
+                <a-menu-item
+                  key="0_0"
+                  @click="router.push('/overview/apply-info')"
+                  >{{ $t('menu.overview.applyInfo') }}</a-menu-item
+                >
+                <a-menu-item
+                  key="0_1"
+                  @click="router.push('/overview/candidate')"
+                  >{{ $t('menu.overview.candidate') }}</a-menu-item
+                >
+              </a-sub-menu>
+              <a-sub-menu key="1">
+                <template #title>{{ $t('menu.interview') }}</template>
+                <a-menu-item
+                  key="1_0"
+                  @click="router.push('/interview/schedule')"
+                  >{{ $t('menu.interview.schedule') }}</a-menu-item
+                >
+                <a-menu-item
+                  key="1_1"
+                  @click="router.push('/interview/management')"
+                  >{{ $t('menu.interview.management') }}</a-menu-item
+                >
+              </a-sub-menu>
+            </a-menu>
+          </template>
+        </a-dropdown>
+      </li> </ul
+    >-
 
     <!--发起招新的模态框-->
     <create-newrec-modal v-model:visible="visible" />
@@ -132,10 +176,14 @@ import CreateNewrecModal from '@/components/navbar/components/create-newrec-moda
 import LogoSVG from '@/assets/svg/logo.svg';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const recruitmentStore = useRecruitmentStore();
 recruitmentStore.getAllRecruitments();
 
+const icon = ref(true);
 const statu = ref('day');
 const changeDayNight = () => {
   if (statu.value === 'day') {
@@ -174,7 +222,11 @@ const visible = ref(false);
   li {
     display: flex;
     align-items: center;
-    padding: 0 10px;
+    padding: 0, 0;
   }
+}
+
+.dashboard-content {
+  width: 100vw;
 }
 </style>
