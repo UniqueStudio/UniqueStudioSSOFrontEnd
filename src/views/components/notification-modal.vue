@@ -165,6 +165,12 @@
                 </template>
               </i18n-t>
             </template>
+            <!-- 组面、群面无需传时间，其时间已在面试管理分配，example_time仅用于展示占位 -->
+            <template #example_time>
+              <span class="text-[rgb(var(--primary-6))]">{{
+                dayjs().format('YYYY-MM-DD HH:mm:00')
+              }}</span>
+            </template>
           </i18n-t>
         </a-scrollbar>
       </a-form-item>
@@ -179,6 +185,7 @@ import { sendSms } from '@/api';
 import { groupBy } from 'lodash';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
+import dayjs from 'dayjs';
 
 const { t } = useI18n();
 
