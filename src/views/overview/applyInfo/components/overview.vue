@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue';
+import { computed } from 'vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import groupPieChart from './charts/group-pie-chart.vue';
 import recruitmentPieChart from './charts/recruitment-pie-chart.vue';
@@ -61,23 +61,21 @@ import groupPieChartSm from './charts/group-pie-chart-sm.vue';
 import recruitmentPieChartSm from './charts/recruitment-pie-chart-sm.vue';
 
 const recStore = useRecruitmentStore();
-const allApplicationCounts = ref();
-const allGroupMemberCounts = ref();
 
-watchEffect(async () => {
-  const recruitmentData = await recStore.getRecruitment(recStore.currentRid);
+const recruitmentData = computed(() => recStore.currentRec);
 
-  allApplicationCounts.value = recruitmentData.applications
-    ? recruitmentData.applications.length
-    : 0;
+const allApplicationCounts = computed(() =>
+  recruitmentData.value?.applications
+    ? recruitmentData.value?.applications.length
+    : 0,
+);
 
-  allGroupMemberCounts.value = recruitmentData.group_details
-    ? computed(() => {
-        return Object.values(recruitmentData.group_details as any[]).reduce(
-          (sum, val) => sum + val,
-          0,
-        );
-      })
+const allGroupMemberCounts = computed(() => {
+  return recruitmentData.value?.group_details
+    ? Object.values(recruitmentData.value?.group_details as any[]).reduce(
+        (sum, val) => sum + val,
+        0,
+      )
     : 0;
 });
 </script>
