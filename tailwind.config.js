@@ -26,8 +26,8 @@ module.exports = {
       },
       width: {
         '2vw': '2vw',
-        193: '48.25rem',
-        66: '16.5rem',
+        '193': '48.25rem',
+        '66': '16.5rem',
       },
       padding: {
         '0.3vw': '0.3vw',
@@ -36,6 +36,11 @@ module.exports = {
         4: '4 1 0%',
       },
 
+    },
+    maxHeight: {
+      158: '39.5rem',
+      158: '39.5rem',
+      179: '44.75rem',
     },
     maxHeight: {
       158: '39.5rem',
