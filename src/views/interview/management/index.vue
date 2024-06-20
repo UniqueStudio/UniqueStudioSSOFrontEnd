@@ -110,9 +110,15 @@
                 "
                 >{{ $t('common.operation.allocate') }}</a-button
               >
-              <a-button class="px-2" type="text" @click="allocateOne(record)">{{
-                $t('common.operation.notify')
-              }}</a-button>
+              <a-button
+                class="px-2"
+                type="text"
+                @click="
+                  selectedKeys = [record.aid];
+                  showNotify = true;
+                "
+                >{{ $t('common.operation.notify') }}</a-button
+              >
             </template>
           </a-table-column>
           <!-- 操作column -->
@@ -127,7 +133,7 @@
           {{ $t('common.operation.dateManagement') }}
         </a-button>
         <!-- 日程管理 -->
-        <a-button type="outline" class="sm:w-auto" @click="allocateSelect()">
+        <a-button type="outline" class="sm:w-auto" @click="showNotify = true">
           <template #icon> <icon-plus /> </template>
           {{ $t('common.operation.sendNotification') }}
         </a-button>
@@ -180,7 +186,6 @@ const currentGroup = ref(Group.Web);
 const selectedKeys = ref<string[]>([]);
 const searchValue = ref('');
 const allowcateApplicationId = ref<string>('');
-const selectData = ref<{ name: string; aid: string; step: any }[]>([]);
 const displayType = ref('common.information');
 
 const showAllowcate = ref(false);
@@ -228,19 +233,8 @@ const data = computed(() =>
 );
 
 // 发送通知
-const allocateOne = (rowData: any) => {
-  selectData.value.length = 0;
-  selectData.value.push({
-    name: rowData.name,
-    aid: rowData.aid,
-    step: rowData.step,
-  });
-  showNotify.value = true;
-};
-
-const allocateSelect = () => {
-  showNotify.value = true;
-  selectData.value = selectedKeys.value
+const selectData = computed(() =>
+  selectedKeys.value
     .map((key) => {
       const nowData = data.value.find((item) => item.aid === key);
       if (!nowData) return {} as { name: string; aid: string; step: any };
@@ -250,8 +244,8 @@ const allocateSelect = () => {
         step: nowData.step,
       };
     })
-    .filter((item) => item !== null);
-};
+    .filter((item) => item.aid),
+);
 </script>
 
 <style scoped lang="less"></style>

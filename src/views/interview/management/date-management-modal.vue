@@ -15,11 +15,13 @@
       </div>
     </div>
     <div class="arco-scrollbar-container overflow-auto h-full">
-      <div class="flex flex-row flex-wrap mt-4 mb-8">
+      <div
+        class="grid grid-cols-1 gap-4 place-content-around mt-4 grid-container"
+      >
         <div
           v-for="info in infos"
           :key="info.uid"
-          class="flex flex-col bg-[--color-bg-2] p-4 mb-4 sm:mr-6 sm:w-[30%] w-full h-48"
+          class="flex flex-col bg-[--color-bg-2] p-4 h-48"
         >
           <div class="overflow-hidden flex items-center mb-1">
             <icon-calendar
@@ -136,3 +138,11 @@ const comfirmDelOk = () => {
   return true;
 };
 </script>
+
+<style>
+@media (min-width: 1024px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, 32%);
+  }
+}
+</style>
