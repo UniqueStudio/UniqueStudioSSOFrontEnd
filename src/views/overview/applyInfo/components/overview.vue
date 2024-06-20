@@ -37,18 +37,10 @@
         <recruitment-pie-chart></recruitment-pie-chart>
       </div>
     </div>
-    <a-carousel
-      class="h-80 sm:hidden"
-      indicator-position="outer"
-      indicator-type="line"
-    >
-      <a-carousel-item>
-        <group-pie-chart-sm></group-pie-chart-sm>
-      </a-carousel-item>
-      <a-carousel-item>
-        <recruitment-pie-chart-sm></recruitment-pie-chart-sm>
-      </a-carousel-item>
-    </a-carousel>
+    <div class="sm:hidden">
+      <group-pie-chart-sm></group-pie-chart-sm>
+      <recruitment-pie-chart-sm></recruitment-pie-chart-sm>
+    </div>
   </div>
 </template>
 
