@@ -31,6 +31,17 @@ export enum Group {
   Unique = 'unique', // for team interview
 }
 
+export const groupMapping = {
+  PM: Group.Pm,
+  Design: Group.Design,
+  AI: Group.Ai,
+  Android: Group.Android,
+  Web: Group.Web,
+  IOS: Group.Ios,
+  Lab: Group.Lab,
+  Game: Group.Game,
+};
+
 export enum Evaluation {
   Undefined = 0,
   Good = 1,
