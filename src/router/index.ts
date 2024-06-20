@@ -10,16 +10,8 @@ const router = createRouter({
     {
       path: '/',
       // 暂时重定向到总览
-      redirect: '/overview',
+      redirect: '/overview/apply-info',
     },
-    // {
-    //   path: '/login',
-    //   name: 'login',
-    //   component: () => import('@/views/login/index.vue'),
-    //   meta: {
-    //     requiresAuth: false,
-    //   },
-    // },
     ...appRoutes,
     NO_PERMISSION,
     // DETAIL,

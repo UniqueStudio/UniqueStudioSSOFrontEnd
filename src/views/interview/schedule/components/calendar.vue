@@ -1,13 +1,17 @@
 <template>
-  <div class="bg-white rounded-sm">
+  <div class="rounded-sm bg-[--color-bg-2]">
     <a-calendar v-model="curDate" class="month-min">
       <template #default="{ year, month, date }">
         <div
           class="arco-calendar-date"
           @click="handleCellClick(year, month, date)"
         >
-          <div class="arco-calendar-date-value">
-            <div class="arco-calendar-date-circle lg:text-lg">{{ date }}</div>
+          <div
+            class="arco-calendar-date-value flex justify-center lg:justify-start"
+          >
+            <div class="arco-calendar-date-circle lg:text-lg text-center">{{
+              date
+            }}</div>
           </div>
           <div
             v-for="(info, index) in filteredInfos(year, month, date).slice(
@@ -22,7 +26,7 @@
                 class="float-left mr-2 flex items-center justify-center"
                 :color="COLORS[index]"
               ></a-badge>
-              <span class="float-left text-sm"
+              <span class="float-left text-sm text-[var(--color-neutral-10)]"
                 >{{ info.group }}{{ interviewType(info) }}</span
               >
             </div>
@@ -130,7 +134,7 @@ const remainingSchedules = (year: number, month: number, date: number) => {
 @media (min-width: 1024px) {
   .month-min {
     :deep(.arco-calendar-month .arco-calendar-month-row) {
-      height: 99px;
+      height: 97px;
     }
   }
 }

@@ -84,6 +84,32 @@
           </div>
         </a-button>
       </div>
+      <div>
+        <div class="text-[--color-text-1] pb-5">
+          {{ $t('common.user.answer') }}
+        </div>
+        <a-button
+          class="w-[min(100%,520px)] h-min py-4"
+          long
+          :disabled="!applyStore.data?.answer"
+          @click="
+            applyStore.getApplicationWrittenTestAnswer(
+              applyStore.data!.uid,
+              applyStore.data!.answer.split('/').pop()!,
+            )
+          "
+        >
+          <div class="flex justify-between w-full items-center">
+            <div class="flex gap-3 items-center w-[calc(100%-15px)] shrink">
+              <icon-file />
+              <div class="w-[calc(100%-35px)] overflow-x-auto">{{
+                applyStore.data!.answer.split('/').pop() || $t('common.void')
+              }}</div>
+            </div>
+            <icon-download />
+          </div>
+        </a-button>
+      </div>
       <comment></comment>
     </div>
   </div>

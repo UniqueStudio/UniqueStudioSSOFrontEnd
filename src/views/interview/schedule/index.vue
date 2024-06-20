@@ -1,16 +1,16 @@
 <template>
   <div
-    class="lg:flex lg:flex-row lg:place-content-between lg:gap-5 flex-col h-206"
+    class="lg:flex lg:flex-row lg:place-content-between lg:gap-5 lg:h-fit h-234.5 flex-col"
   >
     <calender
       :infos="overview"
-      class="mb-4 flex-4 max-h-179"
+      class="mb-4 flex-4 border-[--color-border-4]"
       @date-click="handleDateClick"
     ></calender>
     <schedules
       v-model="currentGroup"
       :infos="candidates"
-      class="flex-1 h-1/2 lg:h-183"
+      class="flex-1 h-1/2 mb-5 lg:h-174"
     ></schedules>
   </div>
 </template>

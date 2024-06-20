@@ -28,6 +28,7 @@ export interface Application {
   is_quick: false;
   referrer: string;
   resume: string;
+  answer: string;
   abandoned: false;
   rejected: false;
   step: Step;

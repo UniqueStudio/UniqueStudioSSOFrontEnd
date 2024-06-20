@@ -2,12 +2,14 @@ import axios, {
   AxiosRequestConfig,
   AxiosInstance,
   InternalAxiosRequestConfig,
+  AxiosError,
 } from 'axios';
+import { SSO_DOMAIN, HR_DOMAIN_FE, HR_BASE_URL } from '@/constants';
 
 import { HttpRes } from '@/constants/httpMsg/_httpResTemplate';
 import { Message } from '@arco-design/web-vue';
 import i18n from '@/locale';
-import { HR_BASE_URL } from '@/constants';
+import router from '@/router';
 
 // const { t } = useI18n();
 
@@ -46,14 +48,21 @@ export default function request<T = object>(config: AxiosRequestConfig) {
       }
       return null;
     },
-    (err: any): any => {
-      console.error(err);
-      if (err.response?.data?.msg) {
-        Message.error(err.response.data.msg);
-      } else {
-        Message.error(err.message);
+    (err: AxiosError<{ msg: string }>) => {
+      const { msg = '' } = err.response!.data!;
+      if (msg.includes('authentication failed')) {
+        // 非登录态跳转SSO登录
+        window.location.href = `//${SSO_DOMAIN}/login?from=${HR_DOMAIN_FE}`;
+        return;
       }
-      return null;
+      if (msg.includes('permission error')) {
+        // 无权限访问
+        router.push({
+          path: '/no-permission',
+        });
+        return;
+      }
+      Message.error(msg || err.message);
     },
   );
 

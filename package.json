@@ -28,6 +28,7 @@
     "@arco-design/web-vue": "^2.55.1",
     "axios": "^1.4.0",
     "http-proxy-middleware": "^2.0.6",
+    "dayjs": "^1.11.11",
     "echarts": "^5.5.0",
     "lodash": "^4.17.21",
     "mitt": "^3.0.1",
