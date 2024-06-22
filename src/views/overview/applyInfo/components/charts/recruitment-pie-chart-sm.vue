@@ -1,5 +1,5 @@
 <template>
-  <div id="pie-chart" ref="chartRef" class="h-80"></div>
+  <div id="pie-chart1" ref="chartRef1" class="h-80"></div>
 </template>
 
 <script setup lang="ts">
@@ -12,7 +12,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const recStore = useRecruitmentStore();
 
-const chartRef = ref(null);
+const chartRef1 = ref(null);
 let myChart: echarts.ECharts | null = null;
 
 const resizeChart = () => {
@@ -77,7 +77,7 @@ const initChart = () => {
 };
 
 onMounted(() => {
-  myChart = echarts.init(chartRef.value);
+  myChart = echarts.init(chartRef1.value);
   initChart();
 });
 

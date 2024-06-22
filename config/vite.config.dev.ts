@@ -14,6 +14,7 @@ export default mergeConfig(
           },
         },
       },
+      Credential: true,
     },
   },
   baseConfig as UserConfig,

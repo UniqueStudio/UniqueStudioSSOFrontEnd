@@ -9,8 +9,8 @@
         <!-- @vue-ignore 由于逆变@change会报ts错误 -->
         <a-select
           v-model="recruitmentStore.current"
-          class="w-36 bg-transparent"
-          default-value="2024春季招新"
+          class="w-40 bg-transparent"
+          default-value="2024夏令营招新"
           @change="recruitmentStore.setCurrentRecruitment"
         >
           <a-option
@@ -19,9 +19,6 @@
             :value="item.uid"
             :label="item.name"
           />
-          <a-option>2024春季招新</a-option>
-          <a-option>2023秋季招新</a-option>
-          <a-option>2023夏令营招新</a-option>
           <template #footer>
             <div class="py-1 text-center">
               <a-button

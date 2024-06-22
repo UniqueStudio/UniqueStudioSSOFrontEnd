@@ -1,6 +1,6 @@
 export const HR_DOMAIN_BE: string =
-  'https://dev.back.recruitment2023.hustunique.com';
-// '/api';
+  // 'https://dev.back.recruitment2023.hustunique.com';
+  '/api';
 
 export const HR_DOMAIN_FE: string = 'hr2024.hustunique.com';
 

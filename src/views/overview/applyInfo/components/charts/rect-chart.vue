@@ -50,10 +50,11 @@ onMounted(() => {
             t('common.steps.TeamInterview'),
             t('common.steps.Pass'),
           ],
-          bottom: 0,
-          itemGap: 60,
+          bottom: 10,
+          itemGap: 10,
           textStyle: {
             fontSize: 16,
+            color: '#a9aeb8',
           },
         },
         series: [
@@ -139,6 +140,9 @@ onMounted(() => {
         ],
       };
       myChart.setOption(option);
+      window.addEventListener('resize', () => {
+        myChart.resize();
+      });
     },
     { immediate: true },
   );
