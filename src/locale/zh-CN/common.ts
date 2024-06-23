@@ -26,6 +26,8 @@ export default {
   'common.operation.operate': '操作',
   'common.operation.refresh': '刷新',
   'common.operation.createRecruitment': '发起招新',
+  'common.operation.noRecruitments': '没有招新记录',
+  'common.operation.selectRecruitment': '选择招新',
   'common.operation.userSetting': '用户设置',
   'common.operation.quitAccount': '退出登录',
   'common.operation.readAll': '全部已读',
