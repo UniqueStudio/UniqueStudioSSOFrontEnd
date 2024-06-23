@@ -179,7 +179,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel, PropType, watch, computed } from 'vue';
+import { ref, PropType, watch, computed } from 'vue';
 import { Group, recruitSteps, Step, SMSTemplate } from '@/constants/team';
 import { sendSms } from '@/api';
 import { groupBy } from 'lodash';
