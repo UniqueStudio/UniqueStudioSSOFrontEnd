@@ -5,7 +5,7 @@ import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import router from './router';
 import i18n from './locale';
 import App from './App.vue';
-import '@/styles/tailwind.css';
+import './styles/tailwind.css';
 
 // 全量引入样式
 // import '@arco-design/web-vue/dist/arco.css';

@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel } from 'vue';
+import { ref } from 'vue';
 import { createRecruitment } from '@/api';
 
 const visible = defineModel<boolean>('visible', {

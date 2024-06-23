@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -36,12 +36,6 @@ module.exports = {
         4: '4 1 0%',
       },
       maxHeight: {
-        158: '39.5rem',
-        158: '39.5rem',
-        179: '44.75rem',
-      },
-      maxHeight: {
-        158: '39.5rem',
         158: '39.5rem',
         179: '44.75rem',
       },

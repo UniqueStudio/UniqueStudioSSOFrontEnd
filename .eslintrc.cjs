@@ -52,6 +52,8 @@ module.exports = {
     // 避免enum的循环引用
     'no-shadow': 0,
     '@typescript-eslint/no-shadow': 2,
+    // 临时解决 defindModel问题
+    'no-undef': 0,
     // import的一些配置
     'import/extensions': [
       2,
