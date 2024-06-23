@@ -8,13 +8,13 @@ export default mergeConfig(
         '^/api': {
           target: 'https://dev.back.recruitment2023.hustunique.com',
           changeOrigin: true,
+          credentials: 'include',
           rewrite: (path) => path.replace(/^\/api/, ''),
           cookieDomainRewrite: {
             '*': 'hustunique.com',
           },
         },
       },
-      Credential: true,
     },
   },
   baseConfig as UserConfig,

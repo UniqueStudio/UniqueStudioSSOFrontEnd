@@ -9,10 +9,12 @@
         <!-- @vue-ignore 由于逆变@change会报ts错误 -->
         <a-select
           v-model="recruitmentStore.current"
-          class="w-40 bg-transparent"
-          default-value="2024夏令营招新"
+          class="w-36 bg-transparent"
           @change="recruitmentStore.setCurrentRecruitment"
         >
+          <a-option v-if="recruitmentStore.data.length === 0" :disabled="true">
+            {{ $t('common.operation.noRecruitments') }}
+          </a-option>
           <a-option
             v-for="item of recruitmentStore.data"
             :key="item.uid"
