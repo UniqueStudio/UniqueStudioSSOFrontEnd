@@ -165,32 +165,7 @@
             </a-menu>
           </template>
         </a-dropdown>
-        <!--头像及下拉栏-->
-        <li>
-          <a-dropdown>
-            <a-avatar
-              :size="32"
-              :style="{ marginRight: '8px', cursor: 'pointer' }"
-            >
-              B
-            </a-avatar>
-            <template #content>
-              <a-doption>
-                <template #icon>
-                  <icon-user />
-                </template>
-                {{ $t(`common.operation.userSetting`) }}
-              </a-doption>
-              <a-doption>
-                <template #icon>
-                  <icon-export />
-                </template>
-                {{ $t(`common.operation.quitAccount`) }}
-              </a-doption>
-            </template>
-          </a-dropdown>
-        </li>
-      </a-space>
+      </li>
     </ul>
 
     <!--发起招新的模态框-->
