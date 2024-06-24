@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
   <div class="bg-[--color-bg-1] w-full p-5 pb-10">
-=======
-  <div class="bg-[--color-bg-2] w-full p-5 pb-10">
->>>>>>> 87c5a2d (dark mode & add group-member fetch)
     <div class="text-[--color-text-1] text-xl p-5 font-bold">{{
       $t('common.applyInfo.overview')
     }}</div>
@@ -49,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue';
+import { computed } from 'vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import groupPieChart from './charts/group-pie-chart.vue';
 import recruitmentPieChart from './charts/recruitment-pie-chart.vue';
