@@ -65,51 +65,6 @@ const props = defineProps({
   },
 });
 
-const recStore = useRecruitmentStore();
-
-// 格式化日期
-const formatToday = (date: Date) => {
-  const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
-// ISO 8601日期
-function parseDate(dateString: string): Date {
-  return new Date(dateString);
-}
-
-function formatDate(dateString: string) {
-  return formatToday(parseDate(dateString));
-}
-function formatTime(date: Date): string {
-  return date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
-}
-
-function Duration(start: Date, end: Date): string {
-  const timeRange = `${formatTime(start)}-${formatTime(end)}`;
-  const diffInMs = end.getTime() - start.getTime();
-  const diffInMinutes = Math.round(diffInMs / 1000 / 60);
-  const hours = Math.floor(diffInMinutes / 60);
-  const minutes = diffInMinutes % 60;
-  if (!hours) return `${timeRange}(${minutes}min)`;
-  if (!minutes) return `${timeRange}(${hours}h)`;
-  return `${timeRange}(${hours}h${minutes}min)`;
-}
-
-const props = defineProps({
-  curStep: {
-    type: Number,
-    default: 0,
-    required: true,
-  },
-});
-
 provide('formatToday', formatToday);
 provide('parseDate', parseDate);
 
