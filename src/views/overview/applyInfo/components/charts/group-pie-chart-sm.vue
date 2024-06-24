@@ -88,14 +88,13 @@ const initChart = () => {
 watch(
   () => option.value,
   () => {
-    if (allGroupMemberCounts.value) initChart();
+    initChart();
   },
   { deep: true },
 );
 
 onMounted(() => {
   myChart = echarts.init(groupChartRef1.value);
-  if (allGroupMemberCounts.value) initChart();
 });
 
 window.addEventListener('resize', resizeChart);
