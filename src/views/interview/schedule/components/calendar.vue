@@ -36,6 +36,13 @@
               remainingSchedules(year, month, date)
             }}</span>
           </div>
+          <div
+            v-if="hasMoreThanTwoInfos(year, month, date)"
+          >
+            <span class="float-left text-blue-600 text-sm">{{
+              `剩余${filteredInfos(year,month,date).length - 2}个日程`
+            }}</span>
+          </div> -->
         </div>
       </template>
     </a-calendar>

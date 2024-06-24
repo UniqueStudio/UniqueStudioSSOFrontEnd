@@ -4,7 +4,7 @@
       <div class="text-[--color-text-1] text-xl font-bold p-3">{{
         $t('common.applyInfo.candidateStagesOverview')
       }}</div>
-      <a-select v-model="currentGroup" class="w-28 h-10 bg-[--color-bg-1]">
+      <a-select v-model="currentGroup" class="arco-select">
         <a-option v-for="item in groups" :key="item">{{ item }}</a-option>
       </a-select>
     </div>
@@ -29,7 +29,7 @@ import { Group } from '@/constants/team';
 import rectChart from './charts/rect-chart.vue';
 
 const recStore = useRecruitmentStore();
-const currentGroup = ref('PM');
+const currentGroup = ref('pm');
 const groups = Object.values(Group).filter((x) => x !== Group.Unique);
 const groupMemberCounts = computed(
   () =>
@@ -38,3 +38,11 @@ const groupMemberCounts = computed(
     }).length,
 );
 </script>
+
+<style scoped lang="less">
+:deep(.arco-select) {
+  width: 7rem;
+  height: 2.5rem;
+  background-color: var(--color-bg-1);
+}
+</style>
