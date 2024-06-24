@@ -173,9 +173,9 @@ import NotificationModal from '@/views/components/notification-modal.vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import useWindowResize from '@/hooks/resize';
 import { useI18n } from 'vue-i18n';
+import dayjs from 'dayjs';
 import AllowcateModal from './allowcate-modal.vue';
 import DateManagementModal from './date-management-modal.vue';
-import { getTotalTime } from './getData';
 
 const recStore = useRecruitmentStore();
 const { t } = useI18n();
@@ -224,7 +224,9 @@ const data = computed(() =>
         name: app.user_detail?.name ?? '',
         interviewTime:
           interviewData && interviewData.uid
-            ? getTotalTime(interviewData?.start, interviewData?.end)
+            ? `${dayjs(interviewData.start).format('YYYY-MM-DD')} ${dayjs(
+                interviewData.start,
+              ).format('HH:mm')}-${dayjs(interviewData.end).format('HH:mm')}`
             : t('common.status.waitForDistribution'),
         aid: app.uid,
         step: app.step,

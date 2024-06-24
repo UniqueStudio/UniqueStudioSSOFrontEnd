@@ -37,7 +37,7 @@
               class="w-10 h-10 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
             <span class="float-left leading-10 text-slate-500">{{
-              getDate(info.start)
+              dayjs(info.start).format('YYYY-MM-DD')
             }}</span>
           </div>
           <!-- 日期 -->
@@ -46,7 +46,9 @@
               class="w-10 h-10 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
             <span class="float-left leading-10 text-slate-500">{{
-              getTime(info.start, info.end)
+              dayjs(info.start).format('HH:mm') +
+              '-' +
+              dayjs(info.end).format('HH:mm')
             }}</span>
           </div>
           <!-- 时间 -->
@@ -98,11 +100,11 @@
 import { ref, computed, defineModel } from 'vue';
 import { Group } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
-import { getDate, getTime } from '@/views/interview/management/getData';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import { deleteInterview } from '@/api';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
+import dayjs from 'dayjs';
 import AddDateModal from './add-date-modal.vue';
 
 const currentGroup = ref(Group.Web);

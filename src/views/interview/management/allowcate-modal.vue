@@ -43,8 +43,8 @@ import { allocateApplicationInterview } from '@/api/application';
 import { CascaderOption, Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 import useRecruitmentStore from '@/store/modules/recruitment';
-import { getDate, getTime } from '@/views/interview/management/getData';
 import useWindowResize from '@/hooks/resize';
+import dayjs from 'dayjs';
 
 const { t } = useI18n();
 const { widthType } = useWindowResize();
@@ -80,8 +80,10 @@ const getTimeOptions = () => {
   };
   recStore.curInterviews.forEach((interview) => {
     if (interview.start && interview.period) {
-      const date = getDate(interview.start);
-      const time = getTime(interview.start, interview.end);
+      const date = dayjs(interview.start).format('YYYY-MM-DD');
+      const time = `${dayjs(interview.start).format('HH:mm')}-${dayjs(
+        interview.end,
+      ).format('HH:mm')}`;
       if (optionsData[date] && optionsData[date][interview.period]) {
         optionsData[date][interview.period].push({
           time,
@@ -135,10 +137,9 @@ const displayData = computed(() => {
   const selectedTime: string[] =
     nowApplication?.interview_selections?.map(
       (interview) =>
-        `${getDate(interview.start)} ${getTime(
+        `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
           interview.start,
-          interview.end,
-        )}`,
+        ).format('HH:mm')}-${dayjs(interview.end).format('HH:mm')}`,
     ) ?? [];
   return { timeOptions, selectedTime };
 });
