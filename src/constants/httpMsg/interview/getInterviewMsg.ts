@@ -10,8 +10,6 @@ export interface Interview {
   start: TimeString;
   end: TimeString;
   name: Group;
-  start: TimeString;
-  end: TimeString;
   slot_number: number;
   recruitment_id: string;
 }

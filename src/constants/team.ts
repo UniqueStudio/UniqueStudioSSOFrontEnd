@@ -114,12 +114,12 @@ export const SMSTemplate: {
   {
     i18nKey: 'sms.interview',
     match: [Step.GroupInterview, Step.TeamInterview],
-    required: ['time', 'place', 'next'],
+    required: ['place', 'next'],
   },
   {
     i18nKey: 'sms.onlineInterview',
     match: [Step.OnlineGroupInterview, Step.OnlineTeamInterview],
-    required: ['time', 'meeting_id'],
+    required: ['meeting_id'],
   },
   {
     i18nKey: 'sms.base',

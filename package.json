@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host=0.0.0.0  --config ./config/vite.config.dev.ts",
-    "build": "vue-tsc && vite build",
+    "dev": "vite --host=0.0.0.0 --config ./config/vite.config.dev.ts",
+    "build": "vue-tsc && vite build --config ./config/vite.config.base.ts",
     "preview": "vite preview",
     "lint-staged": "npx lint-staged",
     "prepare": "husky install"
@@ -27,6 +27,7 @@
   "dependencies": {
     "@arco-design/web-vue": "^2.55.1",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.11",
     "echarts": "^5.5.0",
     "lodash": "^4.17.21",
     "mitt": "^3.0.1",

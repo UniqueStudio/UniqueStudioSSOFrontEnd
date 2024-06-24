@@ -3,17 +3,18 @@
     v-model:visible="visible"
     :title="$t('common.operation.createRecruitment')"
     :on-before-ok="sendForm"
+    draggable
   >
     <a-space direction="vertical" size="mini">
-      <a-form :model="formData" layout="vertical">
+      <a-form ref="recruitmentForm" :model="formData" layout="vertical">
         <a-form-item
+          class="mt-8"
           field="rec_name"
           :label="$t('common.createRec.recName')"
           validate-trigger="change"
         >
           <a-input
             v-model="formData.name"
-            style="width: 400px; margin: 0 24px 24px 0"
             :placeholder="$t('common.createRec.inputRecName')"
           />
         </a-form-item>
@@ -21,14 +22,14 @@
         <a-form-item
           field="rec_time_range"
           :label="$t('common.createRec.recTimeRange')"
+          :rules="recTimeRangeRules"
           validate-trigger="change"
         >
           <a-range-picker
-            style="width: 400px; margin: 0 24px 24px 0"
+            v-model="timeRange1"
             show-time
             :time-picker-props="{ defaultValue: ['00:00:00', '00:00:00'] }"
             format="YYYY-MM-DD HH:mm"
-            value="{timeRange1}"
             @ok="onOk1"
           />
         </a-form-item>
@@ -36,14 +37,14 @@
         <a-form-item
           field="signup_time_range"
           :label="$t('common.createRec.signupTimeRange')"
+          :rules="signupTimeRangeRules"
           validate-trigger="change"
         >
           <a-range-picker
-            style="width: 400px; margin: 0 24px 24px 0"
+            v-model="timeRange2"
             show-time
             :time-picker-props="{ defaultValue: ['00:00:00', '00:00:00'] }"
             format="YYYY-MM-DD HH:mm"
-            value="timeRange2"
             @ok="onOk2"
           />
         </a-form-item>
@@ -53,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel } from 'vue';
+import { ref } from 'vue';
 import { createRecruitment } from '@/api';
 
 const visible = defineModel<boolean>('visible', {
@@ -69,10 +70,44 @@ const formData = ref({
   end: '', // 招新结束时间
 });
 
+const recruitmentForm = ref();
+const timeRange1 = ref([]);
+const timeRange2 = ref([]);
+
+const recTimeRangeRules = [{ required: true, message: '请选择招新时间范围' }];
+
+const signupTimeRangeRules = [
+  { required: true, message: '请选择报名时间范围' },
+  {
+    validator: (_rule: any, value: any) => {
+      if (!value || value.length !== 2) {
+        return Promise.reject(new Error('请选择有效的时间范围'));
+      }
+      const [start, end] = value;
+      const [recStart] = timeRange1.value;
+
+      if (new Date(start).getTime() !== new Date(recStart).getTime()) {
+        return Promise.reject(new Error('报名开始时间必须等于招新开始时间'));
+      }
+      if (new Date(end).getTime() > new Date(recStart).getTime()) {
+        return Promise.reject(new Error('报名结束时间必须早于招新结束时间'));
+      }
+      return Promise.resolve();
+    },
+  },
+];
+
 const sendForm = async () => {
-  const response = await createRecruitment(formData.value);
-  // if (response) console.log(response);
-  // else console.log('error');
+  const form = recruitmentForm.value;
+  try {
+    await form.validate();
+    const response = await createRecruitment(formData.value);
+    if (response.data) {
+      console.log(response.data);
+    }
+  } catch (error) {
+    console.error('Validation failed:', error);
+  }
 };
 
 const onOk1 = (dateString: any, _date: any) => {
