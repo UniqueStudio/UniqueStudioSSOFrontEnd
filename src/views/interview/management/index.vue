@@ -236,17 +236,9 @@ const data = computed(() =>
 
 // 发送通知
 const selectData = computed(() =>
-  selectedKeys.value
-    .map((key) => {
-      const nowData = data.value.find((item) => item.aid === key);
-      if (!nowData) return {} as { name: string; aid: string; step: any };
-      return {
-        name: nowData.name,
-        aid: nowData.aid,
-        step: nowData.step,
-      };
-    })
-    .filter((item) => item.aid),
+  data.value
+    .filter(({ aid }) => selectedKeys.value.includes(aid))
+    .map(({ name, aid, step }) => ({ name, aid, step })),
 );
 </script>
 
