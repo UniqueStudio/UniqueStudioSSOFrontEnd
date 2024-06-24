@@ -96,6 +96,9 @@ export default {
   'common.yes': '是',
   'common.no': '否',
   'common.void': '无',
+  'common.rec.name.S': '夏令营',
+  'common.rec.name.C': '秋季招新',
+  'common.rec.name.A': '春季招新',
 
   'common.applyInfo.overview': '数据总览',
   'common.applyInfo.groupMemberCounts': '团队人数',
