@@ -35,6 +35,12 @@ export const downloadFile = (data: Blob, fileName: string) => {
   window.URL.revokeObjectURL(url);
 };
 
+export const getRecruitmentName = (t: (x: string) => string, name: string) => {
+  if (!/(\d+)(S|C|A)/.test(name)) return name;
+  const [_, year, state] = name.match(/(\d+)(S|C|A)/)!;
+  return `${year}${t(`common.rec.name.${state}`)}`;
+};
+
 export const getToday = () => {
   const today = new Date();
   const year = today.getFullYear();

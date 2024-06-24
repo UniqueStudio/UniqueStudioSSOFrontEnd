@@ -106,7 +106,7 @@
             },
           ]"
           :group="applyStore.data.group"
-          :cur-step="currentStep"
+          :cur-step="currentStep - 1"
         ></edit-buttons>
       </div>
     </div>
