@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel, PropType } from 'vue';
+import { ref, PropType } from 'vue';
 import { Group, Period, PeriodDefineHour } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import { Message } from '@arco-design/web-vue';

@@ -220,7 +220,7 @@ const data = computed(() =>
           ? app.interview_allocations_group
           : app.interview_allocations_team;
       return {
-        key: ind,
+        key: ind.toString(),
         name: app.user_detail?.name ?? '',
         interviewTime:
           interviewData && interviewData.uid

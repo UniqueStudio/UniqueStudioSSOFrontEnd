@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineModel } from 'vue';
+import { ref, computed } from 'vue';
 import { Group } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
