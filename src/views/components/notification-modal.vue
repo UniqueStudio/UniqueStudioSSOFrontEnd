@@ -106,7 +106,11 @@
               }}</span>
             </template>
             <template #recruitment_name>
-              <span class="text-[rgb(var(--primary-6))]">{{ recName }}</span>
+              <span class="text-[rgb(var(--primary-6))]">{{
+                $t(recNameI18nKey, {
+                  defaultValue: recNameI18nKey,
+                })
+              }}</span>
             </template>
             <template #group>
               <span class="text-[rgb(var(--primary-6))]">{{ group }}</span>
@@ -179,13 +183,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel, PropType, watch, computed } from 'vue';
+import { ref, PropType, watch, computed } from 'vue';
 import { Group, recruitSteps, Step, SMSTemplate } from '@/constants/team';
 import { sendSms } from '@/api';
 import { groupBy } from 'lodash';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 import dayjs from 'dayjs';
+import { getRecruitmentName } from '@/utils';
 import useWindowResize from '@/hooks/resize';
 
 const { t } = useI18n();
@@ -219,6 +224,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+const recNameI18nKey = computed(() => getRecruitmentName(t, props.recName));
+
 const showNotify = defineModel<boolean>('showNotify', {
   type: Boolean,
   default: false,

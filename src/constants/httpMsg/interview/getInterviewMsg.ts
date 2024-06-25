@@ -7,9 +7,9 @@ export interface Interview {
   updated_at: TimeString;
   date: TimeString;
   period: Period;
-  name: Group;
   start: TimeString;
   end: TimeString;
+  name: Group;
   slot_number: number;
   recruitment_id: string;
 }

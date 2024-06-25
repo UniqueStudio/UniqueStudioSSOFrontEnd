@@ -128,5 +128,3 @@ const showIntroDetail = ref(false);
 
 const { widthType } = useWindowResize();
 </script>
-
-<style scoped lang="less"></style>

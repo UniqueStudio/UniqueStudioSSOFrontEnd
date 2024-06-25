@@ -56,22 +56,22 @@
       </div>
     </a-scrollbar>
 
-    <a-button
-      type="dashed"
-      class="text-base flex justify-center items-center rounded absolute bottom-5 inset-x-5"
-      @click="goManagement"
-    >
-      <span class="mt-0.5">{{
-        $t('menu.interview.management')
-      }}</span></a-button
-    >
+    <div class="flex rounded absolute bottom-5 inset-x-5">
+      <a-button
+        type="dashed"
+        class="w-full h-full text-base justify-center items-center"
+        @click="goManagement"
+      >
+        <span class="">{{ $t('menu.interview.management') }}</span></a-button
+      >
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import router from '@/router';
 import { Group } from '@/constants/team';
-import { defineModel, computed } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 interface CandidateInfo {

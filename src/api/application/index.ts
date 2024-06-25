@@ -20,6 +20,7 @@ import {
 } from '@/constants/httpMsg/application/updateApplicationMsg';
 import { UpdateRecruitmentResponse } from '@/constants/httpMsg/recruitment/updateRecruitmentMsg';
 import { DeleteApplicationResponse } from '@/constants/httpMsg/application/deleteApplicationMsg';
+import { HR_BASE_URL } from '@/constants';
 import request from '../_request';
 
 export async function getAllApplications(
@@ -43,13 +44,21 @@ export async function getApplication(
 }
 
 export async function getApplicationResume(aid: string): Promise<Blob> {
-  return (await fetch(`/applications/${aid}/resume`)).blob();
+  return (
+    await fetch(`${HR_BASE_URL}/applications/${aid}/resume`, {
+      credentials: 'include',
+    })
+  ).blob();
 }
 
 export async function getApplicationWrittenTestAnswer(
   aid: string,
 ): Promise<Blob> {
-  return (await fetch(`/applications/${aid}/file/WrittenTest`)).blob();
+  return (
+    await fetch(`${HR_BASE_URL}/applications/${aid}/file/WrittenTest`, {
+      credentials: 'include',
+    })
+  ).blob();
 }
 
 export async function getAvailableInterviewSelections(

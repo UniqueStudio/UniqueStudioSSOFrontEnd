@@ -9,7 +9,6 @@ import {
   SetStressTestTime,
   getTest,
 } from '@/api';
-import { Evaluation } from '@/constants/team';
 import {
   RecruitmentState,
   UpdateParams,

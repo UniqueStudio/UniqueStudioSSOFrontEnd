@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-0 justify-between mb-5 absolute top-0 left-0 sm:static w-full bg-[--color-bg-1] h-10"
+    class="flex flex-0 justify-between mb-5 max-sm:absolute top-0 left-0 w-full bg-[--color-bg-1] h-10"
   >
     <div class="flex">
       <!-- @vue-ignore 由于逆变@change会报ts错误 -->
@@ -23,7 +23,7 @@
         </a-descriptions>
       </div>
     </div>
-    <div class="sm:hidden flex items-center">
+    <div class="hidden max-sm:flex items-center">
       <a-select
         v-model="curStep"
         :bordered="false"
@@ -46,13 +46,13 @@
     >
     <team-group-radio
       v-model="currentGroup"
-      class="hidden sm:block"
+      class="max-sm:hidden"
     ></team-group-radio>
   </div>
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
     v-model="selectedApplications"
-    class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5 shrink sm:grow"
+    class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow"
     style="scrollbar-width: thin"
     @change="handleChange"
   >
@@ -64,7 +64,7 @@
     ></candidate-info-card>
   </a-checkbox-group>
   <div
-    class="flex justify-between flex-row-reverse justify-self-end fixed sm:static bottom-0 left-0 w-full bg-[--color-bg-1] p-2"
+    class="flex justify-between flex-row-reverse justify-self-end max-sm:fixed bottom-0 left-0 w-full bg-[--color-bg-1] p-2"
   >
     <edit-buttons
       :candidates="candidates"
@@ -137,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, Ref, defineModel } from 'vue';
+import { ref, computed, watch, Ref } from 'vue';
 import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';

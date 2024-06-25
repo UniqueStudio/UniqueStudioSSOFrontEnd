@@ -34,3 +34,29 @@ export const downloadFile = (data: Blob, fileName: string) => {
   a = null;
   window.URL.revokeObjectURL(url);
 };
+
+export const getRecruitmentName = (t: (x: string) => string, name: string) => {
+  if (!/(\d+)(S|C|A)/.test(name)) return name;
+  const [_, year, state] = name.match(/(\d+)(S|C|A)/)!;
+  return `${year}${t(`common.rec.name.${state}`)}`;
+};
+
+export const getToday = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+export const transformedTime = (start: string, end: string) => {
+  const startTime = new Date(start);
+  const endTime = new Date(end);
+
+  const startHours = startTime.getHours().toString().padStart(2, '0');
+  const startMinutes = startTime.getMinutes().toString().padStart(2, '0');
+  const endHours = endTime.getHours().toString().padStart(2, '0');
+  const endMinutes = endTime.getMinutes().toString().padStart(2, '0');
+
+  return `${startHours}:${startMinutes}-${endHours}:${endMinutes}`;
+};

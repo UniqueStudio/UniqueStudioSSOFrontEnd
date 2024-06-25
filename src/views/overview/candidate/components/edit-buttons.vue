@@ -4,7 +4,7 @@
       type="primary"
       :disabled="props.curStep >= recruitSteps.length - 1 || !candidates.length"
       :size="buttonSize"
-      class="rounded-full sm:rounded-none"
+      class="max-sm:rounded-full rounded-none"
       @click="openSwitchStage"
     >
       {{ $t('common.operation.switchStage') }}
@@ -13,14 +13,14 @@
       status="danger"
       :disabled="!candidates.length"
       :size="buttonSize"
-      class="rounded-full sm:rounded-none"
+      class="max-sm:rounded-full rounded-none"
       @click="openTerminate"
     >
       {{ $t('common.operation.terminate') }}
     </a-button>
     <a-button
       type="outline"
-      class="hidden sm:inline-block"
+      class="max-sm:hidden"
       :size="buttonSize"
       :disabled="!candidates.length"
       @click="openNotify"
