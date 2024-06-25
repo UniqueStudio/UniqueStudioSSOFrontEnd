@@ -32,7 +32,7 @@ export default {
   'common.operation.quitAccount': '退出登录',
   'common.operation.readAll': '全部已读',
   'common.operation.arrangeSchedule': '日程安排',
-
+  'common.operation.addSchedule': '添加日程',
   'common.result.deleteSuccess': '删除成功',
   'common.result.createSuccess': '创建成功',
   'common.result.sendSuccess': '发送成功',
@@ -96,6 +96,9 @@ export default {
   'common.yes': '是',
   'common.no': '否',
   'common.void': '无',
+  'common.rec.name.S': '夏令营',
+  'common.rec.name.C': '秋季招新',
+  'common.rec.name.A': '春季招新',
 
   'common.applyInfo.overview': '数据总览',
   'common.applyInfo.groupMemberCounts': '团队人数',

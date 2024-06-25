@@ -78,7 +78,6 @@ const initChart = () => {
 
 onMounted(() => {
   myChart = echarts.init(chartRef1.value);
-  initChart();
 });
 
 watch(

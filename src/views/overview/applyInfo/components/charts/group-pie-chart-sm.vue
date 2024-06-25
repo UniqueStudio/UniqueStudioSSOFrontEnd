@@ -87,13 +87,14 @@ const initChart = () => {
 
 watch(
   () => option.value,
-  () => initChart(),
+  () => {
+    initChart();
+  },
   { deep: true },
 );
 
 onMounted(() => {
   myChart = echarts.init(groupChartRef1.value);
-  initChart();
 });
 
 window.addEventListener('resize', resizeChart);

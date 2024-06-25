@@ -1,18 +1,21 @@
 <template>
-  <div
-    class="lg:flex lg:flex-row lg:place-content-between lg:gap-5 lg:h-fit h-234.5 flex-col"
+  <a-scrollbar
+    class="w-full h-full pr-4 overflow-y-auto overflow-x-hidden"
+    outer-class="w-full h-full"
   >
-    <calender
-      :infos="overview"
-      class="mb-4 flex-4 border-[--color-border-4]"
-      @date-click="handleDateClick"
-    ></calender>
-    <schedules
-      v-model="currentGroup"
-      :infos="candidates"
-      class="flex-1 h-1/2 mb-5 lg:h-174"
-    ></schedules>
-  </div>
+    <div class="lg:flex lg:flex-row lg:gap-5 lg:h-fit h-234.5 flex-col">
+      <calender
+        :infos="overview"
+        class="flex-4 border-[--color-border-4] max-lg:mb-4"
+        @date-click="handleDateClick"
+      ></calender>
+      <schedules
+        v-model="currentGroup"
+        :infos="candidates"
+        class="flex-1 h-1/2 lg:h-174"
+      ></schedules>
+    </div>
+  </a-scrollbar>
 </template>
 
 <script setup lang="ts">

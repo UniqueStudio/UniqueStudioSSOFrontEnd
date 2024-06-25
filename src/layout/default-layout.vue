@@ -12,7 +12,7 @@
         </div>
       </a-layout-sider>
       <a-layout class="bg-[--color-fill-2]">
-        <a-layout-content class="">
+        <a-layout-content class="overflow-hidden">
           <page-layout />
         </a-layout-content>
       </a-layout>
@@ -21,16 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, provide, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useAppStore } from '@/store';
 import NavBar from '@/components/navbar/index.vue';
 import Menu from '@/components/menu/index.vue';
 import PageLayout from './page-layout.vue';
 
 const appStore = useAppStore();
-const navbarHeight = `60px`;
-const navbar = computed(() => appStore.navbar);
-const hideMenu = computed(() => appStore.hideMenu);
 const renderMenu = computed(() => appStore.menu && !appStore.topMenu);
 const menuWidth = computed(() => {
   // 48是左侧菜单收起的宽度

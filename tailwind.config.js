@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -35,25 +35,19 @@ module.exports = {
       flex: {
         4: '4 1 0%',
       },
-    },
-    maxHeight: {
-      158: '39.5rem',
-      158: '39.5rem',
-      179: '44.75rem',
-    },
-    maxHeight: {
-      158: '39.5rem',
-      158: '39.5rem',
-      179: '44.75rem',
-    },
-    minWidth: {
-      400: '400px',
-      500: '500px',
-    },
-    minHeight: {
-      158: '39.5rem',
-      193: '48.25rem',
-      185.5: '46.375rem',
+      maxHeight: {
+        158: '39.5rem',
+        179: '44.75rem',
+      },
+      minWidth: {
+        400: '400px',
+        500: '500px',
+      },
+      minHeight: {
+        158: '39.5rem',
+        193: '48.25rem',
+        185.5: '46.375rem',
+      },
     },
   },
   plugins: [],

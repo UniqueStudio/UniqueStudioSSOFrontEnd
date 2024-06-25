@@ -66,7 +66,7 @@
             </a-tag>
           </template>
         </div>
-        <a-link :href="`candidate/detail/${info.uid}`">
+        <a-link @click="router.push({ path: `candidate-detail/${info.uid}` })">
           <a-tag
             color="transparent"
             style="color: var(--color-text-3)"
@@ -100,11 +100,11 @@ const props = defineProps({
 });
 
 const EvaluationCnt = computed(() =>
-  EvaluationMap.slice(1).map((x, i) => [
+  EvaluationMap.map((x, i) => [
     x,
     props.info.comments?.filter(({ evaluation }) => evaluation === i)?.length ??
       0,
-  ]),
+  ]).slice(1),
 );
 </script>
 

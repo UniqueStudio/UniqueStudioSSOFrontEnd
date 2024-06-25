@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, computed } from 'vue';
+import { computed } from 'vue';
 import { Group } from '@/constants/team';
 
 const groups = computed(() =>

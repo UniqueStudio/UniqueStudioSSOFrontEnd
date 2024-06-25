@@ -47,54 +47,6 @@
           @click="changeDayNight"
         />
       </li>
-      <!--消息-->
-      <li class="hidden sm:flex sm:mr-8">
-        <a-dropdown class="hidden sm:flex" trigger="hover" position="br">
-          <a-badge class="hidden sm:flex" :count="3" dot :offset="[2, -2]">
-            <IconNotification
-              class="hidden sm:flex"
-              :size="18"
-              :style="{
-                color: '#888',
-                fontSize: '18px',
-                verticalAlign: '-3px',
-              }"
-            />
-          </a-badge>
-          <template #content style="width: 300px">
-            <a-card hoverable :style="{ width: '240px' }" :bordered="false">
-              <div
-                :style="{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }"
-              >
-                <span
-                  :style="{
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: '#1D2129',
-                  }"
-                >
-                  <span>{{ $t(`common.operation.notify`) }}</span>
-                </span>
-                <a-link>{{ $t(`common.operation.readAll`) }}</a-link>
-              </div>
-            </a-card>
-
-            <a-doption
-              ><template #icon><icon-calendar /></template>123</a-doption
-            >
-            <a-doption
-              ><template #icon><icon-calendar /></template>123</a-doption
-            >
-            <a-doption
-              ><template #icon><icon-calendar /></template>123</a-doption
-            >
-          </template>
-        </a-dropdown>
-      </li>
       <!--头像及下拉栏-->
       <li class="mr-4 ml-4 sm:ml-0">
         <a-dropdown>
