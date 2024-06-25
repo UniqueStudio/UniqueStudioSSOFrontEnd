@@ -207,8 +207,8 @@ const data = computed(() =>
           return false;
       } else if (interviewType.value === InterviewType.Team) {
         if (
-          app.step === Step.TeamInterview ||
-          app.step === Step.TeamTimeSelection
+          app.step !== Step.TeamInterview &&
+          app.step !== Step.TeamTimeSelection
         )
           return false;
       }

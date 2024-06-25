@@ -144,15 +144,15 @@ const displayData = computed(() => {
   return { timeOptions, selectedTime };
 });
 
-const handleBeforeOk = () => {
-  const res = allocateApplicationInterview(
+const handleBeforeOk = async () => {
+  const res = await allocateApplicationInterview(
     props.applicationId,
     props.interviewType as 'group' | 'team',
     { interview_id: form.value.selectInterviewId },
   );
   if (!res) return false;
   recStore.refresh();
-  Message.success(t('common.operation.allocateInterviewSuccess'));
+  Message.success(t('common.result.allowcateTimeSuccess'));
   return true;
 };
 </script>
