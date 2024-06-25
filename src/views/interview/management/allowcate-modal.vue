@@ -15,7 +15,7 @@
       >
         <a-space wrap>
           <a-tag
-            v-for="(time, index) in displayData.selectedTime"
+            v-for="(time, index) in selectedTime"
             :key="index"
             color="arcoblue"
           >
@@ -29,7 +29,7 @@
       >
         <a-cascader
           v-model="form.selectInterviewId"
-          :options="displayData.timeOptions"
+          :options="timeOptions"
           expand-trigger="hover"
         />
       </a-form-item>
@@ -73,7 +73,7 @@ const form = ref<{
 }>({ selectInterviewId: '' });
 const recStore = useRecruitmentStore();
 
-const getTimeOptions = () => {
+const timeOptions = computed(() => {
   // 面试分类 date->period->time
   const optionsData = {} as {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
@@ -81,9 +81,8 @@ const getTimeOptions = () => {
   recStore.curInterviews.forEach((interview) => {
     if (interview.start && interview.period) {
       const date = dayjs(interview.start).format('YYYY-MM-DD');
-      const time = `${dayjs(interview.start).format('HH:mm')}-${dayjs(
-        interview.end,
-      ).format('HH:mm')}`;
+      const time = `${dayjs(interview.start).format('HH:mm')}
+        - ${dayjs(interview.end).format('HH:mm')}`;
       if (optionsData[date] && optionsData[date][interview.period]) {
         optionsData[date][interview.period].push({
           time,
@@ -127,21 +126,20 @@ const getTimeOptions = () => {
   });
 
   return timeOptionsTmp;
-};
+});
 
-const displayData = computed(() => {
+const selectedTime = computed(() => {
   const nowApplication = recStore.curApplications.find(
     ({ uid }) => uid === props.applicationId,
   );
-  const timeOptions: CascaderOption[] = getTimeOptions();
-  const selectedTime: string[] =
+  return (
     nowApplication?.interview_selections?.map(
       (interview) =>
         `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
           interview.start,
         ).format('HH:mm')}-${dayjs(interview.end).format('HH:mm')}`,
-    ) ?? [];
-  return { timeOptions, selectedTime };
+    ) ?? []
+  );
 });
 
 const handleBeforeOk = async () => {

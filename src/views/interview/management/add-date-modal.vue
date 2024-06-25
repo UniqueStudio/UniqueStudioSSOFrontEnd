@@ -75,12 +75,9 @@ const interviewDate = ref<string>('');
 const interviewTime = ref<string[]>([]);
 const recStore = useRecruitmentStore();
 
-const groupOptions = Object.keys(Group)
-  .filter((x) => x !== 'Unique')
-  .map((key) => ({
-    value: Group[key as keyof typeof Group],
-    label: key,
-  }));
+const groupOptions = Object.entries(Group)
+  .filter((x) => x[0] !== 'Unique')
+  .map(([value, label]) => ({ value, label }));
 
 const calcPeriod = (time: Date): Period => {
   const hour = time.getHours();
