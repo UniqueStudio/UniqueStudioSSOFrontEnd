@@ -17,5 +17,6 @@ export type {
   SetStressTestTimeRequest as SetTimeParams,
 } from '@/constants/httpMsg/recruitment/updateRecruitmentMsg';
 export type { CreateRecruitmentRequest as CreateParams } from '@/constants/httpMsg/recruitment/createRecruitmentMsg';
+export type { CreateInterviewRequest } from '@/constants/httpMsg/interview/createInterviewMsg';
 
 export { Group } from '@/constants/team';

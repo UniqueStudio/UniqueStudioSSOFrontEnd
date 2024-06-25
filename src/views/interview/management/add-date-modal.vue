@@ -51,8 +51,6 @@
 <script setup lang="ts">
 import { ref, defineModel, PropType } from 'vue';
 import { Group, Period, PeriodDefineHour } from '@/constants/team';
-import { createInterview } from '@/api';
-import { CreateInterviewRequest } from '@/constants/httpMsg/interview/createInterviewMsg';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
@@ -104,21 +102,15 @@ const handleCreate = async () => {
   const start = startDate.toISOString();
   const end = new Date(`${interviewDate.value}T${endTime}`).toISOString();
 
-  const requestData: CreateInterviewRequest = [
+  visible.value = false;
+  const res = await recStore.createInterview(currentGroup.value, [
     {
       date: new Date(interviewDate.value).toISOString(),
       period: calcPeriod(startDate),
       start,
       end,
     },
-  ];
-
-  visible.value = false;
-  const res = await createInterview(
-    recStore.currentRid,
-    currentGroup.value,
-    requestData,
-  );
+  ]);
   if (res) {
     recStore.refresh();
     Message.success(t('common.result.addInterviewSuccess'));

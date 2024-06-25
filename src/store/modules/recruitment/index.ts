@@ -8,6 +8,8 @@ import {
   uploadTest,
   SetStressTestTime,
   getTest,
+  deleteInterview,
+  createInterview,
 } from '@/api';
 import {
   RecruitmentState,
@@ -17,6 +19,7 @@ import {
   CandidateInfo,
   Group,
   InterviewInfo,
+  CreateInterviewRequest,
 } from './types';
 
 const useRecruitmentStore = defineStore('recruitment', {
@@ -72,6 +75,14 @@ const useRecruitmentStore = defineStore('recruitment', {
     },
     async getTest(rid: string, group: Group) {
       const res = await getTest(rid, group);
+      return res.data;
+    },
+    async deleteInterview(group: Group, iid: string) {
+      const res = await deleteInterview(this.currentRid, group, [{ iid }]);
+      return res.data;
+    },
+    async createInterview(group: Group, data: CreateInterviewRequest) {
+      const res = await createInterview(this.currentRid, group, data);
       return res.data;
     },
   },
