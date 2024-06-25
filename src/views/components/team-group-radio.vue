@@ -1,7 +1,7 @@
 <template>
   <a-select
     v-model="currentGroup"
-    class="text-right sm:hidden flex w-24"
+    class="text-right lg:hidden flex w-24"
     :bordered="false"
   >
     <a-option v-for="item in groups" :key="item" :value="item">{{
@@ -12,7 +12,7 @@
 
   <a-radio-group
     v-model="currentGroup"
-    class="bg-[--color-bg-2] hidden sm:flex"
+    class="bg-[--color-bg-2] hidden lg:flex"
   >
     <template v-for="(item, index) in groups" :key="item">
       <a-radio :value="item">
