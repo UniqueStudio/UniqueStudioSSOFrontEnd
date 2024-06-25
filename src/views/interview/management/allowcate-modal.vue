@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, defineModel, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { allocateApplicationInterview } from '@/api/application';
 import { CascaderOption, Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
