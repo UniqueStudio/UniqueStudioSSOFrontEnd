@@ -32,4 +32,4 @@ export {
 
 export { createComment, deleteComment } from './comment';
 
-export { getInterview, setInterview } from './interview';
+export { getInterview, deleteInterview, createInterview } from './interview';

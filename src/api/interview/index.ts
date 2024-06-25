@@ -1,9 +1,13 @@
 import { InterviewSelectionResponse } from '@/constants/httpMsg/interview/getInterviewMsg';
 import { Group } from '@/constants/team';
 import {
-  SetInterviewRequest,
-  SetInterviewResponse,
-} from '@/constants/httpMsg/interview/setInterviewMsg';
+  DeleteInterviewRequest,
+  DeleteInterviewResponse,
+} from '@/constants/httpMsg/interview/deleteInterviewMsg';
+import {
+  CreateInterviewRequest,
+  CreateInterviewResponse,
+} from '@/constants/httpMsg/interview/createInterviewMsg';
 import request from '../_request';
 
 export async function getInterview(
@@ -17,14 +21,27 @@ export async function getInterview(
   return res;
 }
 
-export async function setInterview(
+export async function deleteInterview(
   rid: string,
   name: Group,
-  data: SetInterviewRequest,
-): Promise<SetInterviewResponse> {
-  const res: SetInterviewResponse = await request({
+  data: DeleteInterviewRequest,
+): Promise<DeleteInterviewResponse> {
+  const res: DeleteInterviewResponse = await request({
     url: `/recruitments/${rid}/interviews/${name}`,
-    method: 'PUT',
+    method: 'DELETE',
+    data,
+  });
+  return res;
+}
+
+export async function createInterview(
+  rid: string,
+  name: Group,
+  data: CreateInterviewRequest,
+): Promise<CreateInterviewResponse> {
+  const res: CreateInterviewResponse = await request({
+    url: `/recruitments/${rid}/interviews/${name}`,
+    method: 'POST',
     data,
   });
   return res;
