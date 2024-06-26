@@ -10,7 +10,9 @@
         <a-select
           v-model="recruitmentStore.currentRid"
           class="w-36 bg-transparent"
-          :default-value="transToCN(recruitmentStore.currentRec?.name)"
+          :default-value="
+            getRecruitmentName(t, recruitmentStore.currentRec?.name)
+          "
           @change="recruitmentStore.setCurrentRecruitment"
         >
           <a-option v-if="recruitmentStore.data.length === 0" :disabled="true">
@@ -20,7 +22,7 @@
             v-for="item of recruitmentStore.data"
             :key="item.uid"
             :value="item.uid"
-            :label="transToCN(item.name)"
+            :label="getRecruitmentName(t, item.name)"
           />
           <template #footer>
             <div class="py-1 text-center">
@@ -128,12 +130,15 @@ import CreateNewrecModal from '@/components/navbar/components/create-newrec-moda
 import LogoSVG from '@/assets/svg/logo.svg';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import useUserStore from '@/store/modules/user';
+import { getRecruitmentName } from '@/utils/index';
 import { SSO_DOMAIN } from '@/constants';
+import { useI18n } from 'vue-i18n';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+const { t } = useI18n();
 
 const recruitmentStore = useRecruitmentStore();
 recruitmentStore.getAllRecruitments();
@@ -150,19 +155,6 @@ const gotoUserInfo = () => {
 
 const gotoLogout = () => {
   window.location.href = `//${SSO_DOMAIN}/?logout=true`;
-};
-
-const transToCN = (source: string) => {
-  if (source?.includes('S')) {
-    return source.replace(source.slice(4, source.length), '春季招新');
-  }
-  if (source?.includes('C')) {
-    return source.replace(source.slice(4, source.length), '夏令营招新');
-  }
-  if (source?.includes('A')) {
-    return source.replace(source.slice(4, source.length), '秋季招新');
-  }
-  return '';
 };
 
 const icon = ref(true);

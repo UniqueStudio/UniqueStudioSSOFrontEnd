@@ -57,6 +57,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { createRecruitment } from '@/api';
+import { getRecruitmentName } from '@/utils/index';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const visible = defineModel<boolean>('visible', {
   type: Boolean,
@@ -99,24 +103,11 @@ const signupTimeRangeRules = [
   },
 ];
 
-const transToEN = (source: string) => {
-  if (source?.includes('春')) {
-    return source.replace(source.slice(4, source.length), 'S');
-  }
-  if (source?.includes('夏')) {
-    return source.replace(source.slice(4, source.length), 'C');
-  }
-  if (source?.includes('秋')) {
-    return source.replace(source.slice(4, source.length), 'A');
-  }
-  return '';
-};
-
 const sendForm = async () => {
   const form = recruitmentForm.value;
   try {
     await form.validate();
-    formData.value.name = transToEN(formData.value.name);
+    formData.value.name = getRecruitmentName(t, formData.value.name);
     const response = await createRecruitment(formData.value);
     if (response.data) {
       console.log(response.data);
