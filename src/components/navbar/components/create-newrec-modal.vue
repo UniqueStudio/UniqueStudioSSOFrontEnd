@@ -11,7 +11,7 @@
           class="mt-8"
           field="rec_name"
           :label="$t('common.createRec.recName')"
-          validate-trigger="change"
+          :rules="[{ required: true, message: '请输入招新名称' }]"
         >
           <a-input
             v-model="formData.name"
@@ -22,8 +22,7 @@
         <a-form-item
           field="rec_time_range"
           :label="$t('common.createRec.recTimeRange')"
-          :rules="recTimeRangeRules"
-          validate-trigger="change"
+          :rules="[{ required: true, message: '请输入招新起止日期' }]"
         >
           <a-range-picker
             v-model="timeRange1"
@@ -38,7 +37,6 @@
           field="signup_time_range"
           :label="$t('common.createRec.signupTimeRange')"
           :rules="signupTimeRangeRules"
-          validate-trigger="change"
         >
           <a-range-picker
             v-model="timeRange2"
@@ -74,15 +72,10 @@ const recruitmentForm = ref();
 const timeRange1 = ref([]);
 const timeRange2 = ref([]);
 
-const recTimeRangeRules = [{ required: true, message: '请选择招新时间范围' }];
-
 const signupTimeRangeRules = [
-  { required: true, message: '请选择报名时间范围' },
+  { required: true, message: '请输入报名起止日期' },
   {
     validator: (_rule: any, value: any) => {
-      if (!value || value.length !== 2) {
-        return Promise.reject(new Error('请选择有效的时间范围'));
-      }
       const [start, end] = value;
       const [recStart] = timeRange1.value;
 
@@ -97,10 +90,24 @@ const signupTimeRangeRules = [
   },
 ];
 
+const transToEN = (source: string) => {
+  if (source?.includes('春')) {
+    return source.replace(source.slice(4, source.length), 'S');
+  }
+  if (source?.includes('夏')) {
+    return source.replace(source.slice(4, source.length), 'C');
+  }
+  if (source?.includes('秋')) {
+    return source.replace(source.slice(4, source.length), 'A');
+  }
+  return '';
+};
+
 const sendForm = async () => {
   const form = recruitmentForm.value;
   try {
     await form.validate();
+    formData.value.name = transToEN(formData.value.name);
     const response = await createRecruitment(formData.value);
     if (response.data) {
       console.log(response.data);
@@ -118,6 +125,5 @@ const onOk1 = (dateString: any, _date: any) => {
 
 const onOk2 = (dateString: any, _date: any) => {
   formData.value.deadline = new Date(dateString[1]).toISOString();
-  // console.log('formData: ', formData);
 };
 </script>

@@ -49,7 +49,7 @@ export async function createRecruitment(
   data: CreateRecruitmentRequest,
 ): Promise<CreateRecruitmentResponse> {
   const res: CreateRecruitmentResponse = await request({
-    url: '/recruitments',
+    url: '/recruitments/',
     method: 'POST',
     data,
   });

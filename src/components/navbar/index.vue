@@ -8,8 +8,9 @@
       <li class="mr-4 sm:mr-4">
         <!-- @vue-ignore 由于逆变@change会报ts错误 -->
         <a-select
-          v-model="recruitmentStore.current"
+          v-model="recruitmentStore.currentRid"
           class="w-36 bg-transparent"
+          :default-value="transToCN(recruitmentStore.currentRec?.name)"
           @change="recruitmentStore.setCurrentRecruitment"
         >
           <a-option v-if="recruitmentStore.data.length === 0" :disabled="true">
@@ -19,7 +20,7 @@
             v-for="item of recruitmentStore.data"
             :key="item.uid"
             :value="item.uid"
-            :label="item.name"
+            :label="transToCN(item.name)"
           />
           <template #footer>
             <div class="py-1 text-center">
@@ -50,15 +51,15 @@
       <!--头像及下拉栏-->
       <li class="mr-4 ml-4 sm:ml-0">
         <a-dropdown>
-          <a-avatar :size="32"> B </a-avatar>
+          <a-avatar :size="32"> {{ getUserName() }} </a-avatar>
           <template #content>
-            <a-doption>
+            <a-doption @click="gotoUserInfo()">
               <template #icon>
                 <icon-user />
               </template>
               {{ $t(`common.operation.userSetting`) }}
             </a-doption>
-            <a-doption>
+            <a-doption @click="gotoLogout()">
               <template #icon>
                 <icon-export />
               </template>
@@ -127,6 +128,7 @@ import CreateNewrecModal from '@/components/navbar/components/create-newrec-moda
 import LogoSVG from '@/assets/svg/logo.svg';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import useUserStore from '@/store/modules/user';
+import { SSO_DOMAIN } from '@/constants';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -137,6 +139,31 @@ const recruitmentStore = useRecruitmentStore();
 recruitmentStore.getAllRecruitments();
 const userStore = useUserStore();
 userStore.getUserInfo();
+
+const getUserName = () => {
+  return userStore.data ? userStore.data?.name[0] : 'I';
+};
+
+const gotoUserInfo = () => {
+  window.location.href = `//${SSO_DOMAIN}/user/edit-info`;
+};
+
+const gotoLogout = () => {
+  window.location.href = `//${SSO_DOMAIN}/?logout=true`;
+};
+
+const transToCN = (source: string) => {
+  if (source?.includes('S')) {
+    return source.replace(source.slice(4, source.length), '春季招新');
+  }
+  if (source?.includes('C')) {
+    return source.replace(source.slice(4, source.length), '夏令营招新');
+  }
+  if (source?.includes('A')) {
+    return source.replace(source.slice(4, source.length), '秋季招新');
+  }
+  return '';
+};
 
 const icon = ref(true);
 const statu = ref('day');
