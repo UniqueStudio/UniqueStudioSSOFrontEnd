@@ -42,7 +42,6 @@
               v-for="item in nextValidSteps"
               :key="item"
               :value="item"
-              class="w-min"
               :title="$t(`common.steps.${item}`)"
               >{{ $t(`common.steps.${item}`) }}</a-option
             >
@@ -295,9 +294,11 @@ const handleNotify = async () => {
       aids,
     });
   });
-  await Promise.all(reqs);
+  const resp = await Promise.all(reqs);
+  if (!resp.every((x) => x)) return false;
   Message.success(t('common.result.sendSuccess'));
   notifyFormRef.value?.resetFields();
+  [formData.value.next] = nextValidSteps.value;
   return true;
 };
 </script>
