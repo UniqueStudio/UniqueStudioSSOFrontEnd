@@ -6,12 +6,7 @@
     draggable
   >
     <a-space direction="vertical" size="mini">
-      <a-form
-        ref="recruitmentForm"
-        :model="formData"
-        layout="vertical"
-        :rules="rules"
-      >
+      <a-form ref="recruitmentForm" :model="formData" layout="vertical">
         <a-form-item
           class="mt-8"
           field="rec_name"
@@ -74,14 +69,7 @@ const formData = ref({
   deadline: '', // 报名结束时间
   end: '', // 招新结束时间
 });
-const rules = {
-  name: [
-    {
-      required: true,
-      message: 'name is required',
-    },
-  ],
-};
+
 const recruitmentForm = ref();
 const timeRange1 = ref([]);
 const timeRange2 = ref([]);
