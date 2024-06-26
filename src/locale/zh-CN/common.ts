@@ -114,6 +114,7 @@ export default {
   'common.yes': '是',
   'common.no': '否',
   'common.void': '无',
+  'common.rec.noPermission': '抱歉! 你暂无权限',
   'common.rec.name.S': '春季招新',
   'common.rec.name.C': '夏令营',
   'common.rec.name.A': '秋季招新',
