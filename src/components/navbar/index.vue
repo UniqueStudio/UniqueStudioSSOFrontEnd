@@ -53,7 +53,7 @@
       <!--头像及下拉栏-->
       <li class="mr-4 ml-4 sm:ml-0">
         <a-dropdown>
-          <a-avatar :size="32"> {{ getUserName() }} </a-avatar>
+          <a-avatar :size="32"> {{ getUserName }} </a-avatar>
           <template #content>
             <a-doption @click="gotoUserInfo()">
               <template #icon>
