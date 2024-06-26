@@ -102,7 +102,7 @@
     :cur-step="props.curStep"
     :group="props.group"
     :rec-name="recStore.currentRec?.name ?? ''"
-    :type="'Accept'"
+    :type="allAccepted ? 'Accept' : 'Reject'"
   ></notification-modal>
 </template>
 
@@ -154,6 +154,13 @@ const props = defineProps({
 
 const candidateNames = computed(() => props.candidates.map(({ name }) => name));
 
+const allAccepted = computed(() =>
+  props.candidates.every(({ abandoned, rejected }) => !abandoned && !rejected),
+);
+const allRejected = computed(() =>
+  props.candidates.every(({ rejected }) => rejected),
+);
+
 const showSwitchStage = ref(false);
 const showTerminate = ref(false);
 const showNotify = ref(false);
@@ -171,9 +178,7 @@ watch(nextValidSteps, () => {
 });
 
 const openSwitchStage = () => {
-  if (
-    props.candidates.some(({ abandoned, rejected }) => abandoned || rejected)
-  ) {
+  if (!allAccepted.value) {
     Message.error(t('candidate.noAbandonedRejected'));
     return;
   }
@@ -203,9 +208,7 @@ const handleSwitchStage = async () => {
 };
 
 const openTerminate = () => {
-  if (
-    props.candidates.some(({ abandoned, rejected }) => abandoned || rejected)
-  ) {
+  if (!allAccepted.value) {
     Message.error(t('candidate.noAbandonedRejected'));
     return;
   }
@@ -232,6 +235,10 @@ const handleTerminate = async () => {
 const openNotify = () => {
   if (props.candidates.some(({ abandoned }) => abandoned)) {
     Message.error(t('candidate.noAbandoned'));
+    return;
+  }
+  if (!allAccepted.value && !allRejected.value) {
+    Message.error(t('candidate.noPassRejected'));
     return;
   }
   showNotify.value = true;

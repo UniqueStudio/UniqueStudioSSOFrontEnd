@@ -150,7 +150,7 @@
   <notification-modal
     v-model:showNotify="showNotify"
     :candidates="selectData"
-    :cur-step="0"
+    :cur-step="interviewType === InterviewType.Group ? 2 : 5"
     :rec-name="recStore.currentRec?.name ?? ''"
     :type="'Accept'"
     :group="Group.Web"
@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Group, InterviewType, Step } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import NotificationModal from '@/views/components/notification-modal.vue';
@@ -184,6 +184,9 @@ const { widthType } = useWindowResize();
 const interviewType = ref(InterviewType.Group);
 const currentGroup = ref(Group.Web);
 const selectedKeys = ref<string[]>([]);
+watch([interviewType, currentGroup], () => {
+  selectedKeys.value.length = 0;
+});
 const searchValue = ref('');
 const allowcateApplicationId = ref<string>('');
 const displayType = ref('common.information');

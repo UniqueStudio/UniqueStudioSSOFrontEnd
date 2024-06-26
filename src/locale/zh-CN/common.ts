@@ -130,6 +130,7 @@ export default {
   'common.applyInfo.details': '查看更多',
   'common.applyInfo.interviewName': '面试名称',
   'common.applyInfo.date': '日期',
+  'common.applyInfo.refresh': '如果遇到图表显示问题，请点击这里刷新QAQ',
 
   'common.createRec.recName': '招新名称',
   'common.createRec.inputRecName': '请输入名称',
