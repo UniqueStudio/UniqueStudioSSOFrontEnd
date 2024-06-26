@@ -5,7 +5,7 @@
       <a-popover position="bottom">
         <icon-refresh class="ml-4" @click="reloadPage" />
         <template #content>
-          <p>如果遇到图表显示问题，请点击这里刷新QAQ</p>
+          <p>{{ $t('common.applyInfo.refresh') }}</p>
         </template>
       </a-popover>
     </div>

@@ -187,13 +187,11 @@ const schedulesLength = computed(() => {
 
 const isEmpty = computed(() => {
   let empty = true;
+  const scheduleTimes = schedules.value.map((schedule) =>
+    schedule.date.getTime(),
+  );
   recents.value.forEach((date) => {
-    if (
-      schedules.value.some(
-        (schedule) => schedule.date.getTime() === date.getTime(),
-      )
-    )
-      empty = false;
+    if (scheduleTimes.includes(date.getTime())) empty = false;
   });
   return empty;
 });
