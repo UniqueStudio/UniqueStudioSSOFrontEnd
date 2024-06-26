@@ -22,6 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-D:/desktop/Unique_hr/UniqueStudioSSOFrontEnd/src/views/login/store/useLogin.ts
-D:/desktop/Unique_hr/UniqueStudioSSOFrontEnd/src/views/login/store/useRegister.ts

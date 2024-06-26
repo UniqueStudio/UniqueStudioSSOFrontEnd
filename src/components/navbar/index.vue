@@ -8,8 +8,11 @@
       <li class="mr-4 sm:mr-4">
         <!-- @vue-ignore 由于逆变@change会报ts错误 -->
         <a-select
-          v-model="recruitmentStore.current"
+          v-model="recruitmentStore.currentRid"
           class="w-36 bg-transparent"
+          :default-value="
+            getRecruitmentName(t, recruitmentStore.currentRec?.name)
+          "
           @change="recruitmentStore.setCurrentRecruitment"
         >
           <a-option v-if="recruitmentStore.data.length === 0" :disabled="true">
@@ -19,11 +22,8 @@
             v-for="item of recruitmentStore.data"
             :key="item.uid"
             :value="item.uid"
-            :label="item.name"
+            :label="getRecruitmentName(t, item.name)"
           />
-          <a-option>2024春季招新</a-option>
-          <a-option>2023秋季招新</a-option>
-          <a-option>2023夏令营招新</a-option>
           <template #footer>
             <div class="py-1 text-center">
               <a-button
@@ -50,66 +50,18 @@
           @click="changeDayNight"
         />
       </li>
-      <!--消息-->
-      <li class="hidden sm:flex sm:mr-8">
-        <a-dropdown class="hidden sm:flex" trigger="hover" position="br">
-          <a-badge class="hidden sm:flex" :count="3" dot :offset="[2, -2]">
-            <IconNotification
-              class="hidden sm:flex"
-              :size="18"
-              :style="{
-                color: '#888',
-                fontSize: '18px',
-                verticalAlign: '-3px',
-              }"
-            />
-          </a-badge>
-          <template #content style="width: 300px">
-            <a-card hoverable :style="{ width: '240px' }" :bordered="false">
-              <div
-                :style="{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }"
-              >
-                <span
-                  :style="{
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: '#1D2129',
-                  }"
-                >
-                  <span>{{ $t(`common.operation.notify`) }}</span>
-                </span>
-                <a-link>{{ $t(`common.operation.readAll`) }}</a-link>
-              </div>
-            </a-card>
-
-            <a-doption
-              ><template #icon><icon-calendar /></template>123</a-doption
-            >
-            <a-doption
-              ><template #icon><icon-calendar /></template>123</a-doption
-            >
-            <a-doption
-              ><template #icon><icon-calendar /></template>123</a-doption
-            >
-          </template>
-        </a-dropdown>
-      </li>
       <!--头像及下拉栏-->
       <li class="mr-4 ml-4 sm:ml-0">
         <a-dropdown>
-          <a-avatar :size="32"> B </a-avatar>
+          <a-avatar :size="32"> {{ getUserName }} </a-avatar>
           <template #content>
-            <a-doption>
+            <a-doption @click="gotoUserInfo()">
               <template #icon>
                 <icon-user />
               </template>
               {{ $t(`common.operation.userSetting`) }}
             </a-doption>
-            <a-doption>
+            <a-doption @click="gotoLogout()">
               <template #icon>
                 <icon-export />
               </template>
@@ -178,16 +130,32 @@ import CreateNewrecModal from '@/components/navbar/components/create-newrec-moda
 import LogoSVG from '@/assets/svg/logo.svg';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import useUserStore from '@/store/modules/user';
+import { getRecruitmentName } from '@/utils/index';
+import { SSO_DOMAIN } from '@/constants';
+import { useI18n } from 'vue-i18n';
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+const { t } = useI18n();
 
 const recruitmentStore = useRecruitmentStore();
 recruitmentStore.getAllRecruitments();
 const userStore = useUserStore();
 userStore.getUserInfo();
+
+const getUserName = computed(() => {
+  return userStore.data ? userStore.data?.name[0] : 'I';
+});
+
+const gotoUserInfo = () => {
+  window.location.href = `//${SSO_DOMAIN}/user/edit-info`;
+};
+
+const gotoLogout = () => {
+  window.location.href = `//${SSO_DOMAIN}/?logout=true`;
+};
 
 const icon = ref(true);
 const statu = ref('day');

@@ -11,7 +11,6 @@
           class="mt-8"
           field="rec_name"
           :label="$t('common.createRec.recName')"
-          validate-trigger="change"
         >
           <a-input
             v-model="formData.name"
@@ -22,8 +21,6 @@
         <a-form-item
           field="rec_time_range"
           :label="$t('common.createRec.recTimeRange')"
-          :rules="recTimeRangeRules"
-          validate-trigger="change"
         >
           <a-range-picker
             v-model="timeRange1"
@@ -38,7 +35,6 @@
           field="signup_time_range"
           :label="$t('common.createRec.signupTimeRange')"
           :rules="signupTimeRangeRules"
-          validate-trigger="change"
         >
           <a-range-picker
             v-model="timeRange2"
@@ -74,15 +70,9 @@ const recruitmentForm = ref();
 const timeRange1 = ref([]);
 const timeRange2 = ref([]);
 
-const recTimeRangeRules = [{ required: true, message: '请选择招新时间范围' }];
-
 const signupTimeRangeRules = [
-  { required: true, message: '请选择报名时间范围' },
   {
     validator: (_rule: any, value: any) => {
-      if (!value || value.length !== 2) {
-        return Promise.reject(new Error('请选择有效的时间范围'));
-      }
       const [start, end] = value;
       const [recStart] = timeRange1.value;
 
@@ -118,6 +108,5 @@ const onOk1 = (dateString: any, _date: any) => {
 
 const onOk2 = (dateString: any, _date: any) => {
   formData.value.deadline = new Date(dateString[1]).toISOString();
-  // console.log('formData: ', formData);
 };
 </script>
