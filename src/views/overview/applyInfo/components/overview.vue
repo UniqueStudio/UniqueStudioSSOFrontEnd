@@ -1,17 +1,24 @@
 <template>
   <div class="bg-[--color-bg-1] w-full p-5 pb-10">
-    <div class="text-[--color-text-1] text-xl p-5 font-bold">{{
-      $t('common.applyInfo.overview')
-    }}</div>
+    <div class="text-[--color-text-1] text-xl p-5 font-bold"
+      >{{ $t('common.applyInfo.overview') }}
+      <a-popover position="bottom">
+        <icon-refresh class="ml-4" @click="reloadPage" />
+        <template #content>
+          <p>如果遇到图表显示问题，请点击这里刷新QAQ</p>
+        </template>
+      </a-popover>
+    </div>
     <div class="p-5 flex justify-around">
       <div class="flex">
         <icon-user-group
           class="pt-3 pr-5 text-7xl text-[--color-text-1]"
         ></icon-user-group>
         <div class="flex flex-col">
-          <span class="text-[--color-text-1] pb-3 text-lg font-medium">{{
-            $t('common.applyInfo.groupMemberCounts')
-          }}</span>
+          <span
+            class="text-[--color-text-1] pr-4 sm:pr-0 pb-3 text-lg font-medium"
+            >{{ $t('common.applyInfo.groupMemberCounts') }}</span
+          >
           <span class="font-bold text-4xl text-[--color-text-1]">
             {{ allGroupMemberCounts }}
           </span>
@@ -20,9 +27,10 @@
       <div class="flex">
         <icon-user class="pt-3 pr-5 text-7xl text-[--color-text-1]"></icon-user>
         <div class="flex flex-col">
-          <span class="text-[--color-text-1] pb-3 text-lg font-medium">{{
-            $t('common.applyInfo.candidateCounts')
-          }}</span>
+          <span
+            class="text-[--color-text-1] pr-4 sm:pr-0 pb-3 text-lg font-medium"
+            >{{ $t('common.applyInfo.candidateCounts') }}</span
+          >
           <span class="font-bold text-4xl text-[--color-text-1]">
             {{ allApplicationCounts }}
           </span>
@@ -70,4 +78,8 @@ const allGroupMemberCounts = computed(() => {
       )
     : 0;
 });
+
+const reloadPage = () => {
+  window.location.reload();
+};
 </script>

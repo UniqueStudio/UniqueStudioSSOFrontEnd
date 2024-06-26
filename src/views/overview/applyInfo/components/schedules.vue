@@ -1,16 +1,16 @@
 <template>
   <div>
-    <a-date-picker
-      v-model="pickerValue"
-      hide-trigger
-      class="hidden sm:block sm:w-full"
-    />
+    <a-date-picker v-model="pickerValue" hide-trigger />
   </div>
   <div>
-    <div class="text-[--color-text-1] text-lg font-bold mt-15 ml-5 pt-5">{{
+    <div class="text-[--color-text-1] text-xl font-bold mt-15 ml-5 pt-5">{{
       $t('common.applyInfo.recentSchedules')
     }}</div>
-    <div>
+    <div class="">
+      <a-empty
+        :class="isEmpty ? 'block' : 'hidden'"
+        class="mt-40 pb-40"
+      ></a-empty>
       <li
         v-for="date in recents"
         :key="date.toDateString()"
@@ -23,7 +23,7 @@
             )
           "
         >
-          <div class="text-[--color-text-1] mt-5 ml-5 sm:text-xl">
+          <div class="text-[--color-text-1] mt-5 ml-5 sm:text-lg">
             {{ date.getMonth() + 1 }}.{{ date.getDate() }}
           </div>
           <li
@@ -36,15 +36,13 @@
                 <div
                   class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 mr-3 flex items-center justify-center"
                 >
-                  <icon-calendar class="sm:text-xl text-[--color-text-1]" />
+                  <icon-calendar class="sm:text-lg text-[--color-text-1]" />
                 </div>
-                <span class="sm:text-xl mt-1 text-[--color-text-1]">{{
+                <span class="sm:text-lg mt-1 text-[--color-text-1]">{{
                   schedule.name
                 }}</span>
               </div>
-              <span class="text-blue-600 mr-8 sm:text-lg">{{
-                schedule.time
-              }}</span>
+              <span class="text-blue-600 mr-8">{{ schedule.time }}</span>
             </div>
           </li>
         </div>
@@ -92,7 +90,7 @@
             <div class="w-10 h-10 rounded-full border-2 float-left mr-3 p-2">
               <icon-calendar class="text-xl" />
             </div>
-            <span class="text-xl float-left mt-1 text-[--color-text-1]">{{
+            <span class="text-lg float-left mt-1 text-[--color-text-1]">{{
               schedule.name
             }}</span>
             <span class="text-blue-600 float-right mt-3">{{
@@ -185,5 +183,18 @@ const schedulesLength = computed(() => {
       (date: Date) => schedule.date.getTime() === date.getTime(),
     );
   }).length;
+});
+
+const isEmpty = computed(() => {
+  let empty = true;
+  recents.value.forEach((date) => {
+    if (
+      schedules.value.some(
+        (schedule) => schedule.date.getTime() === date.getTime(),
+      )
+    )
+      empty = false;
+  });
+  return empty;
 });
 </script>
