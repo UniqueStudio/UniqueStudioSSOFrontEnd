@@ -6,12 +6,16 @@
     draggable
   >
     <a-space direction="vertical" size="mini">
-      <a-form ref="recruitmentForm" :model="formData" layout="vertical">
+      <a-form
+        ref="recruitmentForm"
+        :model="formData"
+        layout="vertical"
+        :rules="rules"
+      >
         <a-form-item
           class="mt-8"
           field="rec_name"
           :label="$t('common.createRec.recName')"
-          :rules="[{ required: true, message: '请输入招新名称' }]"
         >
           <a-input
             v-model="formData.name"
@@ -22,7 +26,6 @@
         <a-form-item
           field="rec_time_range"
           :label="$t('common.createRec.recTimeRange')"
-          :rules="[{ required: true, message: '请输入招新起止日期' }]"
         >
           <a-range-picker
             v-model="timeRange1"
@@ -67,13 +70,19 @@ const formData = ref({
   deadline: '', // 报名结束时间
   end: '', // 招新结束时间
 });
-
+const rules = {
+  name: [
+    {
+      required: true,
+      message: 'name is required',
+    },
+  ],
+};
 const recruitmentForm = ref();
 const timeRange1 = ref([]);
 const timeRange2 = ref([]);
 
 const signupTimeRangeRules = [
-  { required: true, message: '请输入报名起止日期' },
   {
     validator: (_rule: any, value: any) => {
       const [start, end] = value;

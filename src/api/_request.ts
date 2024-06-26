@@ -52,8 +52,8 @@ export default function request<T = object>(config: AxiosRequestConfig) {
       const { msg = '' } = err.response!.data!;
       if (msg.includes('authentication failed')) {
         // 非登录态跳转SSO登录
-        window.location.href = `//${SSO_DOMAIN}/login?from=${HR_DOMAIN_FE}`;
-        return;
+        // window.location.href = `//${SSO_DOMAIN}/login?from=${HR_DOMAIN_FE}`;
+        // return;
       }
       if (msg.includes('permission error')) {
         // 无权限访问
