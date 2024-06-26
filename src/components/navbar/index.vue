@@ -134,7 +134,7 @@ import { getRecruitmentName } from '@/utils/index';
 import { SSO_DOMAIN } from '@/constants';
 import { useI18n } from 'vue-i18n';
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -145,9 +145,9 @@ recruitmentStore.getAllRecruitments();
 const userStore = useUserStore();
 userStore.getUserInfo();
 
-const getUserName = () => {
+const getUserName = computed(() => {
   return userStore.data ? userStore.data?.name[0] : 'I';
-};
+});
 
 const gotoUserInfo = () => {
   window.location.href = `//${SSO_DOMAIN}/user/edit-info`;

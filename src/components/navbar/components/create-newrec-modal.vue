@@ -52,10 +52,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { createRecruitment } from '@/api';
-import { getRecruitmentName } from '@/utils/index';
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
 
 const visible = defineModel<boolean>('visible', {
   type: Boolean,
@@ -95,7 +91,6 @@ const sendForm = async () => {
   const form = recruitmentForm.value;
   try {
     await form.validate();
-    formData.value.name = getRecruitmentName(t, formData.value.name);
     const response = await createRecruitment(formData.value);
     if (response.data) {
       console.log(response.data);
