@@ -1,11 +1,11 @@
 import { Period, TimeString } from '@/constants/team';
 import { HttpRes } from '../_httpResTemplate';
 
-export type SetInterviewRequest = {
-  uid?: string;
+export type CreateInterviewRequest = {
   date: TimeString;
   period: Period;
-  slot_number: number;
+  start: TimeString;
+  end: TimeString;
 }[];
 
-export type SetInterviewResponse = HttpRes<object>;
+export type CreateInterviewResponse = HttpRes<object>;

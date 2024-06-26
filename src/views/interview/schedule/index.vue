@@ -1,6 +1,6 @@
 <template>
   <a-scrollbar
-    class="w-full h-full pr-4 overflow-y-auto overflow-x-hidden"
+    class="w-full h-full sm:pr-4 overflow-y-auto overflow-x-hidden"
     outer-class="w-full h-full"
   >
     <div class="lg:flex lg:flex-row lg:gap-5 lg:h-fit h-234.5 flex-col">

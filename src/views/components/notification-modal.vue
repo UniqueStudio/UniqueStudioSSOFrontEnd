@@ -6,6 +6,7 @@
     :on-before-close="
       notifyFormRef?.resetFields(['time', 'place', 'rest', 'meeting_id'])
     "
+    :width="width < 666 ? '90%' : '600px'"
   >
     <a-form
       ref="notifyFormRef"
@@ -73,8 +74,7 @@
           <a-input v-model="formData.meeting_id" />
         </a-form-item>
       </div>
-
-      <div class="flex gap-2 justify-between w-full">
+      <div class="flex gap-2 justify-between w-full flex-col sm:flex-row">
         <a-form-item
           class="max-sm:mb-3"
           field="place"
@@ -191,8 +191,10 @@ import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 import dayjs from 'dayjs';
 import { getRecruitmentName } from '@/utils';
+import useWindowResize from '@/hooks/resize';
 
 const { t } = useI18n();
+const { width } = useWindowResize();
 
 const props = defineProps({
   candidates: {
@@ -201,8 +203,6 @@ const props = defineProps({
         name: string;
         aid: string;
         step: Step;
-        abandoned: boolean;
-        rejected: boolean;
       }[]
     >,
     required: true,

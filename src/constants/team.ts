@@ -19,6 +19,17 @@ export enum Period {
   Evening = 'evening',
 }
 
+export const PeriodDefineHour = {
+  morning: [5, 12], // 5:00 - 12:00
+  afternoon: [12, 18], // 12:00 - 6:00
+  evening: [18, 24], // 18:00 - 24:00
+};
+
+export enum InterviewType {
+  Group = 'common.steps.GroupInterview',
+  Team = 'common.steps.TeamInterview',
+}
+
 export enum Group {
   Web = 'web',
   Lab = 'lab',

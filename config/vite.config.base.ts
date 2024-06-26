@@ -34,4 +34,17 @@ export default defineConfig({
       plugins: [tailwindcss, autoprefixer],
     },
   },
+  build: {
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('styles/tailwind.css')) {
+            return 'tailwindcss';
+          }
+          return undefined;
+        },
+      },
+    },
+  },
 });
