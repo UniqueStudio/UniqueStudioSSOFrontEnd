@@ -52,7 +52,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { createRecruitment } from '@/api';
+import { Message } from '@arco-design/web-vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const visible = defineModel<boolean>('visible', {
   type: Boolean,
   default: false,
@@ -96,7 +99,7 @@ const sendForm = async () => {
       console.log(response.data);
     }
   } catch (error) {
-    console.error('Validation failed:', error);
+    Message.error(t('common.rec.noPermission'));
   }
 };
 
