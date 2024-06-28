@@ -128,29 +128,35 @@ const filteredApps = computed(() =>
 );
 
 const candidates = computed(() => {
-  return filteredApps.value.flatMap((app) => {
-    const groupEndDate = parseDate(app.interview_allocations_group?.end ?? '');
-    const groupStartDate = parseDate(
-      app.interview_allocations_group?.start ?? '',
-    );
-    const groupInterviewPeriod = `${Duration(groupStartDate, groupEndDate)}`;
-    const teamEndDate = parseDate(app.interview_allocations_team?.end ?? '');
-    const teamStartDate = parseDate(
-      app.interview_allocations_team?.start ?? '',
-    );
-    const teamInterviewPeriod = `${Duration(teamStartDate, teamEndDate)}`;
-    const interviewPeriod =
-      app.step === 'GroupInterview'
-        ? groupInterviewPeriod
-        : teamInterviewPeriod;
+  return filteredApps.value
+    .flatMap((app) => {
+      const groupEndDate = parseDate(
+        app.interview_allocations_group?.end ?? '',
+      );
+      const groupStartDate = parseDate(
+        app.interview_allocations_group?.start ?? '',
+      );
+      const groupInterviewPeriod = Duration(groupStartDate, groupEndDate);
+      const teamEndDate = parseDate(app.interview_allocations_team?.end ?? '');
+      const teamStartDate = parseDate(
+        app.interview_allocations_team?.start ?? '',
+      );
+      const teamInterviewPeriod = Duration(teamStartDate, teamEndDate);
+      const interviewPeriod =
+        app.step === 'GroupInterview'
+          ? groupInterviewPeriod
+          : teamInterviewPeriod;
 
-    return {
-      name: app.user_detail?.name ?? '',
-      step: app.step ?? recruitSteps[props.curStep].value[0],
-      group: app.group ?? '',
-      interviewPeriod,
-    };
-  });
+      return {
+        name: app.user_detail?.name ?? '',
+        step: app.step ?? recruitSteps[props.curStep].value[0],
+        group: app.group ?? '',
+        interviewPeriod,
+        startDate:
+          app.step === 'GroupInterview' ? groupStartDate : teamStartDate,
+      };
+    })
+    .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
 });
 </script>
 
