@@ -5,6 +5,7 @@ import { Interview } from '../interview/getInterviewMsg';
 
 interface Statistics {
   ai?: number;
+  mobile?: number;
   android?: number;
   design?: number;
   game?: number;
@@ -16,6 +17,7 @@ interface Statistics {
 
 export interface GroupDetails {
   ai?: number;
+  mobile?: number;
   android?: number;
   design?: number;
   game?: number;
