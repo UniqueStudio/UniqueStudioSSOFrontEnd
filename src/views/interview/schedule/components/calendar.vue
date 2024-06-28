@@ -19,7 +19,7 @@
               2,
             )"
             :key="info.date.getTime()"
-            class="mt-0.5 hidden lg:block"
+            class="hidden lg:block"
           >
             <div class="flex items-center">
               <a-badge
@@ -32,7 +32,7 @@
             </div>
           </div>
           <div v-if="hasMoreThanTwoInfos(year, month, date)">
-            <span class="float-left text-blue-600 text-sm">{{
+            <span class="float-left text-blue-500 text-xs">{{
               remainingSchedules(year, month, date)
             }}</span>
           </div>
@@ -45,6 +45,7 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import useRecruitmentStore from '@/store/modules/recruitment';
 
 interface InterviewInfo {
   step: string;
@@ -52,15 +53,29 @@ interface InterviewInfo {
   date: Date;
 }
 
+const recStore = useRecruitmentStore();
+
 const props = defineProps<{
   infos: InterviewInfo[];
 }>();
-const COLORS = ['green', 'arcoblue'];
-const curDate = ref(new Date('2024-01-01'));
+
 const { t } = useI18n();
 const formatToday = inject('formatToday') as (date: Date) => string;
 const parseDate = inject('parseDate') as (dateString: string) => Date;
 const emits = defineEmits(['dateClick']);
+const COLORS = ['green', 'arcoblue'];
+
+const curDate = ref(new Date());
+
+const curRecDate = async (rid = '') => {
+  await recStore.setCurrentRecruitment(rid);
+  if (recStore.currentRec && recStore.currentRec.beginning) {
+    curDate.value = new Date(recStore.currentRec.beginning);
+  }
+};
+
+// 获取本次招新的开始日期
+curRecDate();
 
 function formatDate(year: number, month: number, date: number) {
   const formattedMonth = month.toString().padStart(2, '0');

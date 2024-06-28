@@ -38,7 +38,7 @@ export default {
         4: '4 1 0%',
       },
       maxHeight: {
-        158: '39.5rem',
+        146: '36.5rem',
         179: '44.75rem',
       },
       minWidth: {
