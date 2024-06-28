@@ -2,8 +2,7 @@
   <div class="flex h-min">
     <a-card
       class="w-full h-min"
-      :class="{ 'bg-[#f0f5ff]': checked }"
-      title="Arco Card"
+      :class="{ 'bg-[rgb(var(--primary-1))]': checked }"
       size="small"
       hoverable
       :header-style="{ height: 'auto' }"
@@ -18,9 +17,11 @@
               @click="router.push({ path: `candidate-detail/${info.uid}` })"
             >
               <a-avatar class="bg-[rgb(var(--primary-6))] mr-2" :size="24">
-                {{
-                  info.user_detail?.avatar_url || info.user_detail?.name || ''
-                }}
+                <img
+                  v-if="info.user_detail?.avatar_url"
+                  :src="info.user_detail.avatar_url"
+                />
+                <span v-else>{{ info.user_detail?.name ?? '' }}</span>
               </a-avatar>
               <a-typography-text class="sm:text-sm md:text-md lg:text-lg">
                 {{ info.user_detail?.name || '' }}

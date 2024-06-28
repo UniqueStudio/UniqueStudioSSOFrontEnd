@@ -1,11 +1,12 @@
 <template>
-  <div class="flex flex-col gap-3">
+  <div class="flex flex-col gap-3 text-[--color-text-1]">
     <div class="flex pl-5 pb-2 sm:flex-col items-center gap-3 sm:gap-0">
-      <a-avatar :size="64">{{ user?.avatar_url || user?.name || '' }}</a-avatar>
+      <a-avatar :size="64">
+        <img v-if="user?.avatar_url" :src="user.avatar_url" />
+        <span v-else>{{ user?.name ?? '' }}</span>
+      </a-avatar>
       <div>
-        <div class="text-[--color-text-1] pt-3 sm:text-center">{{
-          user?.name ?? ''
-        }}</div>
+        <div class="pt-3 sm:text-center">{{ user?.name ?? '' }}</div>
         <div class="text-[--color-text-3] sm:text-center">{{
           applyStore.data?.group ?? ''
         }}</div>
