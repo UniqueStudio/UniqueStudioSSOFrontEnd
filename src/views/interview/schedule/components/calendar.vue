@@ -43,9 +43,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from 'vue';
+import { ref, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import dayjs from 'dayjs';
+
+function formatDate(year: number, month: number, date: number) {
+  const formattedMonth = String(month).padStart(2, '0');
+  const formattedDate = String(date).padStart(2, '0');
+  return dayjs(`${year}-${formattedMonth}-${formattedDate}`).format(
+    'YYYY-MM-DD',
+  );
+}
 
 interface InterviewInfo {
   step: string;
@@ -61,31 +70,24 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const formatToday = inject('formatToday') as (date: Date) => string;
-const parseDate = inject('parseDate') as (dateString: string) => Date;
 const emits = defineEmits(['dateClick']);
 const COLORS = ['green', 'arcoblue'];
 
-const curDate = ref(new Date());
+const curDate = ref<Date | null>(null);
 
-const curRecDate = async (rid = '') => {
-  await recStore.setCurrentRecruitment(rid);
-  if (recStore.currentRec && recStore.currentRec.beginning) {
-    curDate.value = new Date(recStore.currentRec.beginning);
-  }
-};
-
-// 获取本次招新的开始日期
-curRecDate();
-
-function formatDate(year: number, month: number, date: number) {
-  const formattedMonth = month.toString().padStart(2, '0');
-  const formattedDate = date.toString().padStart(2, '0');
-  return `${year}-${formattedMonth}-${formattedDate}`;
-}
+watch(
+  () => recStore.beginningDate,
+  (newDate) => {
+    if (newDate) {
+      curDate.value = new Date(newDate);
+    }
+  },
+  { immediate: true },
+);
 
 // 点击某个日期cell事件处理
 const handleCellClick = (year: number, month: number, date: number) => {
-  curDate.value = parseDate(formatDate(year, month, date));
+  curDate.value = dayjs(formatDate(year, month, date)).toDate();
   emits('dateClick', curDate.value);
 };
 
