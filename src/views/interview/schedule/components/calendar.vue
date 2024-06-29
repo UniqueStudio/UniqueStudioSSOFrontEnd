@@ -73,7 +73,7 @@ const formatToday = inject('formatToday') as (date: Date) => string;
 const emits = defineEmits(['dateClick']);
 const COLORS = ['green', 'arcoblue'];
 
-const curDate = ref<Date | null>(null);
+const curDate = ref<Date>();
 
 watch(
   () => recStore.beginningDate,
