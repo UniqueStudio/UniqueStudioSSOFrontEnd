@@ -93,6 +93,9 @@ const useRecruitmentStore = defineStore('recruitment', {
     curInterviews(): InterviewInfo[] {
       return this.currentRec?.interviews ?? [];
     },
+    beginningDate(): string {
+      return this.currentRec?.beginning ?? '';
+    },
   },
 });
 

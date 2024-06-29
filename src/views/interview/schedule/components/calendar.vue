@@ -19,7 +19,7 @@
               2,
             )"
             :key="info.date.getTime()"
-            class="mt-0.5 hidden lg:block"
+            class="hidden lg:block"
           >
             <div class="flex items-center">
               <a-badge
@@ -32,7 +32,7 @@
             </div>
           </div>
           <div v-if="hasMoreThanTwoInfos(year, month, date)">
-            <span class="float-left text-blue-600 text-sm">{{
+            <span class="float-left text-blue-500 text-xs">{{
               remainingSchedules(year, month, date)
             }}</span>
           </div>
@@ -43,8 +43,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from 'vue';
+import { ref, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import useRecruitmentStore from '@/store/modules/recruitment';
+import dayjs from 'dayjs';
+
+function formatDate(year: number, month: number, date: number) {
+  const formattedMonth = String(month).padStart(2, '0');
+  const formattedDate = String(date).padStart(2, '0');
+  return dayjs(`${year}-${formattedMonth}-${formattedDate}`).format(
+    'YYYY-MM-DD',
+  );
+}
 
 interface InterviewInfo {
   step: string;
@@ -52,25 +62,32 @@ interface InterviewInfo {
   date: Date;
 }
 
+const recStore = useRecruitmentStore();
+
 const props = defineProps<{
   infos: InterviewInfo[];
 }>();
-const COLORS = ['green', 'arcoblue'];
-const curDate = ref(new Date('2024-01-01'));
+
 const { t } = useI18n();
 const formatToday = inject('formatToday') as (date: Date) => string;
-const parseDate = inject('parseDate') as (dateString: string) => Date;
 const emits = defineEmits(['dateClick']);
+const COLORS = ['green', 'arcoblue'];
 
-function formatDate(year: number, month: number, date: number) {
-  const formattedMonth = month.toString().padStart(2, '0');
-  const formattedDate = date.toString().padStart(2, '0');
-  return `${year}-${formattedMonth}-${formattedDate}`;
-}
+const curDate = ref<Date>();
+
+watch(
+  () => recStore.beginningDate,
+  (newDate) => {
+    if (newDate) {
+      curDate.value = new Date(newDate);
+    }
+  },
+  { immediate: true },
+);
 
 // 点击某个日期cell事件处理
 const handleCellClick = (year: number, month: number, date: number) => {
-  curDate.value = parseDate(formatDate(year, month, date));
+  curDate.value = dayjs(formatDate(year, month, date)).toDate();
   emits('dateClick', curDate.value);
 };
 

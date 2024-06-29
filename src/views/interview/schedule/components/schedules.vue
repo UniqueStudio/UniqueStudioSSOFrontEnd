@@ -20,7 +20,7 @@
         </template>
       </a-dropdown>
     </div>
-    <a-scrollbar type="embed" class="overflow-y-auto mb-5 max-h-158">
+    <a-scrollbar type="embed" class="overflow-y-auto mb-5 max-h-146">
       <div class="flex flex-col">
         <li
           v-for="info in props.infos"

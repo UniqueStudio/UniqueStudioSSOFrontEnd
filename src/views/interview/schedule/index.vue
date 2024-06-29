@@ -22,37 +22,31 @@
 import { ref, computed, provide } from 'vue';
 import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import dayjs from 'dayjs';
 import calender from './components/calendar.vue';
 import schedules from './components/schedules.vue';
 
 // 格式化日期
 const formatToday = (date: Date) => {
-  const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return dayjs(date).format('YYYY-MM-DD');
 };
 
 // ISO 8601日期
-function parseDate(dateString: string): Date {
-  return new Date(dateString);
+function parseDate(dateString: string) {
+  return dayjs(dateString).toDate();
 }
 
 function formatDate(dateString: string) {
   return formatToday(parseDate(dateString));
 }
-function formatTime(date: Date): string {
-  return date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
+
+function formatTime(date: Date) {
+  return dayjs(date).format('HH:mm');
 }
 
-function Duration(start: Date, end: Date): string {
+function Duration(start: Date, end: Date) {
   const timeRange = `${formatTime(start)}-${formatTime(end)}`;
-  const diffInMs = end.getTime() - start.getTime();
-  const diffInMinutes = Math.round(diffInMs / 1000 / 60);
+  const diffInMinutes = dayjs(end).diff(dayjs(start), 'minute');
   const hours = Math.floor(diffInMinutes / 60);
   const minutes = diffInMinutes % 60;
   if (!hours) return `${timeRange}(${minutes}min)`;
@@ -69,8 +63,6 @@ const props = defineProps({
 });
 
 provide('formatToday', formatToday);
-provide('parseDate', parseDate);
-
 const currentGroup = ref(Group.Web);
 const selectedDate = ref<string>('2024-01-01');
 const recStore = useRecruitmentStore();
@@ -128,29 +120,35 @@ const filteredApps = computed(() =>
 );
 
 const candidates = computed(() => {
-  return filteredApps.value.flatMap((app) => {
-    const groupEndDate = parseDate(app.interview_allocations_group?.end ?? '');
-    const groupStartDate = parseDate(
-      app.interview_allocations_group?.start ?? '',
-    );
-    const groupInterviewPeriod = `${Duration(groupStartDate, groupEndDate)}`;
-    const teamEndDate = parseDate(app.interview_allocations_team?.end ?? '');
-    const teamStartDate = parseDate(
-      app.interview_allocations_team?.start ?? '',
-    );
-    const teamInterviewPeriod = `${Duration(teamStartDate, teamEndDate)}`;
-    const interviewPeriod =
-      app.step === 'GroupInterview'
-        ? groupInterviewPeriod
-        : teamInterviewPeriod;
+  return filteredApps.value
+    .flatMap((app) => {
+      const groupEndDate = parseDate(
+        app.interview_allocations_group?.end ?? '',
+      );
+      const groupStartDate = parseDate(
+        app.interview_allocations_group?.start ?? '',
+      );
+      const groupInterviewPeriod = Duration(groupStartDate, groupEndDate);
+      const teamEndDate = parseDate(app.interview_allocations_team?.end ?? '');
+      const teamStartDate = parseDate(
+        app.interview_allocations_team?.start ?? '',
+      );
+      const teamInterviewPeriod = Duration(teamStartDate, teamEndDate);
+      const interviewPeriod =
+        app.step === 'GroupInterview'
+          ? groupInterviewPeriod
+          : teamInterviewPeriod;
 
-    return {
-      name: app.user_detail?.name ?? '',
-      step: app.step ?? recruitSteps[props.curStep].value[0],
-      group: app.group ?? '',
-      interviewPeriod,
-    };
-  });
+      return {
+        name: app.user_detail?.name ?? '',
+        step: app.step ?? recruitSteps[props.curStep].value[0],
+        group: app.group ?? '',
+        interviewPeriod,
+        startDate:
+          app.step === 'GroupInterview' ? groupStartDate : teamStartDate,
+      };
+    })
+    .sort((a, b) => dayjs(a.startDate).unix() - dayjs(b.startDate).unix());
 });
 </script>
 
