@@ -33,24 +33,24 @@ export enum InterviewType {
 export enum Group {
   Web = 'web',
   Lab = 'lab',
-  Ai = 'ai',
+  AI = 'ai',
   Game = 'game',
   Mobile = 'mobile',
   Android = 'android',
-  Ios = 'ios',
+  IOS = 'ios',
   Design = 'design',
-  Pm = 'pm',
+  PM = 'pm',
   Unique = 'unique', // for team interview
 }
 
 export const groupMapping = {
-  PM: Group.Pm,
+  PM: Group.PM,
   Design: Group.Design,
-  AI: Group.Ai,
+  AI: Group.AI,
   Android: Group.Android,
   Mobile: Group.Mobile,
   Web: Group.Web,
-  IOS: Group.Ios,
+  IOS: Group.IOS,
   Lab: Group.Lab,
   Game: Group.Game,
 };

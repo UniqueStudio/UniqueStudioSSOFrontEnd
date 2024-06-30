@@ -8,7 +8,7 @@ export default function useWindowResize() {
     height.value = window.innerHeight;
   };
   const widthType = computed(() => {
-    if (width.value <= 576) return 'sm';
+    if (width.value <= 640) return 'sm';
     if (width.value <= 960) return 'md';
     return 'lg';
   });

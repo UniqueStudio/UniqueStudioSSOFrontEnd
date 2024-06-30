@@ -96,7 +96,7 @@
       <a-form-item class="max-sm:mb-3" :label="$t('common.sms.example')">
         <a-scrollbar
           class="rounded-md border-2 px-4 py-3 break-all overflow-y-auto max-h-20"
-          outer-class=""
+          outer-class="w-full"
         >
           <i18n-t :keypath="preview.i18nKey" tag="div">
             <template #name>
@@ -116,12 +116,13 @@
             </template>
             <template #current>
               <span class="text-[rgb(var(--primary-6))]">{{
+                curStep < recruitSteps.length &&
                 $t(recruitSteps[props.curStep].i18Key)
               }}</span>
             </template>
             <template #next>
               <span class="text-[rgb(var(--primary-6))]">{{
-                $t(`common.steps.${formData.next}`)
+                formData.next && $t(`common.steps.${formData.next}`)
               }}</span>
             </template>
             <template #meeting_id>
@@ -150,7 +151,7 @@
               >
                 <template #next>
                   <span class="text-[rgb(var(--primary-6))]">{{
-                    $t(`common.steps.${formData.next}`)
+                    formData.next && $t(`common.steps.${formData.next}`)
                   }}</span>
                 </template>
                 <template #time>
@@ -191,6 +192,7 @@ import { useI18n } from 'vue-i18n';
 import dayjs from 'dayjs';
 import { getRecruitmentName } from '@/utils';
 import useWindowResize from '@/hooks/resize';
+import useRecruitmentStore from '@/store/modules/recruitment';
 
 const { t } = useI18n();
 const { width } = useWindowResize();
@@ -214,17 +216,17 @@ const props = defineProps({
     type: String as PropType<'Accept' | 'Reject'>,
     required: true,
   },
-  recName: {
-    type: String,
-    required: true,
-  },
   group: {
     type: String as PropType<Group>,
     required: true,
   },
 });
 
-const recNameI18nKey = computed(() => getRecruitmentName(t, props.recName));
+const recStore = useRecruitmentStore();
+
+const recName = computed(() => recStore.currentRec?.name ?? '');
+
+const recNameI18nKey = computed(() => getRecruitmentName(t, recName.value));
 
 const showNotify = defineModel<boolean>('showNotify', {
   type: Boolean,
@@ -257,7 +259,7 @@ const preview = computed(() => {
       rules: {},
     };
   const template = SMSTemplate.find(({ match }) =>
-    match.includes(formData.value.next),
+    match.includes(formData.value.next || Step.Pass),
   );
   return {
     ...template,

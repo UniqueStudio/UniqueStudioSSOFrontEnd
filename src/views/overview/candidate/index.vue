@@ -22,53 +22,70 @@
       </a-scrollbar>
 
       <div class="flex shrink-0">
-        <a-step
-          class="step-fail"
-          :description="`${failCnt}${$t('common.person')}`"
+        <a-steps
+          :current="currentStep - 8"
+          changeable
+          @change="(x) => (currentStep = x + 8)"
         >
-          <template #icon>
-            <icon-close />
-          </template>
-          {{ $t('common.steps.Fail') }}</a-step
-        >
-        <a-step
-          class="step-all"
-          :description="`${recStore.curApplications.length}${$t(
-            'common.person',
-          )}`"
-        >
-          <template #icon> <icon-user /> </template
-          >{{ $t('common.steps.All') }}</a-step
-        >
+          <a-step
+            class="step-fail"
+            :description="`${failCnt}${$t('common.person')}`"
+          >
+            <template #icon>
+              <icon-close />
+            </template>
+            {{ $t('common.steps.Fail') }}</a-step
+          >
+          <a-step
+            class="step-all"
+            :description="`${allCnt}${$t('common.person')}`"
+          >
+            <template #icon> <icon-user /> </template
+            >{{ $t('common.steps.All') }}</a-step
+          >
+        </a-steps>
       </div>
     </div>
     <a-divider class="hidden sm:block" />
-    <candidate-info v-model="currentStep"></candidate-info>
+    <candidate-info
+      v-model:curStep="currentStep"
+      v-model:currentGroup="currentGroup"
+    ></candidate-info>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { recruitSteps } from '@/constants/team';
+import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import candidateInfo from './components/candidate-info.vue';
 
 const recStore = useRecruitmentStore();
 
 const currentStep = ref(1);
+const currentGroup = ref(Group.Web);
 const stepCnt = computed(() =>
   recruitSteps.map(
     ({ value }) =>
-      recStore.curApplications.filter(({ step }) => value.includes(step))
-        .length,
+      recStore.curApplications.filter(
+        ({ step, group }) =>
+          value.includes(step) && group === currentGroup.value,
+      ).length,
   ),
 );
 
 const failCnt = computed(
   () =>
     recStore.curApplications.filter(
-      ({ rejected, abandoned }) => rejected || abandoned,
+      ({ rejected, abandoned, group }) =>
+        group === currentGroup.value && (rejected || abandoned),
     ).length,
+);
+
+const allCnt = computed(
+  () =>
+    recStore.curApplications.filter(({ group }) => group === currentGroup.value)
+      .length,
 );
 </script>
 
@@ -78,11 +95,19 @@ const failCnt = computed(
     color: rgb(var(--red-6));
     background-color: rgb(var(--red-1));
   }
+  :deep(&.arco-steps-item-active .arco-steps-icon) {
+    color: var(--color-white);
+    background-color: rgb(var(--red-6));
+  }
 }
 .step-all {
   :deep(.arco-steps-icon) {
     color: rgb(var(--arcoblue-6));
     background-color: rgb(var(--arcoblue-1));
+  }
+  :deep(&.arco-steps-item-active .arco-steps-icon) {
+    color: var(--color-white);
+    background-color: rgb(var(--primary-6));
   }
 }
 </style>
