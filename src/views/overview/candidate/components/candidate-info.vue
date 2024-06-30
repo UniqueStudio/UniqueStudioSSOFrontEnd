@@ -27,7 +27,7 @@
       <a-select
         v-model="curStep"
         :bordered="false"
-        class="w-min text-[rgb(var(--primary-6))] text-right"
+        class="text-[rgb(var(--primary-6))] text-right"
       >
         <a-option
           v-for="(item, index) in recruitSteps"
@@ -35,19 +35,15 @@
           :value="index + 1"
           >{{ $t(item.i18Key) }}</a-option
         >
+        <a-option :value="recruitSteps.length + 1">{{
+          $t('common.steps.Fail')
+        }}</a-option>
+        <a-option :value="recruitSteps.length + 2">{{
+          $t('common.steps.All')
+        }}</a-option>
       </a-select>
-      <a-select
-        v-model="currentGroup"
-        :bordered="false"
-        class="w-min text-[rgb(var(--primary-6))] text-right"
-      >
-        <a-option v-for="item in groups" :key="item">{{ item }}</a-option>
-      </a-select></div
-    >
-    <team-group-radio
-      v-model="currentGroup"
-      class="max-sm:hidden"
-    ></team-group-radio>
+    </div>
+    <team-group-radio v-model="currentGroup"></team-group-radio>
   </div>
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
@@ -138,7 +134,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, Ref } from 'vue';
-import { Group, recruitSteps } from '@/constants/team';
+import { Group, Step, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import { FileItem, Message } from '@arco-design/web-vue';
@@ -154,25 +150,50 @@ const buttonSize = computed(() =>
 
 const { t } = useI18n();
 
-const curStep = defineModel<number>({
+const curStep = defineModel<number>('curStep', {
+  required: true,
+});
+const currentGroup = defineModel<Group>('currentGroup', {
   required: true,
 });
 
 const recStore = useRecruitmentStore();
 
-const currentGroup = ref(Group.Web);
 const groups = Object.values(Group).filter((x) => x !== Group.Unique);
 
 const indeterminate = ref(false);
 const checkedAll = ref(false);
 
-const filteredApps = computed(() =>
-  recStore.curApplications.filter(
+const StepsOrder = Object.values(Step).reduce(
+  (res, x) => {
+    res[x] = recruitSteps.findIndex(({ value }) => value.includes(x));
+    return res;
+  },
+  {} as Record<Step, number>,
+);
+
+const filteredApps = computed(() => {
+  if (curStep.value === 9) {
+    // 已终止
+    return recStore.curApplications
+      .filter(
+        ({ group, abandoned, rejected }) =>
+          group === currentGroup.value && (abandoned || rejected),
+      )
+      .sort((a, b) => StepsOrder[a.step] - StepsOrder[b.step]);
+  }
+  if (curStep.value === 10) {
+    // 全部
+    return recStore.curApplications
+      .filter(({ group }) => group === currentGroup.value)
+      .sort((a, b) => StepsOrder[a.step] - StepsOrder[b.step]);
+  }
+  return recStore.curApplications.filter(
     ({ step, group }) =>
       recruitSteps[curStep.value - 1].value.includes(step) &&
       group === currentGroup.value,
-  ),
-);
+  );
+});
 const selectedApplications = ref<string[]>([]);
 
 const candidates = computed(() =>

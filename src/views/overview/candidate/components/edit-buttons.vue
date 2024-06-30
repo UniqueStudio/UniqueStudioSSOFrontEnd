@@ -11,7 +11,7 @@
     </a-button>
     <a-button
       status="danger"
-      :disabled="!candidates.length"
+      :disabled="props.curStep >= recruitSteps.length || !candidates.length"
       :size="buttonSize"
       class="max-sm:rounded-full rounded-none"
       @click="openTerminate"
@@ -22,7 +22,7 @@
       type="outline"
       class="max-sm:hidden"
       :size="buttonSize"
-      :disabled="!candidates.length"
+      :disabled="props.curStep >= recruitSteps.length || !candidates.length"
       @click="openNotify"
     >
       <template #icon> <icon-plus /> </template>
@@ -58,6 +58,7 @@
             <i18n-t keypath="candidate.switchStage" tag="div">
               <template #cur>
                 <span class="text-[rgb(var(--primary-6))]">{{
+                  curStep < recruitSteps.length &&
                   $t(recruitSteps[curStep].i18Key)
                 }}</span>
               </template>
@@ -97,11 +98,11 @@
     </div>
   </a-modal>
   <notification-modal
+    v-if="curStep <= recruitSteps.length"
     v-model:showNotify="showNotify"
     :candidates="props.candidates"
     :cur-step="props.curStep"
     :group="props.group"
-    :rec-name="recStore.currentRec?.name ?? ''"
     :type="allAccepted ? 'Accept' : 'Reject'"
   ></notification-modal>
 </template>

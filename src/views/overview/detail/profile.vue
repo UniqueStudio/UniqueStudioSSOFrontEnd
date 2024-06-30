@@ -12,11 +12,15 @@
         }}</div>
         <div class="sm:hidden flex items-center">
           <icon-phone />
-          <span class="ml-2.5 w-52 overflow-auto">{{ user?.phone ?? '' }}</span>
+          <span class="ml-2.5 w-52 overflow-x-auto">{{
+            user?.phone ?? ''
+          }}</span>
         </div>
         <div class="sm:hidden flex items-center">
           <icon-email />
-          <span class="ml-2.5 w-52 overflow-auto">{{ user?.email ?? '' }}</span>
+          <span class="ml-2.5 w-52 overflow-x-auto">{{
+            user?.email ?? ''
+          }}</span>
         </div>
       </div>
     </div>
