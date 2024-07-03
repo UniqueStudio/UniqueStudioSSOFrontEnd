@@ -77,7 +77,7 @@ const recStore = useRecruitmentStore();
 
 const groupOptions = Object.entries(Group)
   .filter((x) => x[0] !== 'Unique')
-  .map(([value, label]) => ({ value, label }));
+  .map(([label, value]) => ({ label, value }));
 
 const calcPeriod = (time: Date): Period => {
   const hour = time.getHours();
