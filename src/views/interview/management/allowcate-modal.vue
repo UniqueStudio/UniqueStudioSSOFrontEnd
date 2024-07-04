@@ -38,13 +38,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, PropType } from 'vue';
 import { allocateApplicationInterview } from '@/api/application';
 import { CascaderOption, Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import useWindowResize from '@/hooks/resize';
 import dayjs from 'dayjs';
+import { Group } from '@/constants/team';
 
 const { t } = useI18n();
 const { widthType } = useWindowResize();
@@ -58,6 +59,11 @@ const props = defineProps({
   interviewType: {
     type: String,
     default: 'group',
+    required: true,
+  },
+  currentGroup: {
+    type: String as PropType<Group>,
+    default: Group.Web,
     required: true,
   },
 });
@@ -78,27 +84,29 @@ const timeOptions = computed(() => {
   const optionsData = {} as {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
   };
-  recStore.curInterviews.forEach((interview) => {
-    if (interview.start && interview.period) {
-      const date = dayjs(interview.start).format('YYYY-MM-DD');
-      const time = `${dayjs(interview.start).format('HH:mm')}
+  recStore.curInterviews
+    .filter((item) => item.name === props.currentGroup)
+    .forEach((interview) => {
+      if (interview.start && interview.period) {
+        const date = dayjs(interview.start).format('YYYY-MM-DD');
+        const time = `${dayjs(interview.start).format('HH:mm')}
         - ${dayjs(interview.end).format('HH:mm')}`;
-      if (optionsData[date] && optionsData[date][interview.period]) {
-        optionsData[date][interview.period].push({
-          time,
-          interviewId: interview.uid,
-        });
-      } else if (optionsData[date]) {
-        optionsData[date][interview.period] = [
-          { time, interviewId: interview.uid },
-        ];
-      } else {
-        optionsData[date] = {
-          [interview.period]: [{ time, interviewId: interview.uid }],
-        };
+        if (optionsData[date] && optionsData[date][interview.period]) {
+          optionsData[date][interview.period].push({
+            time,
+            interviewId: interview.uid,
+          });
+        } else if (optionsData[date]) {
+          optionsData[date][interview.period] = [
+            { time, interviewId: interview.uid },
+          ];
+        } else {
+          optionsData[date] = {
+            [interview.period]: [{ time, interviewId: interview.uid }],
+          };
+        }
       }
-    }
-  });
+    });
 
   // 数据格式转换 change the data in optionsData to timeOptions
   const timeOptionsTmp: CascaderOption[] = [];
