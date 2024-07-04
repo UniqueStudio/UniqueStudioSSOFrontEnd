@@ -32,7 +32,7 @@
             </div>
           </div>
           <div v-if="hasMoreThanTwoInfos(year, month, date)">
-            <span class="float-left text-blue-500 text-xs">{{
+            <span class="hidden lg:block float-left text-blue-500 text-xs">{{
               remainingSchedules(year, month, date)
             }}</span>
           </div>

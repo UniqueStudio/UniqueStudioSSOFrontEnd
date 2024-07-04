@@ -3,7 +3,7 @@
     class="w-full h-full sm:pr-4 overflow-y-auto overflow-x-hidden"
     outer-class="w-full h-full"
   >
-    <div class="lg:flex lg:flex-row lg:gap-5 lg:h-fit h-234.5 flex-col">
+    <div class="lg:flex lg:flex-row lg:gap-5 lg:h-fit h-full flex-col">
       <calender
         :infos="overview"
         class="flex-4 border-[--color-border-4] max-lg:mb-4"
