@@ -153,7 +153,7 @@
     :cur-step="interviewType === InterviewType.Group ? 2 : 5"
     :rec-name="recStore.currentRec?.name ?? ''"
     :type="'Accept'"
-    :group="Group.Web"
+    :group="currentGroup"
   />
   <!-- 发送通知弹窗 -->
 
@@ -161,6 +161,7 @@
     v-model:showAllowcate="showAllowcate"
     :application-id="allowcateApplicationId"
     :interview-type="interviewType === InterviewType.Team ? 'team' : 'group'"
+    :current-group="currentGroup"
   />
   <!-- 分配选手面试时间弹窗 -->
 </template>

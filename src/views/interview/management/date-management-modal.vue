@@ -16,7 +16,7 @@
     </div>
     <div class="arco-scrollbar-container overflow-auto h-full">
       <div
-        class="grid grid-cols-1 gap-4 place-content-around mt-4 grid-container"
+        class="grid grid-cols-1 lg:grid-cols-3 gap-4 place-content-around mt-4 grid-container"
       >
         <div
           v-for="info in infos"
