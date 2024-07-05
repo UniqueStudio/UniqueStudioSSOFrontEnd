@@ -12,7 +12,7 @@
       <schedules
         v-model="currentGroup"
         :infos="candidates"
-        class="flex-1 h-1/2 lg:h-174"
+        class="flex-1 h-1/2 lg:h-188"
       ></schedules>
     </div>
   </a-scrollbar>

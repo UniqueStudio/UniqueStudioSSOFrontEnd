@@ -1,6 +1,6 @@
 <template>
   <div class="rounded p-5 relative bg-[--color-bg-2]">
-    <div class="w-full font-normal mb-5 text-xl flex justify-between">
+    <div class="w-full font-normal mb-5 lg:mb-8 text-xl flex justify-between">
       <span class="text-[--color-text-1]">{{
         $t('common.applyInfo.Schedules')
       }}</span>
@@ -22,7 +22,7 @@
     </div>
     <a-scrollbar
       type="embed"
-      class="h-3/4 lg:h-full overflow-y-auto mb-5 lg:max-h-146"
+      class="h-3/4 lg:h-5/6 overflow-y-auto"
       outer-class="w-full h-full"
     >
       <div
