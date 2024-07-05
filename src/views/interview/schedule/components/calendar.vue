@@ -9,9 +9,9 @@
           <div
             class="arco-calendar-date-value flex justify-center lg:justify-start"
           >
-            <div class="arco-calendar-date-circle lg:text-lg text-center">{{
-              date
-            }}</div>
+            <div class="arco-calendar-date-circle lg:text-lg text-center mb-1">
+              {{ date }}
+            </div>
           </div>
           <div
             v-for="(info, index) in filteredInfos(year, month, date).slice(
@@ -32,9 +32,11 @@
             </div>
           </div>
           <div v-if="hasMoreThanTwoInfos(year, month, date)">
-            <span class="float-left text-blue-500 text-xs">{{
-              remainingSchedules(year, month, date)
-            }}</span>
+            <span
+              class="hidden lg:block float-left text-blue-500 text-xs mt-0.5"
+            >
+              {{ remainingSchedules(year, month, date) }}
+            </span>
           </div>
         </div>
       </template>
@@ -151,7 +153,7 @@ const remainingSchedules = (year: number, month: number, date: number) => {
 @media (min-width: 1024px) {
   .month-min {
     :deep(.arco-calendar-month .arco-calendar-month-row) {
-      height: 97px;
+      height: 105px;
     }
   }
 }

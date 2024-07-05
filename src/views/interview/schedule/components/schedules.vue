@@ -1,6 +1,6 @@
 <template>
   <div class="rounded p-5 relative bg-[--color-bg-2]">
-    <div class="w-full font-normal mb-5 text-xl flex justify-between">
+    <div class="w-full font-normal mb-5 lg:mb-8 text-xl flex justify-between">
       <span class="text-[--color-text-1]">{{
         $t('common.applyInfo.Schedules')
       }}</span>
@@ -20,8 +20,14 @@
         </template>
       </a-dropdown>
     </div>
-    <a-scrollbar type="embed" class="overflow-y-auto mb-5 max-h-146">
-      <div class="flex flex-col">
+    <a-scrollbar
+      type="embed"
+      class="h-3/4 lg:h-5/6 overflow-y-auto"
+      outer-class="w-full h-full"
+    >
+      <div
+        class="grid md:max-lg:grid-cols-3 lg:grid-cols-1 grid-cols-2 gap-4 place-content-around mt-1"
+      >
         <li
           v-for="info in props.infos"
           :key="info.name"

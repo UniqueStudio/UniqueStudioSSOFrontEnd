@@ -3,7 +3,7 @@
     <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
       $t('menu.interview.management')
     }}</div>
-    <div class="flex flex-col justify-between w-full h-full sm:pb-6">
+    <div class="flex flex-col flex-1 w-full h-full sm:pb-6">
       <div class="flex justify-between pb-5">
         <a-select
           v-model="displayType"
@@ -69,7 +69,7 @@
           onlyCurrent: false,
         }"
         :pagination="{
-          pageSize: 10,
+          pageSize: widthType === 'sm' ? 10 : widthType === 'lg' ? 8 : 10,
         }"
         column-resizable
       >
