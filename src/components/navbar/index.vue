@@ -73,17 +73,18 @@
       <!-- 仪表盘 -->
       <li class="flex sm:hidden">
         <a-dropdown
+          v-model:visible="isMenuVisible"
           class="dashboard-dropdown flex sm:hidden"
           trigger="click"
-          @click="icon = !icon"
+          @popup-visible-change="handleVisibleChange"
         >
-          <IconMenu v-if="icon" :size="24" class="flex sm:hidden" />
-          <icon-close v-if="!icon" :size="24" class="flex sm:hidden" />
+          <IconMenu v-if="!isMenuVisible" :size="24" class="flex sm:hidden" />
+          <icon-close v-if="isMenuVisible" :size="24" class="flex sm:hidden" />
           <template #content>
             <a-menu
               class="dashboard-content"
-              :default-open-keys="['0']"
-              :default-selected-keys="['0_1']"
+              :default-open-keys="defaultOpenKeys"
+              :default-selected-keys="defaultSelectedKeys"
             >
               <a-menu-item key="0_0_0" data-obj="1">{{
                 $t('menu.title.dashboard')
@@ -134,10 +135,11 @@ import { getRecruitmentName } from '@/utils/index';
 import { SSO_DOMAIN } from '@/constants';
 import { useI18n } from 'vue-i18n';
 
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 const { t } = useI18n();
 
 const recruitmentStore = useRecruitmentStore();
@@ -157,7 +159,6 @@ const gotoLogout = () => {
   window.location.href = `//${SSO_DOMAIN}/?logout=true`;
 };
 
-const icon = ref(true);
 const statu = ref('day');
 const changeDayNight = () => {
   if (statu.value === 'day') {
@@ -170,11 +171,42 @@ const changeDayNight = () => {
 };
 
 const visible = ref(false);
+const isMenuVisible = ref(false);
+
+const handleVisibleChange = (menuVisible: boolean) => {
+  isMenuVisible.value = menuVisible;
+};
+
+const defaultOpenKeys = ref<string[]>([]);
+const defaultSelectedKeys = ref<string[]>([]);
+
+const setDefaultMenuKeys = () => {
+  const { path } = route;
+  if (path.includes('/overview')) {
+    defaultOpenKeys.value = ['0'];
+    if (path.includes('/apply-info')) {
+      defaultSelectedKeys.value = ['0_0'];
+    } else if (path.includes('/candidate')) {
+      defaultSelectedKeys.value = ['0_1'];
+    }
+  } else if (path.includes('/interview')) {
+    defaultOpenKeys.value = ['1'];
+    if (path.includes('/schedule')) {
+      defaultSelectedKeys.value = ['1_0'];
+    } else if (path.includes('/management')) {
+      defaultSelectedKeys.value = ['1_1'];
+    }
+  }
+};
+
+setDefaultMenuKeys();
+
+watch(route, () => {
+  setDefaultMenuKeys();
+});
 </script>
 
 <style scoped lang="less">
-@nav-size-height: 60px;
-
 .navbar {
   display: flex;
   justify-content: space-between;
