@@ -51,6 +51,7 @@
         <a-form-item
           class="max-sm:mb-3"
           field="time"
+          :disabled="!preview.notDisable.includes('time')"
           :label="$t('common.time')"
           asterisk-position="end"
           validate-trigger="change"
@@ -66,6 +67,7 @@
         <a-form-item
           class="max-sm:mb-3"
           field="meeting_id"
+          :disabled="!preview.notDisable.includes('meeting_id')"
           :label="$t('common.sms.meetingId')"
           asterisk-position="end"
           validate-trigger="change"
@@ -77,6 +79,7 @@
         <a-form-item
           class="max-sm:mb-3"
           field="place"
+          :disabled="!preview.notDisable.includes('place')"
           :label="$t('common.sms.place')"
           asterisk-position="end"
           validate-trigger="change"
@@ -86,6 +89,7 @@
         <a-form-item
           class="max-sm:mb-3"
           field="rest"
+          :disabled="!preview.notDisable.includes('rest')"
           :label="$t('common.sms.rest')"
           asterisk-position="end"
           validate-trigger="change"
@@ -95,87 +99,134 @@
       </div>
       <a-form-item class="max-sm:mb-3" :label="$t('common.sms.example')">
         <a-scrollbar
-          class="rounded-md border-2 px-4 py-3 break-all overflow-y-auto max-h-20"
+          class="flex flex-col w-full max-h-24 overflow-y-auto"
           outer-class="w-full"
         >
-          <i18n-t :keypath="preview.i18nKey" tag="div">
-            <template #name>
-              <span class="text-[rgb(var(--primary-6))]">{{
-                candidates[0]?.name || '{ }'
-              }}</span>
-            </template>
-            <template #recruitment_name>
-              <span class="text-[rgb(var(--primary-6))]">{{
-                $t(recNameI18nKey, {
-                  defaultValue: recNameI18nKey,
-                })
-              }}</span>
-            </template>
-            <template #group>
-              <span class="text-[rgb(var(--primary-6))]">{{ group }}</span>
-            </template>
-            <template #current>
-              <span class="text-[rgb(var(--primary-6))]">{{
-                curStep < recruitSteps.length &&
-                $t(recruitSteps[props.curStep].i18Key)
-              }}</span>
-            </template>
-            <template #next>
-              <span class="text-[rgb(var(--primary-6))]">{{
-                formData.next && $t(`common.steps.${formData.next}`)
-              }}</span>
-            </template>
-            <template #meeting_id>
-              <span class="text-[rgb(var(--primary-6))]">{{
-                formData.meeting_id || '{ }'
-              }}</span>
-            </template>
-            <template #time>
-              <span class="text-[rgb(var(--primary-6))]">{{
-                formData.time || '{ }'
-              }}</span>
-            </template>
-            <template #place>
-              <span class="text-[rgb(var(--primary-6))]">{{
-                formData.place || '{ }'
-              }}</span>
-            </template>
-            <template #rest>
-              <span v-if="formData.rest" class="text-[rgb(var(--primary-6))]">{{
-                formData.rest
-              }}</span>
-              <i18n-t
-                v-else-if="props.type === 'Accept'"
-                :keypath="preview.restI18nKey"
-                tag="span"
-              >
-                <template #next>
-                  <span class="text-[rgb(var(--primary-6))]">{{
-                    formData.next && $t(`common.steps.${formData.next}`)
-                  }}</span>
-                </template>
-                <template #time>
-                  <span class="text-[rgb(var(--primary-6))]">{{
-                    formData.time || '{ }'
-                  }}</span>
-                </template>
-                <template #place>
-                  <span class="text-[rgb(var(--primary-6))]">{{
-                    formData.place || '{ }'
-                  }}</span>
-                </template>
-                <template #group>
-                  <span class="text-[rgb(var(--primary-6))]">{{ group }}</span>
-                </template>
-              </i18n-t>
-            </template>
-            <!-- 组面、群面无需传时间，其时间已在面试管理分配，example_time仅用于展示占位 -->
-            <template #example_time>
-              <span class="text-[rgb(var(--primary-6))]">{{
-                dayjs().format('YYYY-MM-DD HH:mm:00')
-              }}</span>
-            </template>
-          </i18n-t>
+          <a-scrollbar
+            v-for="candidate in props.candidates"
+            :key="candidate.aid"
+            class="rounded-md border-2 px-4 py-3 break-all overflow-y-auto max-h-20"
+            outer-class="w-full pb-4"
+          >
+            <i18n-t :keypath="preview.i18nKey" tag="div">
+              <template #name>
+                <span class="text-[rgb(var(--primary-6))]">{{
+                  candidate.name || '{ }'
+                }}</span>
+              </template>
+              <template #recruitment_name>
+                <span class="text-[rgb(var(--primary-6))]">{{
+                  $t(recNameI18nKey, {
+                    defaultValue: recNameI18nKey,
+                  })
+                }}</span>
+              </template>
+              <template #group>
+                <span class="text-[rgb(var(--primary-6))]">{{ group }}</span>
+              </template>
+              <template #current>
+                <span class="text-[rgb(var(--primary-6))]">{{
+                  curStep < recruitSteps.length &&
+                  $t(recruitSteps[props.curStep].i18Key)
+                }}</span>
+              </template>
+              <template #next>
+                <span class="text-[rgb(var(--primary-6))]">{{
+                  formData.next && $t(`common.steps.${formData.next}`)
+                }}</span>
+              </template>
+              <template #meeting_id>
+                <span class="text-[rgb(var(--primary-6))]">{{
+                  formData.meeting_id || '{ }'
+                }}</span>
+              </template>
+              <template #time>
+                <span class="text-[rgb(var(--primary-6))]">{{
+                  formData.time || '{ }'
+                }}</span>
+              </template>
+              <template #place>
+                <span class="text-[rgb(var(--primary-6))]">{{
+                  formData.place || '{ }'
+                }}</span>
+              </template>
+              <template #rest>
+                <span
+                  v-if="formData.rest"
+                  class="text-[rgb(var(--primary-6))]"
+                  >{{ formData.rest }}</span
+                >
+                <i18n-t
+                  v-else-if="props.type === 'Accept'"
+                  :keypath="preview.restI18nKey"
+                  tag="span"
+                >
+                  <template #next>
+                    <span class="text-[rgb(var(--primary-6))]">{{
+                      formData.next && $t(`common.steps.${formData.next}`)
+                    }}</span>
+                  </template>
+                  <template #time>
+                    <span class="text-[rgb(var(--primary-6))]">{{
+                      formData.time || '{ }'
+                    }}</span>
+                  </template>
+                  <template #place>
+                    <span class="text-[rgb(var(--primary-6))]">{{
+                      formData.place || '{ }'
+                    }}</span>
+                  </template>
+                  <template #group>
+                    <span class="text-[rgb(var(--primary-6))]">{{
+                      group
+                    }}</span>
+                  </template>
+                </i18n-t>
+              </template>
+              <!-- 组面、群面无需传时间，其时间已在面试管理分配，example_time仅用于展示占位 -->
+              <template #example_time>
+                <!-- 3-(在线)组面 6-(在线)群面 -->
+                <span
+                  v-if="
+                    recruitSteps[3].value.includes(formData.next) &&
+                    candidate.groupInterviewTime
+                  "
+                  class="text-[rgb(var(--primary-6))]"
+                >
+                  {{
+                    dayjs(candidate.groupInterviewTime).format(
+                      'YYYY-MM-DD HH:mm:00',
+                    )
+                  }}
+                </span>
+                <span
+                  v-else-if="
+                    recruitSteps[6].value.includes(formData.next) &&
+                    candidate.teamInterviewTime
+                  "
+                  class="text-[rgb(var(--primary-6))]"
+                >
+                  {{
+                    dayjs(candidate.teamInterviewTime).format(
+                      'YYYY-MM-DD HH:mm:00',
+                    )
+                  }}
+                </span>
+                <span
+                  v-else
+                  class="cursor-pointer text-[rgb(var(--warning-4))] hover:text-[rgb(var(--warning-5))]"
+                  @click="
+                    $router.push('/interview/management');
+                    showNotify = false;
+                  "
+                  >{{ `\{${$t('common.status.waitForDistribution')}\}` }}</span
+                >
+              </template>
+              <template #online_interview_type>
+                {{ $t(`common.steps.${formData.next}`) }}
+              </template>
+            </i18n-t>
+          </a-scrollbar>
         </a-scrollbar>
       </a-form-item>
     </a-form>
@@ -204,6 +255,8 @@ const props = defineProps({
         name: string;
         aid: string;
         step: Step;
+        groupInterviewTime: string;
+        teamInterviewTime: string;
       }[]
     >,
     required: true,
@@ -257,6 +310,7 @@ const preview = computed(() => {
     return {
       ...SMSTemplate[0],
       rules: {},
+      notDisable: SMSTemplate[0].required.concat(['rest']),
     };
   const template = SMSTemplate.find(({ match }) =>
     match.includes(formData.value.next || Step.Pass),
@@ -271,6 +325,8 @@ const preview = computed(() => {
           ]),
         )
       : {},
+    notDisable:
+      template?.required.concat(template.restI18nKey ? ['rest'] : []) ?? [],
   };
 });
 
@@ -286,6 +342,21 @@ watch(
 const handleNotify = async () => {
   const validateError = await notifyFormRef.value?.validate();
   if (validateError) return false;
+  if (
+    recruitSteps[3].value.includes(formData.value.next) &&
+    !props.candidates.every(({ groupInterviewTime }) => groupInterviewTime)
+  ) {
+    Message.error(t('candidate.requireAllocateTime'));
+    return false;
+  }
+  if (
+    recruitSteps[6].value.includes(formData.value.next) &&
+    !props.candidates.every(({ teamInterviewTime }) => teamInterviewTime)
+  ) {
+    Message.error(t('candidate.requireAllocateTime'));
+    return false;
+  }
+
   const res = groupBy(props.candidates, ({ step }) => step);
   const reqs = Object.entries(res).map(([current, arr]) => {
     const aids = arr.map(({ aid }) => aid);

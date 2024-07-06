@@ -6,6 +6,7 @@ export default {
   'candidate.noAbandonedRejected': '不能对已放弃或淘汰的选手执行本操作',
   'candidate.noAbandoned': '不能对已放弃的选手执行本操作',
   'candidate.noPassRejected': '所选选手需全部通过或全部淘汰',
+  'candidate.requireAllocateTime': '所选选手需全部分配好面试时间',
   'candidate.applicationNotFound': '找不到选手信息',
   'candidate.receiver': '收信人',
 };

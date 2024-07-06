@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <div class="flex gap-3">
+      <div class="flex gap-4">
         <div
           class="w-9 h-9 rounded-full flex justify-center items-center bg-[rgb(var(--gray-2))] shrink-0"
         >

@@ -133,7 +133,12 @@
           {{ $t('common.operation.dateManagement') }}
         </a-button>
         <!-- 日程管理 -->
-        <a-button type="outline" class="sm:w-auto" @click="showNotify = true">
+        <a-button
+          type="outline"
+          class="sm:w-auto"
+          :disabled="!selectData.length"
+          @click="showNotify = true"
+        >
           <template #icon> <icon-plus /> </template>
           {{ $t('common.operation.sendNotification') }}
         </a-button>
@@ -202,6 +207,8 @@ const displayTypeItems = ['common.information', 'common.operation.operate'];
 const data = computed(() =>
   recStore.curApplications
     .filter((app) => {
+      // 放弃或淘汰的选手不能选择
+      if (app.abandoned || app.rejected) return false;
       if (app.group !== currentGroup.value) return false;
       if (interviewType.value === InterviewType.Group) {
         if (
@@ -219,10 +226,11 @@ const data = computed(() =>
       return app.user_detail?.name.includes(searchValue.value);
     })
     .map((app, ind) => {
+      const alloGroup = app.interview_allocations_group;
+      const alloTeam = app.interview_allocations_team;
       const interviewData =
-        interviewType.value === InterviewType.Group
-          ? app.interview_allocations_group
-          : app.interview_allocations_team;
+        interviewType.value === InterviewType.Group ? alloGroup : alloTeam;
+
       return {
         key: ind.toString(),
         name: app.user_detail?.name ?? '',
@@ -232,6 +240,8 @@ const data = computed(() =>
                 interviewData.start,
               ).format('HH:mm')}-${dayjs(interviewData.end).format('HH:mm')}`
             : t('common.status.waitForDistribution'),
+        groupInterviewTime: alloGroup?.uid ? alloGroup.start : '',
+        teamInterviewTime: alloTeam?.uid ? alloTeam.start : '',
         aid: app.uid,
         step: app.step,
       };
@@ -242,7 +252,13 @@ const data = computed(() =>
 const selectData = computed(() =>
   data.value
     .filter(({ aid }) => selectedKeys.value.includes(aid))
-    .map(({ name, aid, step }) => ({ name, aid, step })),
+    .map(({ name, aid, step, groupInterviewTime, teamInterviewTime }) => ({
+      name,
+      aid,
+      step,
+      groupInterviewTime,
+      teamInterviewTime,
+    })),
 );
 </script>
 

@@ -103,6 +103,7 @@
               step: applyStore.data.step,
               abandoned: applyStore.data.abandoned,
               rejected: applyStore.data.rejected,
+              ...interviewTimes,
             },
           ]"
           :group="applyStore.data.group"
@@ -147,6 +148,15 @@ const props = defineProps({
 onActivated(() => applyStore.getApplication(props.id));
 
 onDeactivated(() => applyStore.resetApplication());
+
+const interviewTimes = computed(() => {
+  const alloGroup = applyStore.data?.interview_allocations_group;
+  const alloTeam = applyStore.data?.interview_allocations_team;
+  return {
+    groupInterviewTime: alloGroup?.uid ? alloGroup.start : '',
+    teamInterviewTime: alloTeam?.uid ? alloTeam.start : '',
+  };
+});
 
 const user = computed(() => applyStore.data?.user_detail);
 

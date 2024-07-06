@@ -69,9 +69,10 @@
             class="text-[rgb(var(--primary-6))]"
           >
             <a-option
-              v-for="item in nextValidSteps"
+              v-for="item in Object.values(Step)"
               :key="item"
               :value="item"
+              :disabled="recruitSteps[props.curStep]?.value.includes(item)"
               :title="$t(`common.steps.${item}`)"
               >{{ $t(`common.steps.${item}`) }}</a-option
             >
@@ -135,6 +136,8 @@ const props = defineProps({
         step: Step;
         abandoned: boolean;
         rejected: boolean;
+        groupInterviewTime: string;
+        teamInterviewTime: string;
       }[]
     >,
     default: () => [],
@@ -166,17 +169,13 @@ const showSwitchStage = ref(false);
 const showTerminate = ref(false);
 const showNotify = ref(false);
 
-const nextValidSteps = computed(() => {
-  const arr: Step[] = [];
-  recruitSteps
-    .slice(props.curStep + 1)
-    .forEach(({ value }) => arr.push(...value));
-  return arr;
-});
-const nextStep = ref(nextValidSteps.value[0]);
-watch(nextValidSteps, () => {
-  [nextStep.value] = nextValidSteps.value;
-});
+const nextStep = ref(recruitSteps[props.curStep + 1]?.value[0] ?? Step.Pass);
+watch(
+  () => props.curStep,
+  () => {
+    [nextStep.value] = recruitSteps[props.curStep + 1]?.value ?? [Step.Pass];
+  },
+);
 
 const openSwitchStage = () => {
   if (!allAccepted.value) {

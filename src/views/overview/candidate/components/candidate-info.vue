@@ -62,6 +62,7 @@
   <div
     class="flex justify-between flex-row-reverse justify-self-end max-sm:fixed bottom-0 left-0 w-full bg-[--color-bg-1] p-2"
   >
+    <!-- curStep从1开始算，传入edi-button时进行-1操作 -->
     <edit-buttons
       :candidates="candidates"
       :cur-step="curStep - 1"
@@ -199,12 +200,17 @@ const selectedApplications = ref<string[]>([]);
 const candidates = computed(() =>
   selectedApplications.value.map((selectId) => {
     const app = filteredApps.value.find(({ uid }) => uid === selectId);
+    const alloGroup = app?.interview_allocations_group;
+    const alloTeam = app?.interview_allocations_team;
+
     return {
       name: app?.user_detail?.name ?? '',
       aid: app?.uid ?? '',
       step: app?.step ?? recruitSteps[curStep.value - 1].value[0],
       abandoned: app?.abandoned ?? false,
       rejected: app?.rejected ?? false,
+      groupInterviewTime: alloGroup?.uid ? alloGroup.start : '',
+      teamInterviewTime: alloTeam?.uid ? alloTeam.start : '',
     };
   }),
 );
