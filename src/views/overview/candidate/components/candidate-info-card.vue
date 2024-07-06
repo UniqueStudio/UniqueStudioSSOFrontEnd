@@ -13,9 +13,7 @@
             style="scrollbar-width: none"
             class="flex justify-start gap-2 items-center overflow-y-auto"
           >
-            <a-link
-              @click="router.push({ path: `candidate-detail/${info.uid}` })"
-            >
+            <a-link @click="$router.push(`candidate-detail/${info.uid}`)">
               <a-avatar class="bg-[rgb(var(--primary-6))] mr-2" :size="24">
                 <img
                   v-if="info.user_detail?.avatar_url"
@@ -67,7 +65,7 @@
             </a-tag>
           </template>
         </div>
-        <a-link @click="router.push({ path: `candidate-detail/${info.uid}` })">
+        <a-link @click="$router.push(`candidate-detail/${info.uid}`)">
           <a-tag
             color="transparent"
             style="color: var(--color-text-3)"
@@ -86,9 +84,7 @@
 import { PropType, computed } from 'vue';
 import { CandidateInfo } from '@/store/modules/recruitment/types';
 import { EvaluationMap, GenderMap } from '@/constants/team';
-import { useRouter } from 'vue-router';
 
-const router = useRouter();
 const props = defineProps({
   info: {
     type: Object as PropType<CandidateInfo>,
