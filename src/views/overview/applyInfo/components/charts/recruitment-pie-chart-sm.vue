@@ -73,11 +73,13 @@ const option = computed(() => {
 });
 
 const initChart = () => {
-  myChart?.setOption(option.value);
+  resizeChart();
+  if (allApplicationCounts.value) myChart?.setOption(option.value);
 };
 
 onMounted(() => {
   myChart = echarts.init(chartRef1.value);
+  initChart();
 });
 
 watch(

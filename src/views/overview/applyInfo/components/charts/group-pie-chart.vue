@@ -36,8 +36,7 @@ const groupMemberCounts = computed(() => {
     // 在group_details加上可选链后仍报错：对象可能为“未定义”，暂无法解决
     return recruitmentData.value?.group_details
       ? // @ts-ignore
-        recruitmentData.value.group_details[targetGroup as keyof GroupDetails] /
-          allGroupMemberCounts.value
+        recruitmentData.value.group_details[targetGroup as keyof GroupDetails]
       : 0;
   };
 });
@@ -60,9 +59,6 @@ const option = computed(() => {
         color: '#a9aeb8',
       },
     },
-    tooltip: {
-      formatter: '{b} : {d}%',
-    },
     series: [
       {
         type: 'pie',
@@ -82,6 +78,8 @@ const option = computed(() => {
 });
 
 const initChart = () => {
+  resizeChart();
+
   myChart?.setOption(option.value);
 };
 
@@ -95,6 +93,10 @@ watch(
 
 onMounted(() => {
   myChart = echarts.init(groupChartRef.value);
+  // @ts-ignore
+  if (allGroupMemberCounts.value.dep)
+    // 取value会报错，所以随便找了一个属性
+    initChart();
 });
 
 window.addEventListener('resize', resizeChart);

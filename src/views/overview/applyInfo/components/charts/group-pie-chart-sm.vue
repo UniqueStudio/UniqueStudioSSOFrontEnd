@@ -82,7 +82,11 @@ const option = computed(() => {
 });
 
 const initChart = () => {
-  myChart?.setOption(option.value);
+  resizeChart();
+  // @ts-ignore
+  if (allGroupMemberCounts.value.dep)
+    // 取value会报错，所以随便找了一个属性
+    myChart?.setOption(option.value);
 };
 
 watch(
@@ -95,6 +99,7 @@ watch(
 
 onMounted(() => {
   myChart = echarts.init(groupChartRef1.value);
+  initChart();
 });
 
 window.addEventListener('resize', resizeChart);
