@@ -34,7 +34,6 @@
         <a-form-item
           field="signup_time_range"
           :label="$t('common.createRec.signupTimeRange')"
-          :rules="signupTimeRangeRules"
         >
           <a-range-picker
             v-model="timeRange2"
@@ -53,9 +52,7 @@
 import { ref } from 'vue';
 import { createRecruitment } from '@/api';
 import { Message } from '@arco-design/web-vue';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
 const visible = defineModel<boolean>('visible', {
   type: Boolean,
   default: false,
@@ -66,50 +63,105 @@ const formData = ref({
   name: '', // 招新名称
   beginning: '', // 招新起始时间
   deadline: '', // 报名结束时间
+  start: '', // 报名开始时间
   end: '', // 招新结束时间
 });
 
-const recruitmentForm = ref();
+const form = ref({
+  name: '',
+  beginning: '',
+  deadline: '',
+  end: '',
+});
+
 const timeRange1 = ref([]);
 const timeRange2 = ref([]);
 
-const signupTimeRangeRules = [
-  {
-    validator: (_rule: any, value: any) => {
-      const [start, end] = value;
-      const [recStart] = timeRange1.value;
+const formatName = (name: string) => {
+  let normalizedName = name.trim();
+  if (normalizedName.includes('春')) {
+    normalizedName = normalizedName.replace(/春.*/, 'S');
+  } else if (normalizedName.includes('夏')) {
+    normalizedName = normalizedName.replace(/夏.*/, 'C');
+  } else if (normalizedName.includes('秋')) {
+    normalizedName = normalizedName.replace(/秋.*/, 'A');
+  }
+  return normalizedName;
+};
 
-      if (new Date(start).getTime() !== new Date(recStart).getTime()) {
-        return Promise.reject(new Error('报名开始时间必须等于招新开始时间'));
-      }
-      if (new Date(end).getTime() > new Date(recStart).getTime()) {
-        return Promise.reject(new Error('报名结束时间必须早于招新结束时间'));
-      }
-      return Promise.resolve();
-    },
-  },
-];
+const formValidate = () => {
+  const errors: { [key: string]: string } = {};
+
+  if (!formData.value.name) {
+    errors.name = '招新名称不能为空';
+  }
+  const formattedName = formatName(formData.value.name);
+  const nameRegex = /^\d{4}[SAC]$/;
+  if (!nameRegex.test(formattedName)) {
+    errors.name =
+      '招新名称格式不正确，正确格式如"2024春季招新"、""2024夏令营"、"2024秋季招新"';
+  } else {
+    formData.value.name = formattedName;
+  }
+
+  if (!formData.value.beginning || !formData.value.end) {
+    errors.rec_time_range = '招新时间范围不能为空';
+  }
+
+  if (!formData.value.start || !formData.value.deadline) {
+    errors.signup_time_range = '报名时间范围不能为空';
+  }
+
+  if (
+    formData.value.beginning &&
+    formData.value.end &&
+    formData.value.start &&
+    formData.value.deadline
+  ) {
+    const beginningTime = new Date(formData.value.beginning).getTime(); // 招新开始时间
+    const endTime = new Date(formData.value.end).getTime(); // 招新结束时间
+    const startTime = new Date(formData.value.start).getTime(); // 报名开始时间
+    const deadlineTime = new Date(formData.value.deadline).getTime(); // 报名结束时间
+
+    if (beginningTime !== startTime) {
+      errors.signup_time_range = '报名开始时间必须等于招新开始时间';
+    }
+
+    if (deadlineTime >= endTime) {
+      errors.signup_time_range = '报名结束时间必须早于招新结束时间';
+    }
+  }
+
+  if (Object.keys(errors).length > 0) {
+    console.log('beginning:', formData.value.beginning);
+    console.log('end:', formData.value.end);
+    console.log('start:', formData.value.start);
+    console.log('deadline:', formData.value.deadline);
+    console.log(errors);
+    Message.error(Object.values(errors).join('; '));
+  }
+};
 
 const sendForm = async () => {
-  const form = recruitmentForm.value;
   try {
-    await form.validate();
+    await formValidate();
+    form.value = { ...formData.value };
     const response = await createRecruitment(formData.value);
     if (response.data) {
       console.log(response.data);
     }
   } catch (error) {
-    Message.error(t('common.rec.noPermission'));
+    Message.error((error as any).message);
   }
 };
 
 const onOk1 = (dateString: any, _date: any) => {
-  // console.log('onOk: ', dateString);
-  formData.value.beginning = new Date(dateString[0]).toISOString();
-  formData.value.end = new Date(dateString[1]).toISOString();
+  formData.value.beginning = new Date(dateString[0]).toISOString(); // 招新开始时间
+  formData.value.end = new Date(dateString[1]).toISOString(); // 招新结束时间
 };
 
 const onOk2 = (dateString: any, _date: any) => {
-  formData.value.deadline = new Date(dateString[1]).toISOString();
+  formData.value.start = new Date(dateString[0]).toISOString(); // 报名开始时间
+  formData.value.deadline = new Date(dateString[1]).toISOString(); // 报名结束时间
 };
 </script>
