@@ -198,7 +198,6 @@ const setDefaultMenuKeys = () => {
     }
   }
 };
-
 setDefaultMenuKeys();
 
 watch(route, () => {

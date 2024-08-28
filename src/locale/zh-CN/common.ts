@@ -138,4 +138,5 @@ export default {
   'common.createRec.signupTimeRange': '报名起止时间',
   'common.createRec.code': '验证码',
   'common.createRec.inputCode': '请输入验证码',
+  'common.createRec.succeed': '创建招新成功',
 };

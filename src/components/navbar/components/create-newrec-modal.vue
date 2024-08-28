@@ -52,7 +52,9 @@
 import { ref } from 'vue';
 import { createRecruitment } from '@/api';
 import { Message } from '@arco-design/web-vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const visible = defineModel<boolean>('visible', {
   type: Boolean,
   default: false,
@@ -139,19 +141,27 @@ const formValidate = () => {
     console.log('deadline:', formData.value.deadline);
     console.log(errors);
     Message.error(Object.values(errors).join('; '));
+    return false;
   }
+  return true;
 };
 
 const sendForm = async () => {
   try {
-    await formValidate();
+    const isValid = formValidate();
+    if (!isValid) {
+      return false;
+    }
     form.value = { ...formData.value };
-    const response = await createRecruitment(formData.value);
+    const response = await createRecruitment(form.value);
     if (response.data) {
       console.log(response.data);
+      Message.success(t('common.createRec.success'));
     }
+    return true;
   } catch (error) {
     Message.error((error as any).message);
+    return false;
   }
 };
 
