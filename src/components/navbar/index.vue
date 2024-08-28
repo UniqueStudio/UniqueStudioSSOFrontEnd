@@ -135,7 +135,7 @@ import { getRecruitmentName } from '@/utils/index';
 import { SSO_DOMAIN } from '@/constants';
 import { useI18n } from 'vue-i18n';
 
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
@@ -164,9 +164,11 @@ const changeDayNight = () => {
   if (statu.value === 'day') {
     document.body.setAttribute('arco-theme', 'dark');
     statu.value = 'night';
+    localStorage.setItem('themeMode', 'night');
   } else {
     document.body.removeAttribute('arco-theme');
     statu.value = 'day';
+    localStorage.setItem('themeMode', 'day');
   }
 };
 
@@ -202,6 +204,18 @@ setDefaultMenuKeys();
 
 watch(route, () => {
   setDefaultMenuKeys();
+});
+
+onMounted(() => {
+  const savedThemeMode = localStorage.getItem('themeMode');
+  if (savedThemeMode) {
+    statu.value = savedThemeMode;
+    if (savedThemeMode === 'night') {
+      document.body.setAttribute('arco-theme', 'dark');
+    } else {
+      document.body.removeAttribute('arco-theme');
+    }
+  }
 });
 </script>
 
