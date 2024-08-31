@@ -154,7 +154,7 @@ const sendForm = async () => {
     const response = await createRecruitment(form.value);
     if (response.data) {
       console.log(response.data);
-      Message.success(t('common.createRec.success'));
+      Message.success(t('common.createRec.succeed'));
     }
     return true;
   } catch (error) {
