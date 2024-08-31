@@ -95,23 +95,22 @@ const formValidate = () => {
   const errors: { [key: string]: string } = {};
 
   if (!formData.value.name) {
-    errors.name = '招新名称不能为空';
+    errors.name = t('common.createRec.nameRequired');
   }
   const formattedName = formatName(formData.value.name);
   const nameRegex = /^\d{4}[SAC]$/;
   if (!nameRegex.test(formattedName)) {
-    errors.name =
-      '招新名称格式不正确，正确格式如"2024春季招新"、""2024夏令营"、"2024秋季招新"';
+    errors.name = t('common.createRec.nameFormat');
   } else {
     formData.value.name = formattedName;
   }
 
   if (!formData.value.beginning || !formData.value.end) {
-    errors.rec_time_range = '招新时间范围不能为空';
+    errors.rec_time_range = t('common.createRec.recTimeRangeRequired');
   }
 
   if (!formData.value.start || !formData.value.deadline) {
-    errors.signup_time_range = '报名时间范围不能为空';
+    errors.signup_time_range = t('common.createRec.signupTimeRangeRequired');
   }
 
   if (
@@ -126,20 +125,19 @@ const formValidate = () => {
     const deadlineTime = new Date(formData.value.deadline).getTime(); // 报名结束时间
 
     if (beginningTime !== startTime) {
-      errors.signup_time_range = '报名开始时间必须等于招新开始时间';
+      errors.signup_time_range = t(
+        'common.createRec.signupStartTimeEqualRecStartTime',
+      );
     }
 
     if (deadlineTime >= endTime) {
-      errors.signup_time_range = '报名结束时间必须早于招新结束时间';
+      errors.signup_time_range = t(
+        'common.createRec.signupEndTimeBeforeRecEndTime',
+      );
     }
   }
 
   if (Object.keys(errors).length > 0) {
-    console.log('beginning:', formData.value.beginning);
-    console.log('end:', formData.value.end);
-    console.log('start:', formData.value.start);
-    console.log('deadline:', formData.value.deadline);
-    console.log(errors);
     Message.error(Object.values(errors).join('; '));
     return false;
   }
