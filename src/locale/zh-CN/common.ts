@@ -138,4 +138,14 @@ export default {
   'common.createRec.signupTimeRange': '报名起止时间',
   'common.createRec.code': '验证码',
   'common.createRec.inputCode': '请输入验证码',
+  'common.createRec.succeed': '创建招新成功',
+  'common.createRec.nameRequired': '招新名称不能为空',
+  'common.createRec.nameFormat':
+    '招新名称格式不正确，正确格式如"2024春季招新"、"2024夏令营"、"2024秋季招新"',
+  'common.createRec.recTimeRangeRequired': '招新时间范围不能为空',
+  'common.createRec.signupTimeRangeRequired': '报名时间范围不能为空',
+  'common.createRec.signupStartTimeEqualRecStartTime':
+    '报名开始时间必须等于招新开始时间',
+  'common.createRec.signupEndTimeBeforeRecEndTime':
+    '报名结束时间必须早于招新结束时间',
 };
