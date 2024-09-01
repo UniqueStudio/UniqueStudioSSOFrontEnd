@@ -36,8 +36,6 @@ export enum Group {
   AI = 'ai',
   Game = 'game',
   Mobile = 'mobile',
-  Android = 'android',
-  IOS = 'ios',
   Design = 'design',
   PM = 'pm',
   Unique = 'unique', // for team interview
@@ -47,10 +45,8 @@ export const groupMapping = {
   PM: Group.PM,
   Design: Group.Design,
   AI: Group.AI,
-  Android: Group.Android,
   Mobile: Group.Mobile,
   Web: Group.Web,
-  IOS: Group.IOS,
   Lab: Group.Lab,
   Game: Group.Game,
 };
