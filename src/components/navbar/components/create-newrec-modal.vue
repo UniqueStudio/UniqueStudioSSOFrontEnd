@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 import { createRecruitment } from '@/api';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
@@ -76,6 +76,10 @@ const form = ref({
   end: '',
 });
 
+const emit = defineEmits<{
+  (e: 'recruitmentCreated'): void;
+}>();
+
 const timeRange1 = ref([]);
 const timeRange2 = ref([]);
 
@@ -93,16 +97,15 @@ const formatName = (name: string) => {
 
 const formValidate = () => {
   const errors: { [key: string]: string } = {};
+  const originalName = formData.value.name;
 
-  if (!formData.value.name) {
+  if (!originalName) {
     errors.name = t('common.createRec.nameRequired');
   }
-  const formattedName = formatName(formData.value.name);
+  const formattedName = formatName(originalName);
   const nameRegex = /^\d{4}[SAC]$/;
   if (!nameRegex.test(formattedName)) {
     errors.name = t('common.createRec.nameFormat');
-  } else {
-    formData.value.name = formattedName;
   }
 
   if (!formData.value.beginning || !formData.value.end) {
@@ -119,16 +122,8 @@ const formValidate = () => {
     formData.value.start &&
     formData.value.deadline
   ) {
-    const beginningTime = new Date(formData.value.beginning).getTime(); // 招新开始时间
     const endTime = new Date(formData.value.end).getTime(); // 招新结束时间
-    const startTime = new Date(formData.value.start).getTime(); // 报名开始时间
     const deadlineTime = new Date(formData.value.deadline).getTime(); // 报名结束时间
-
-    if (beginningTime !== startTime) {
-      errors.signup_time_range = t(
-        'common.createRec.signupStartTimeEqualRecStartTime',
-      );
-    }
 
     if (deadlineTime >= endTime) {
       errors.signup_time_range = t(
@@ -141,6 +136,8 @@ const formValidate = () => {
     Message.error(Object.values(errors).join('; '));
     return false;
   }
+
+  formData.value.name = formattedName;
   return true;
 };
 
@@ -155,6 +152,7 @@ const sendForm = async () => {
     if (response.data) {
       console.log(response.data);
       Message.success(t('common.createRec.succeed'));
+      emit('recruitmentCreated');
     }
     return true;
   } catch (error) {
