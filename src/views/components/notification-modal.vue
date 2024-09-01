@@ -108,7 +108,7 @@
             class="rounded-md border-2 px-4 py-3 break-all overflow-y-auto max-h-20"
             outer-class="w-full pb-4"
           >
-            <i18n-t :keypath="preview.i18nKey" tag="div">
+            <i18n-t :keypath="preview.i18nKey || ''" tag="div">
               <template #name>
                 <span class="text-[rgb(var(--primary-6))]">{{
                   candidate.name || '{ }'
@@ -158,7 +158,7 @@
                 >
                 <i18n-t
                   v-else-if="props.type === 'Accept'"
-                  :keypath="preview.restI18nKey"
+                  :keypath="preview.restI18nKey ?? ''"
                   tag="span"
                 >
                   <template #next>
