@@ -13,6 +13,14 @@ import type { GroupDetails } from '@/constants/httpMsg/recruitment/getRecruitmen
 import { groupMapping } from '@/constants/team';
 
 const { t } = useI18n();
+
+const props = defineProps({
+  counts: {
+    type: Number,
+    required: true,
+  },
+});
+
 const recStore = useRecruitmentStore();
 
 const groupChartRef = ref(null);
@@ -23,13 +31,6 @@ const resizeChart = () => {
 };
 
 const recruitmentData = computed(() => recStore.currentRec);
-
-const allGroupMemberCounts = computed(() => {
-  return Object.values(recruitmentData.value?.group_details as any[]).reduce(
-    (sum, val) => sum + val,
-    0,
-  );
-});
 
 const groupMemberCounts = computed(() => {
   return (targetGroup: string) => {
@@ -79,12 +80,11 @@ const option = computed(() => {
 
 const initChart = () => {
   resizeChart();
-
-  myChart?.setOption(option.value);
+  if (props.counts > 0) myChart?.setOption(option.value);
 };
 
 watch(
-  () => option.value,
+  () => [option.value],
   () => {
     initChart();
   },
@@ -93,10 +93,7 @@ watch(
 
 onMounted(() => {
   myChart = echarts.init(groupChartRef.value);
-  // @ts-ignore
-  if (allGroupMemberCounts.value.dep)
-    // 取value会报错，所以随便找了一个属性
-    initChart();
+  if (!myChart.getOption()) initChart();
 });
 
 window.addEventListener('resize', resizeChart);

@@ -13,6 +13,14 @@ import type { GroupDetails } from '@/constants/httpMsg/recruitment/getRecruitmen
 import { groupMapping } from '@/constants/team';
 
 const { t } = useI18n();
+
+const props = defineProps({
+  counts: {
+    type: Number,
+    required: true,
+  },
+});
+
 const recStore = useRecruitmentStore();
 
 const groupChartRef1 = ref(null);
@@ -83,14 +91,11 @@ const option = computed(() => {
 
 const initChart = () => {
   resizeChart();
-  // @ts-ignore
-  if (allGroupMemberCounts.value.dep)
-    // 取value会报错，所以随便找了一个属性
-    myChart?.setOption(option.value);
+  if (props.counts > 0) myChart?.setOption(option.value);
 };
 
 watch(
-  () => option.value,
+  () => [option.value],
   () => {
     initChart();
   },
@@ -99,7 +104,7 @@ watch(
 
 onMounted(() => {
   myChart = echarts.init(groupChartRef1.value);
-  initChart();
+  if (!myChart.getOption()) initChart();
 });
 
 window.addEventListener('resize', resizeChart);

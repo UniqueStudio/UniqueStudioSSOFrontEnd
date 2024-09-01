@@ -39,14 +39,14 @@
     </div>
     <div class="hidden sm:flex sm:w-full">
       <div class="w-1/2">
-        <group-pie-chart></group-pie-chart>
+        <group-pie-chart :counts="allGroupMemberCounts"></group-pie-chart>
       </div>
       <div class="w-1/2">
         <recruitment-pie-chart></recruitment-pie-chart>
       </div>
     </div>
     <div class="sm:hidden">
-      <group-pie-chart-sm></group-pie-chart-sm>
+      <group-pie-chart-sm :counts="allGroupMemberCounts"></group-pie-chart-sm>
       <recruitment-pie-chart-sm></recruitment-pie-chart-sm>
     </div>
   </div>
