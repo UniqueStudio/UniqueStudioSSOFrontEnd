@@ -29,7 +29,7 @@ const applicationCounts = computed(() => {
     return recruitmentData.value?.applications
       ? recruitmentData.value.applications.filter(({ group }) => {
           return group === targetGroup;
-        }).length / allApplicationCounts.value!
+        }).length
       : 0;
   };
 });
@@ -43,9 +43,6 @@ const createDataObject = (group: string, name: string) => {
 
 const option = computed(() => {
   return {
-    tooltip: {
-      formatter: '{b} : {d}%',
-    },
     title: {
       text: t('common.applyInfo.candidates'),
       left: 'center',
@@ -73,11 +70,13 @@ const option = computed(() => {
 });
 
 const initChart = () => {
-  myChart?.setOption(option.value);
+  resizeChart();
+  if (allApplicationCounts.value) myChart?.setOption(option.value);
 };
 
 onMounted(() => {
   myChart = echarts.init(chartRef.value);
+  initChart();
 });
 
 watch(
