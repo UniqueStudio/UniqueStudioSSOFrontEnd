@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 import { createRecruitment } from '@/api';
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
