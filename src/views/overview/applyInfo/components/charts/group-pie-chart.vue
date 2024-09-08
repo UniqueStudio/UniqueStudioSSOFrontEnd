@@ -60,6 +60,9 @@ const option = computed(() => {
         color: '#a9aeb8',
       },
     },
+    tooltip: {
+      trigger: 'item',
+    },
     series: [
       {
         type: 'pie',

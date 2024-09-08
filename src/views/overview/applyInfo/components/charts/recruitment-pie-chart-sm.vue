@@ -44,7 +44,7 @@ const createDataObject = (group: string, name: string) => {
 const option = computed(() => {
   return {
     tooltip: {
-      formatter: '{b} : {d}%',
+      trigger: 'item',
     },
     title: {
       text: t('common.applyInfo.candidates'),
