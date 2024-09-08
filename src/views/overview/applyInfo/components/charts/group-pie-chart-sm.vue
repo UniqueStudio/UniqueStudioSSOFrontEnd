@@ -69,7 +69,7 @@ const option = computed(() => {
       },
     },
     tooltip: {
-      formatter: '{b} : {d}%',
+      trigger: 'item',
     },
     series: [
       {
