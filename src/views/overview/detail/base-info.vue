@@ -40,7 +40,7 @@
           {{ $t('common.user.intro') }}
         </div>
         <div
-          class="text-[--color-neutral-8]"
+          class="text-[--color-neutral-8] whitespace-pre-line"
           :class="{ 'line-clamp-3': !showIntroDetail }"
         >
           {{ applyStore.data!.intro }}
