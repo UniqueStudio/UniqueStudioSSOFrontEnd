@@ -38,11 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, PropType, watchEffect } from 'vue';
+import { ref, computed, PropType } from 'vue';
 import { allocateApplicationInterview } from '@/api/application';
 import { CascaderOption, Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
-import { storeToRefs } from 'pinia';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import useWindowResize from '@/hooks/resize';
 import dayjs from 'dayjs';
@@ -79,7 +78,6 @@ const form = ref<{
   selectInterviewId: string;
 }>({ selectInterviewId: '' });
 const recStore = useRecruitmentStore();
-const { curApplications } = storeToRefs(recStore);
 
 const timeOptions = computed(() => {
   // 面试分类 date->period->time
@@ -145,7 +143,7 @@ const timeOptions = computed(() => {
 
 
 const selectedTime = computed(() => {
-  const nowApplication = curApplications.value.find(
+  const nowApplication = recStore.curApplications.find(
     ({ uid }) => uid === props.applicationId,
   );
   return (
