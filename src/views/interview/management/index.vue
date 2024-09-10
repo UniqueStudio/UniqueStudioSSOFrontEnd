@@ -172,7 +172,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+
 import { Group, InterviewType, Step } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import NotificationModal from '@/views/components/notification-modal.vue';
@@ -182,6 +183,21 @@ import { useI18n } from 'vue-i18n';
 import dayjs from 'dayjs';
 import AllowcateModal from './allowcate-modal.vue';
 import DateManagementModal from './date-management-modal.vue';
+
+const refreshInterval = ref<number | null>(null);
+
+onMounted(() => {
+  // 每 30 秒刷新一次数据
+  refreshInterval.value = setInterval(() => {
+    recStore.refresh();
+  }, 30000);
+});
+
+onUnmounted(() => {
+  if (refreshInterval.value) {
+    clearInterval(refreshInterval.value);
+  }
+});
 
 const recStore = useRecruitmentStore();
 const { t } = useI18n();
