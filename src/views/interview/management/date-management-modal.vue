@@ -11,7 +11,10 @@
         <div class="text-[--color-text-1] text-xl">{{
           $t('common.operation.dateManagement')
         }}</div>
-        <team-group-radio v-model="currentGroup"></team-group-radio>
+        <team-group-radio
+          v-model="currentGroup"
+          :include-unique="true"
+        ></team-group-radio>
       </div>
     </div>
     <div class="arco-scrollbar-container overflow-auto h-full">
