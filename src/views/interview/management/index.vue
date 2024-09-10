@@ -207,7 +207,7 @@ const displayTypeItems = ['common.information', 'common.operation.operate'];
 const data = computed(() =>
   recStore.curApplications
     .filter((app) => {
-      // 放弃或淘汰的选手不能选择
+      // 根据选手阶段、组别、面试类型筛选选手
       if (app.abandoned || app.rejected) return false;
       if (app.group !== currentGroup.value) return false;
       if (interviewType.value === InterviewType.Group) {

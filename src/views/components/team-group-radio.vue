@@ -4,9 +4,12 @@
     class="text-[rgb(var(--primary-6))] text-right lg:hidden flex w-24"
     :bordered="false"
   >
-    <a-option v-for="item in groups" :key="item.val" :value="item.val">{{
-      item.label
-    }}</a-option>
+    <a-option
+      v-for="item in filteredGroups"
+      :key="item.val"
+      :value="item.val"
+      >{{ item.label }}</a-option
+    >
   </a-select>
   <!-- 移动端 -->
 
@@ -14,7 +17,7 @@
     v-model="currentGroup"
     class="pl-5 bg-[--color-bg-2] hidden lg:flex"
   >
-    <template v-for="(item, index) in groups" :key="item.val">
+    <template v-for="(item, index) in filteredGroups" :key="item.val">
       <a-radio :value="item.val">
         <template #radio="{ checked }">
           <span
@@ -37,10 +40,21 @@
 import { computed } from 'vue';
 import { Group } from '@/constants/team';
 
+const props = defineProps({
+  includeUnique: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const groups = computed(() =>
-  Object.entries(Group)
-    .filter(([_, val]) => val !== Group.Unique)
-    .map(([label, val]) => ({ label, val })),
+  Object.entries(Group).map(([label, val]) => ({ label, val })),
+);
+
+const filteredGroups = computed(() =>
+  props.includeUnique
+    ? groups.value
+    : groups.value.filter((item) => item.val !== Group.Unique),
 );
 
 const currentGroup = defineModel<Group>({

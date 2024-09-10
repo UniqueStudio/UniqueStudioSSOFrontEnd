@@ -84,29 +84,34 @@ const timeOptions = computed(() => {
   const optionsData = {} as {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
   };
-  recStore.curInterviews
-    .filter((item) => item.name === props.currentGroup)
-    .forEach((interview) => {
-      if (interview.start && interview.period) {
-        const date = dayjs(interview.start).format('YYYY-MM-DD');
-        const time = `${dayjs(interview.start).format('HH:mm')}
+  const filteredInterviews =
+    props.interviewType === 'group'
+      ? recStore.curInterviews.filter(
+          (item) => item.name === props.currentGroup,
+        )
+      : recStore.curInterviews.filter((item) => item.name === 'unique');
+
+  filteredInterviews.forEach((interview) => {
+    if (interview.start && interview.period) {
+      const date = dayjs(interview.start).format('YYYY-MM-DD');
+      const time = `${dayjs(interview.start).format('HH:mm')}
         - ${dayjs(interview.end).format('HH:mm')}`;
-        if (optionsData[date] && optionsData[date][interview.period]) {
-          optionsData[date][interview.period].push({
-            time,
-            interviewId: interview.uid,
-          });
-        } else if (optionsData[date]) {
-          optionsData[date][interview.period] = [
-            { time, interviewId: interview.uid },
-          ];
-        } else {
-          optionsData[date] = {
-            [interview.period]: [{ time, interviewId: interview.uid }],
-          };
-        }
+      if (optionsData[date] && optionsData[date][interview.period]) {
+        optionsData[date][interview.period].push({
+          time,
+          interviewId: interview.uid,
+        });
+      } else if (optionsData[date]) {
+        optionsData[date][interview.period] = [
+          { time, interviewId: interview.uid },
+        ];
+      } else {
+        optionsData[date] = {
+          [interview.period]: [{ time, interviewId: interview.uid }],
+        };
       }
-    });
+    }
+  });
 
   // 数据格式转换 change the data in optionsData to timeOptions
   const timeOptionsTmp: CascaderOption[] = [];
@@ -135,6 +140,7 @@ const timeOptions = computed(() => {
 
   return timeOptionsTmp;
 });
+
 
 const selectedTime = computed(() => {
   const nowApplication = recStore.curApplications.find(
