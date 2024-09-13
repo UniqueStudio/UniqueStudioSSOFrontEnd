@@ -7,7 +7,17 @@
       <div
         v-for="comment in applyStore.data?.comments?.flat() ?? []"
         :key="comment.uid"
-        class="group rounded-full py-1.5 px-2.5 text-sm bg-[--color-neutral-2] text-[--color-neutral-8]"
+        :class="[
+          'group py-1.5 px-2.5 text-sm bg-[--color-neutral-2] text-[--color-neutral-8]',
+          isMultiline(
+            `${EvaluationMap[comment.evaluation]} ${comment.member_name}${
+              comment.content ? `: ${comment.content}` : ''
+            }`,
+            containerWidth
+          )
+            ? 'rounded-3xl'
+            : 'rounded-full'
+        ]"
       >
         <span>{{ EvaluationMap[comment.evaluation] }}</span>
         <span>{{
@@ -51,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted  } from 'vue';
 import { Evaluation, EvaluationMap } from '@/constants/team';
 import { deleteComment, createComment } from '@/api';
 import useApplicationStore from '@/store/modules/application';
@@ -90,6 +100,25 @@ const handleDeleteComment = async (cid: string) => {
       Message.success(t('common.result.deleteSuccess'));
     },
   });
+};
+
+const containerWidth = ref(800);
+
+onMounted(() => {
+  const container = document.querySelector('.flex.gap-2.flex-wrap');
+  if (container) {
+    containerWidth.value = container.clientWidth;
+  }
+});
+
+const isMultiline = (text: string, containerWidth: number) => {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  if (context) {
+    context.font = 'text-sm';
+    return context.measureText(text).width > containerWidth;
+  }
+  return false;
 };
 </script>
 
