@@ -69,7 +69,7 @@
           onlyCurrent: false,
         }"
         :pagination="{
-          pageSize: widthType === 'sm' ? 10 : widthType === 'lg' ? 8 : 10,
+          pageSize: tablePageSize,
         }"
         column-resizable
       >
@@ -186,7 +186,7 @@ import DateManagementModal from './date-management-modal.vue';
 
 const recStore = useRecruitmentStore();
 const { t } = useI18n();
-const { widthType } = useWindowResize();
+const { widthType, heightType } = useWindowResize();
 
 const interviewType = ref(InterviewType.Group);
 const currentGroup = ref(Group.Web);
@@ -205,6 +205,10 @@ const showDateManagement = ref(false);
 const tabItems = [InterviewType.Group, InterviewType.Team];
 const displayTypeItems = ['common.information', 'common.operation.operate'];
 
+const tablePageSize = computed(() => {
+  if (heightType.value === 'sm') return 6;
+  return widthType.value === 'sm' ? 10 : widthType.value === 'lg' ? 8 : 10;
+});
 const data = computed(() =>
   recStore.curApplications
     .filter((app) => {

@@ -1,5 +1,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
+type WidthType = 'sm' | 'md' | 'lg';
+type HeightType = 'sm' | 'md' | 'lg';
+
 export default function useWindowResize() {
   const width = ref(window.innerWidth);
   const height = ref(window.innerHeight);
@@ -7,10 +10,12 @@ export default function useWindowResize() {
     width.value = window.innerWidth;
     height.value = window.innerHeight;
   };
-  const widthType = computed(() => {
-    if (width.value <= 640) return 'sm';
-    if (width.value <= 960) return 'md';
-    return 'lg';
+  const widthType = computed((): WidthType => {
+    return width.value <= 640 ? 'sm' : width.value <= 960 ? 'md' : 'lg';
+  });
+
+  const heightType = computed((): HeightType => {
+    return height.value <= 810 ? 'sm' : height.value <= 1080 ? 'md' : 'lg';
   });
 
   onMounted(() => {
@@ -25,5 +30,6 @@ export default function useWindowResize() {
     width,
     height,
     widthType,
+    heightType,
   };
 }
