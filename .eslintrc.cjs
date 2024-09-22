@@ -70,6 +70,7 @@ module.exports = {
     // 生产环境需要启用
     'no-debugger': 0,
     'no-param-reassign': 0,
+    'no-nested-ternary': 'off',
     'prefer-regex-literals': 0,
     'camelcase': 0,
   },
