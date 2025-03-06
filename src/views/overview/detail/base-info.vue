@@ -41,8 +41,30 @@
         </a-descriptions>
       </div>
       <div>
-        <div class="text-[--color-text-1] pb-5">
-          {{ $t('common.user.intro') }}
+        <div>
+          <div class="text-[--color-text-1] pb-5">
+            {{ $t('common.user.intro') }}
+          </div>
+          <div
+            ref="introContentRef"
+            class="text-[--color-neutral-8] whitespace-pre-line"
+            :class="{ 'line-clamp-3': !showIntroDetail && needsExpand }"
+          >
+            {{ applyStore.data!.intro }}
+          </div>
+          <div
+            v-if="needsExpand"
+            class="text-sm text-[rgb(var(--primary-6))] cursor-pointer"
+            @click="showIntroDetail = !showIntroDetail"
+          >
+            {{
+              $t(
+                showIntroDetail
+                  ? 'common.operation.close'
+                  : 'common.operation.more',
+              )
+            }}
+          </div>
         </div>
         <div
           class="text-[--color-neutral-8] whitespace-pre-line"
@@ -138,23 +160,27 @@ const needsExpand = ref(false);
 // 检测文本内容是否需要展开/收起按钮
 const checkTextOverflow = async () => {
   await nextTick();
-  if (!introContentRef.value) return;
-
   const element = introContentRef.value as HTMLElement;
+  if (!element) return;
 
-  const originalMaxHeight = element.style.maxHeight;
+  // 临时移除限制以获取完整高度
+  const originalHeight = element.style.maxHeight;
   const originalOverflow = element.style.overflow;
-  element.style.maxHeight = 'none';
-  element.style.overflow = 'visible';
 
-  const lineHeight = parseFloat(getComputedStyle(element).lineHeight) || 24;
-  const maxAllowedHeight = lineHeight * 3; // 3行文本的高度
+  try {
+    element.style.maxHeight = 'none';
+    element.style.overflow = 'visible';
 
-  // 检查内容高度是否超过3行
-  needsExpand.value = element.scrollHeight > maxAllowedHeight;
+    const lineHeight = parseInt(getComputedStyle(element).lineHeight, 10) || 24;
+    const maxAllowedHeight = lineHeight * 3; // 3行文本的高度
 
-  element.style.maxHeight = originalMaxHeight;
-  element.style.overflow = originalOverflow;
+    // 检查内容高度是否超过3行
+    needsExpand.value = element.scrollHeight > maxAllowedHeight;
+  } finally {
+    // 确保恢复原始样式
+    element.style.maxHeight = originalHeight;
+    element.style.overflow = originalOverflow;
+  }
 };
 
 const { widthType } = useWindowResize();
@@ -163,16 +189,25 @@ watch(
   () => applyStore.data?.intro,
   () => {
     if (applyStore.data?.intro) {
-      checkTextOverflow();
+      nextTick(() => checkTextOverflow());
     }
   },
   { immediate: true },
 );
 
 // 窗口大小变化时重新检查
-watch(widthType, checkTextOverflow);
+watch(widthType, () => nextTick(() => checkTextOverflow()));
 
 onMounted(() => {
-  checkTextOverflow();
+  nextTick(() => checkTextOverflow());
 });
 </script>
+
+<style scoped>
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
