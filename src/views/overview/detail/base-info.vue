@@ -122,7 +122,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick, watch, onMounted } from 'vue';
 import { GenderMap } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
 import useWindowResize from '@/hooks/resize';
@@ -132,13 +132,47 @@ const applyStore = useApplicationStore();
 const user = computed(() => applyStore.data?.user_detail);
 const showIntroDetail = ref(false);
 
-// 文本超过多少字符时显示"查看更多"按钮
-const TEXT_LIMIT = 100;
+const introContentRef = ref<HTMLElement | null>(null);
+const needsExpand = ref(false);
 
-const isTextOverflow = computed(() => {
-  const introText = applyStore.data?.intro || '';
-  return introText.length > TEXT_LIMIT;
-});
+// 检测文本内容是否需要展开/收起按钮
+const checkTextOverflow = async () => {
+  await nextTick();
+  if (!introContentRef.value) return;
+
+  const element = introContentRef.value as HTMLElement;
+
+  const originalMaxHeight = element.style.maxHeight;
+  const originalOverflow = element.style.overflow;
+  element.style.maxHeight = 'none';
+  element.style.overflow = 'visible';
+
+  const lineHeight = parseFloat(getComputedStyle(element).lineHeight) || 24;
+  const maxAllowedHeight = lineHeight * 3; // 3行文本的高度
+
+  // 检查内容高度是否超过3行
+  needsExpand.value = element.scrollHeight > maxAllowedHeight;
+
+  element.style.maxHeight = originalMaxHeight;
+  element.style.overflow = originalOverflow;
+};
 
 const { widthType } = useWindowResize();
+
+watch(
+  () => applyStore.data?.intro,
+  () => {
+    if (applyStore.data?.intro) {
+      checkTextOverflow();
+    }
+  },
+  { immediate: true },
+);
+
+// 窗口大小变化时重新检查
+watch(widthType, checkTextOverflow);
+
+onMounted(() => {
+  checkTextOverflow();
+});
 </script>
