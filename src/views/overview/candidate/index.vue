@@ -55,15 +55,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import candidateInfo from './components/candidate-info.vue';
 
+const route = useRoute();
+
 const recStore = useRecruitmentStore();
 
-const currentStep = ref(1);
-const currentGroup = ref(Group.Web);
+// 从 URL query 或 localStorage 恢复状态（仅初始化时读取一次）
+const savedGroup = localStorage.getItem('candidate-view-group') as Group | null;
+const initStep = Number(route.query.step);
+const initGroup = route.query.group as Group | undefined;
+
+const currentStep = ref(initStep >= 1 && initStep <= 10 ? initStep : 1);
+const currentGroup = ref(
+  initGroup && Object.values(Group).includes(initGroup)
+    ? initGroup
+    : savedGroup && Object.values(Group).includes(savedGroup)
+    ? savedGroup
+    : Group.Web,
+);
+
+// 同步状态到 URL 和 localStorage
+watch([currentStep, currentGroup], ([step, group]) => {
+  localStorage.setItem('candidate-view-group', group);
+  // 使用 history API 直接更新 URL，避免触发路由导航
+  const url = new URL(window.location.href);
+  url.searchParams.set('step', String(step));
+  url.searchParams.set('group', group);
+  window.history.replaceState(null, '', url.toString());
+});
 const stepCnt = computed(() =>
   recruitSteps.map(
     ({ value }) =>

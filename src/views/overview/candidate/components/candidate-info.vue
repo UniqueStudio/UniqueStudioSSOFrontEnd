@@ -2,7 +2,7 @@
   <div
     class="flex flex-0 justify-between mb-5 max-sm:absolute top-0 left-0 w-full bg-[--color-bg-1] h-10"
   >
-    <div class="flex">
+    <div class="flex items-center">
       <!-- @vue-ignore 由于逆变@change会报ts错误 -->
       <a-checkbox
         class="sm:pr-5 w-max"
@@ -22,6 +22,14 @@
           </a-descriptions-item>
         </a-descriptions>
       </div>
+      <!-- 搜索框 -->
+      <a-input-search
+        v-model="searchText"
+        :placeholder="$t('common.operation.searchCandidate')"
+        class="!w-48 ml-4"
+        allow-clear
+        size="small"
+      />
     </div>
     <div class="hidden max-sm:flex items-center">
       <a-select
@@ -62,8 +70,41 @@
         :info="candidate"
         :checked="selectedApplications.includes(candidate.uid)"
         :curstep="curStep"
-      ></candidate-info-card> </a-checkbox-group
-  ></a-scrollbar>
+      ></candidate-info-card>
+    </a-checkbox-group>
+
+    <!-- 已淘汰选手折叠区域 -->
+    <div v-if="eliminatedApps.length > 0 && curStep !== 9" class="mt-4">
+      <div
+        class="flex items-center cursor-pointer select-none text-[--color-text-3] hover:text-[rgb(var(--primary-6))] transition-colors py-2"
+        @click="eliminatedExpanded = !eliminatedExpanded"
+      >
+        <icon-down
+          class="mr-1 transition-transform"
+          :class="{ 'rotate-[-90deg]': !eliminatedExpanded }"
+        />
+        <span class="text-sm">
+          {{
+            $t('common.candidate.eliminated', { count: eliminatedApps.length })
+          }}
+        </span>
+      </div>
+      <a-checkbox-group
+        v-if="eliminatedExpanded"
+        v-model="selectedApplications"
+        class="grid grid-cols-4 gap-x-4 gap-y-3 max-sm:shrink sm:grow max-[1035px]:grid-cols-1 max-[1410px]:grid-cols-2 max-[1775px]:grid-cols-3 opacity-70"
+        @change="handleChange"
+      >
+        <candidate-info-card
+          v-for="candidate in eliminatedApps"
+          :key="candidate.uid"
+          :info="candidate"
+          :checked="selectedApplications.includes(candidate.uid)"
+          :curstep="curStep"
+        ></candidate-info-card>
+      </a-checkbox-group>
+    </div>
+  </a-scrollbar>
 
   <div
     class="flex justify-between justify-self-end flex-row-reverse max-sm:fixed bottom-0 left-0 w-full bg-[--color-bg-1] p-2"
@@ -247,10 +288,24 @@ const StepsOrder = Object.values(Step).reduce(
   {} as Record<Step, number>,
 );
 
+// 搜索
+const searchText = ref('');
+
+const applySearch = <T extends { user_detail?: { name?: string } }>(
+  list: T[],
+): T[] => {
+  if (!searchText.value.trim()) return list;
+  const keyword = searchText.value.trim().toLowerCase();
+  return list.filter(
+    (app) => app.user_detail?.name?.toLowerCase().includes(keyword),
+  );
+};
+
 const filteredApps = computed(() => {
+  let baseList;
   if (curStep.value === 9) {
     // 已终止
-    return recStore.curApplications
+    baseList = recStore.curApplications
       .filter(
         ({ group, abandoned, rejected }) =>
           group === currentGroup.value && (abandoned || rejected),
@@ -264,11 +319,13 @@ const filteredApps = computed(() => {
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
         );
       });
-  }
-  if (curStep.value === 10) {
-    // 全部
-    return recStore.curApplications
-      .filter(({ group }) => group === currentGroup.value)
+  } else if (curStep.value === 10) {
+    // 全部（排除已淘汰，已淘汰显示在折叠区域）
+    baseList = recStore.curApplications
+      .filter(
+        ({ group, abandoned, rejected }) =>
+          group === currentGroup.value && !abandoned && !rejected,
+      )
       .sort((a, b) => {
         const StepCmp = StepsOrder[a.step] - StepsOrder[b.step];
         if (StepCmp !== 0) {
@@ -278,18 +335,64 @@ const filteredApps = computed(() => {
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
         );
       });
+  } else {
+    baseList = recStore.curApplications
+      .filter(
+        ({ step, group, abandoned, rejected }) =>
+          recruitSteps[curStep.value - 1].value.includes(step) &&
+          group === currentGroup.value &&
+          !abandoned &&
+          !rejected,
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      );
   }
-  return recStore.curApplications
-    .filter(
-      ({ step, group }) =>
-        recruitSteps[curStep.value - 1].value.includes(step) &&
-        group === currentGroup.value,
-    )
-    .sort(
-      (a, b) =>
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-    );
+  return applySearch(baseList);
 });
+
+const eliminatedApps = computed(() => {
+  let baseList;
+  // 已终止视图不需要，主列表已包含
+  if (curStep.value === 9) {
+    return [];
+  }
+  if (curStep.value === 10) {
+    // 全部视图：所有已淘汰选手
+    baseList = recStore.curApplications
+      .filter(
+        ({ group, abandoned, rejected }) =>
+          group === currentGroup.value && (abandoned || rejected),
+      )
+      .sort((a, b) => {
+        const StepCmp = StepsOrder[a.step] - StepsOrder[b.step];
+        if (StepCmp !== 0) {
+          return StepCmp;
+        }
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      });
+  } else {
+    // 普通阶段视图：当前阶段的已淘汰选手
+    baseList = recStore.curApplications
+      .filter(
+        ({ step, group, abandoned, rejected }) =>
+          recruitSteps[curStep.value - 1].value.includes(step) &&
+          group === currentGroup.value &&
+          (abandoned || rejected),
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      );
+  }
+  return applySearch(baseList);
+});
+
+const eliminatedExpanded = ref(false);
+
 const selectedApplications = ref<string[]>([]);
 
 const candidates = computed(() =>
