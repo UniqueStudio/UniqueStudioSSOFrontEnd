@@ -35,6 +35,7 @@ export default {
   'common.operation.editContent': '编辑内容',
   'common.operation.currentTestFileOrUrl': '当前笔试文件/链接',
   'common.operation.searchByName': '搜索成员姓名',
+  'common.operation.searchCandidate': '搜索选手姓名',
   'common.operation.operate': '操作',
   'common.operation.refresh': '刷新',
   'common.operation.allocateTime': '分配时间',
@@ -125,6 +126,7 @@ export default {
 
   'common.information': '信息',
   'common.candidate': '选手',
+  'common.candidate.eliminated': '已淘汰选手（{count}人）',
   'common.yes': '是',
   'common.no': '否',
   'common.void': '无',
