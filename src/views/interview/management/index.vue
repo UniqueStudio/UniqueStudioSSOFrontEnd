@@ -1,6 +1,5 @@
 <template>
   <a-scrollbar
-    v-if="!showDateManagement"
     class="w-full h-full sm:pr-4 overflow-y-auto overflow-x-hidden"
     outer-class="w-full h-full"
   >
@@ -60,23 +59,7 @@
           <!-- 选择组 -->
         </div>
 
-        <div class="flex justify-between pb-5">
-          <a-input-search
-            v-model="searchValue"
-            class="sm:w-80 w-1/2 mr-5"
-            :placeholder="$t('common.operation.searchByName')"
-          />
-          <!-- 搜索框 -->
-        </div>
         <div class="flex justify-between pb-5 pt-5 sm:mt-auto">
-          <a-button
-            type="outline"
-            class="sm:w-auto"
-            @click="showDateManagement = true"
-          >
-            {{ $t('common.operation.dateManagement') }}
-          </a-button>
-          <!-- 日程管理 -->
           <a-button
             type="outline"
             class="sm:w-auto"
@@ -167,11 +150,6 @@
     </div>
   </a-scrollbar>
 
-  <date-management-modal
-    v-if="showDateManagement"
-    v-model:show="showDateManagement"
-  />
-
   <notification-modal
     v-model:show-notify="showNotify"
     :candidates="selectData"
@@ -188,7 +166,6 @@
     :interview-type="interviewType === InterviewType.Team ? 'team' : 'group'"
     :current-group="currentGroup"
     :filtered-apps="filteredAndSortedApps"
-    :merged-time-ranges="mergedTimeRanges"
   />
   <!-- 分配选手面试时间弹窗 -->
 </template>
@@ -203,9 +180,7 @@ import useRecruitmentStore from '@/store/modules/recruitment';
 import useWindowResize from '@/hooks/resize';
 import { useI18n } from 'vue-i18n';
 import dayjs from 'dayjs';
-import { sortAndMergeTimeRanges, timeRangesType } from '@/utils/isOverlapping';
 import AllowcateModal from './allowcate-modal.vue';
-import DateManagementModal from './date-management-modal.vue';
 
 const recStore = useRecruitmentStore();
 const { t } = useI18n();
@@ -217,13 +192,11 @@ const selectedKeys = ref<string[]>([]);
 watch([interviewType, currentGroup], () => {
   selectedKeys.value.length = 0;
 });
-const searchValue = ref('');
 const allowcateApplicationId = ref<string>('');
 const displayType = ref('common.information');
 
 const showAllowcate = ref(false);
 const showNotify = ref(false);
-const showDateManagement = ref(false);
 
 const tabItems = [InterviewType.Group, InterviewType.Team];
 const displayTypeItems = ['common.information', 'common.operation.operate'];
@@ -247,7 +220,7 @@ const filteredAndSortedApps = computed(() =>
         )
           return false;
       }
-      return app.user_detail?.name.includes(searchValue.value);
+      return true;
     })
     .sort((app1, app2) => {
       const alloGroup1 = app1.interview_allocations_group;
@@ -276,21 +249,6 @@ const filteredAndSortedApps = computed(() =>
       );
     }),
 );
-
-const mergedTimeRanges = computed(() => {
-  const raw: timeRangesType[] = [];
-  filteredAndSortedApps.value.forEach((app) => {
-    const interview =
-      interviewType.value === InterviewType.Group
-        ? app.interview_allocations_group
-        : app.interview_allocations_team;
-    if (interview && interview.uid && interview.start && interview.end) {
-      raw.push([new Date(interview.start), new Date(interview.end)]);
-    }
-  });
-  const merged = sortAndMergeTimeRanges(raw);
-  return merged;
-});
 
 const data = computed(() =>
   filteredAndSortedApps.value.map((app, ind) => {
