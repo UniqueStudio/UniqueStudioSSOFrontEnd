@@ -64,6 +64,7 @@
               type="time-range"
               format="HH:mm"
               class="flex-1"
+              @change="(val: any) => handleTimeRangeChange(index, val)"
             />
             <a-input-number
               v-model="slotNumbers[index]"
@@ -95,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, PropType } from 'vue';
+import { ref, watch, PropType } from 'vue';
 import { Group, Period, PeriodDefineHour } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import { Message } from '@arco-design/web-vue';
@@ -112,10 +113,20 @@ const visible = defineModel<boolean>('visible', {
 const props = defineProps({
   currentGroupStart: {
     type: String as PropType<Group>,
+    required: false,
     default: Group.Web,
-    required: true,
+  },
+  initialDate: {
+    type: String,
+    default: '',
+  },
+  initialTimeRange: {
+    type: Array as PropType<string[]>,
+    default: () => [],
   },
 });
+
+const emit = defineEmits(['success']);
 
 const currentGroup = ref<Group>(props.currentGroupStart);
 const interviewDate = ref<string>('');
@@ -124,6 +135,88 @@ const slotNumbers = ref<number[]>([1]);
 const duration = ref(30);
 const rest = ref(10);
 const recStore = useRecruitmentStore();
+
+// 根据面试时长和休息时长，将一段总时间自动拆分为多个面试场次
+function splitRange(
+  startStr: string,
+  endStr: string,
+  dur: number,
+  rst: number,
+): string[][] {
+  if (!startStr || !endStr) return [];
+  const [sh, sm] = startStr.split(':').map(Number);
+  const [eh, em] = endStr.split(':').map(Number);
+  const startMins = sh * 60 + (sm || 0);
+  const endMins = eh * 60 + (em || 0);
+  if (endMins <= startMins) return [[startStr, endStr]];
+
+  const validDur = Math.max(dur, 5);
+  const validRest = Math.max(rst, 0);
+
+  // 如果跨度不超过单场时长，则无需划分
+  if (endMins - startMins <= validDur) {
+    return [[startStr, endStr]];
+  }
+
+  const result: string[][] = [];
+  let cur = startMins;
+  while (cur + validDur <= endMins) {
+    const sH = String(Math.floor(cur / 60)).padStart(2, '0');
+    const sM = String(cur % 60).padStart(2, '0');
+    const e = cur + validDur;
+    const eH = String(Math.floor(e / 60)).padStart(2, '0');
+    const eM = String(e % 60).padStart(2, '0');
+    result.push([`${sH}:${sM}`, `${eH}:${eM}`]);
+    cur = e + validRest;
+  }
+  return result.length > 0 ? result : [[startStr, endStr]];
+}
+
+watch(
+  () => visible.value,
+  (val) => {
+    if (val) {
+      currentGroup.value = props.currentGroupStart;
+      interviewDate.value = props.initialDate || '';
+      if (
+        props.initialTimeRange &&
+        props.initialTimeRange.length === 2 &&
+        props.initialTimeRange[0] &&
+        props.initialTimeRange[1]
+      ) {
+        const slots = splitRange(
+          props.initialTimeRange[0],
+          props.initialTimeRange[1],
+          duration.value,
+          rest.value,
+        );
+        interviewTimes.value =
+          slots.length > 0 ? slots : [props.initialTimeRange];
+        slotNumbers.value = Array(interviewTimes.value.length).fill(1);
+      } else {
+        interviewTimes.value = [[]];
+        slotNumbers.value = [1];
+      }
+    }
+  },
+  { immediate: true },
+);
+
+// 当用户在时间选择器中选中一个较长时间跨度时，自动按休息时间和时长划分为多个场次
+const handleTimeRangeChange = (index: number, val: any) => {
+  if (!val || val.length < 2 || !val[0] || !val[1]) return;
+  const [startStr, endStr] = val;
+  const slots = splitRange(startStr, endStr, duration.value, rest.value);
+  if (slots.length > 1) {
+    const currentSlotNum = slotNumbers.value[index] || 1;
+    interviewTimes.value.splice(index, 1, ...slots);
+    const newSlots = Array(slots.length).fill(currentSlotNum);
+    slotNumbers.value.splice(index, 1, ...newSlots);
+    Message.info(
+      `已按面试时长(${duration.value}分钟)和休息(${rest.value}分钟)自动划分为 ${slots.length} 个场次`,
+    );
+  }
+};
 
 const addTimeRange = () => {
   const lastRange = interviewTimes.value[interviewTimes.value.length - 1];
@@ -178,30 +271,46 @@ const calcPeriod = (time: Date): Period => {
 const handleCreate = async () => {
   if (
     !interviewDate.value ||
-    interviewTimes.value.some((time) => time.length < 2)
+    interviewTimes.value.some(
+      (time) => !time || time.length < 2 || !time[0] || !time[1],
+    )
   ) {
     Message.warning(t('common.interview.error.incompleteInfo'));
     return;
   }
 
-  const interviews = interviewTimes.value.map(([startTime, endTime], index) => {
-    const startDate = new Date(`${interviewDate.value}T${startTime}`);
-    const start = startDate.toISOString();
-    const end = new Date(`${interviewDate.value}T${endTime}`).toISOString();
-    return {
-      date: new Date(interviewDate.value).toISOString(),
-      period: calcPeriod(startDate),
-      start,
-      end,
-      slot_number: slotNumbers.value[index],
-    };
+  // 提交时保底进行自动拆分，确保所有时间段均按休息时间和时长划分为多个独立场次
+  const expandedList = interviewTimes.value.flatMap((time, i) => {
+    const slots = splitRange(time[0], time[1], duration.value, rest.value);
+    const slotNum = slotNumbers.value[i] || 1;
+    return slots.map((s) => ({
+      start: s[0],
+      end: s[1],
+      slotNumber: slotNum,
+    }));
   });
+
+  const interviews = expandedList.map(
+    ({ start: startTime, end: endTime, slotNumber }) => {
+      const startDate = new Date(`${interviewDate.value}T${startTime}`);
+      const start = startDate.toISOString();
+      const end = new Date(`${interviewDate.value}T${endTime}`).toISOString();
+      return {
+        date: new Date(interviewDate.value).toISOString(),
+        period: calcPeriod(startDate),
+        start,
+        end,
+        slot_number: slotNumber,
+      };
+    },
+  );
 
   visible.value = false;
   const res = await recStore.createInterview(currentGroup.value, interviews);
   if (res) {
     recStore.refresh();
     Message.success(t('common.result.addInterviewSuccess'));
+    emit('success');
   }
 };
 </script>

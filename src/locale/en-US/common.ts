@@ -5,4 +5,9 @@ export default {
   'common.candidate.eliminated':
     'Eliminated candidates ({count}) click to expand/collapse',
   'common.operation.searchCandidate': 'Search candidate name',
+  'common.operation.editSchedule': 'Interview Schedule',
+  'common.operation.candidateSelect': 'Select Candidates',
+  'common.operation.candidateInfo': 'Candidate Info',
+  'common.operation.confirmDeleteInterview':
+    'Are you sure you want to delete this interview?',
 };
