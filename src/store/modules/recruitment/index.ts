@@ -36,7 +36,7 @@ const useRecruitmentStore = defineStore('recruitment', {
       const res = await getAllRecruitments();
       this.data = res.data;
       if (this.currentRid === '') {
-        this.setCurrentRecruitment(this.currentRid);
+        await this.setCurrentRecruitment(this.currentRid);
       }
     },
     async getRecruitment(rid: string) {
@@ -55,7 +55,7 @@ const useRecruitmentStore = defineStore('recruitment', {
       this.currentRec = data;
     },
     async refresh() {
-      this.setCurrentRecruitment(this.currentRid);
+      await this.setCurrentRecruitment(this.currentRid);
     },
     async createRecruitment(data: CreateParams) {
       await createRecruitment(data);
@@ -64,7 +64,7 @@ const useRecruitmentStore = defineStore('recruitment', {
     async updateRecruitment(rid: string, data: UpdateParams) {
       await updateRecruitment(rid, data);
       if (rid === this.currentRid) {
-        this.setCurrentRecruitment(rid);
+        await this.setCurrentRecruitment(rid);
       }
       this.getAllRecruitments();
     },

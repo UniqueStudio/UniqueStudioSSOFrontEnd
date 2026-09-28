@@ -71,28 +71,28 @@ const { widthType } = useWindowResize();
 const props = defineProps({
   applicationId: {
     type: String,
+    required: false,
     default: '',
-    required: true,
   },
   interviewType: {
     type: String,
+    required: false,
     default: 'group',
-    required: true,
   },
   currentGroup: {
     type: String as PropType<Group>,
+    required: false,
     default: Group.Web,
-    required: true,
   },
   filteredApps: {
     type: Array as PropType<Application[]>,
+    required: false,
     default: () => [],
-    required: true,
   },
   mergedTimeRanges: {
     type: Array as PropType<timeRangesType[]>,
+    required: false,
     default: () => [],
-    required: true,
   },
 });
 
@@ -152,9 +152,43 @@ const timeOptions = computed(() => {
     Object.entries(valueThisDate).forEach(([period, valueThisPeriod]) => {
       const periodChildren = [] as CascaderOption[];
       valueThisPeriod.forEach(({ time, interviewId }) => {
+        const interview = filteredInterviews.value.find(
+          (i) => i.uid === interviewId,
+        );
+        const maxSlot = interview?.slot_number;
+        const isTeam = props.interviewType === 'team';
+        const assignedCount = recStore.curApplications.filter((app) => {
+          const allo = isTeam
+            ? app.interview_allocations_team
+            : app.interview_allocations_group;
+          return allo?.uid === interviewId;
+        }).length;
+
+        const curApp = recStore.curApplications.find(
+          (a) => a.uid === props.applicationId,
+        );
+        const currentAllo = isTeam
+          ? curApp?.interview_allocations_team
+          : curApp?.interview_allocations_group;
+        const isSelfAssigned = currentAllo?.uid === interviewId;
+
+        const isFull =
+          maxSlot !== undefined &&
+          maxSlot !== null &&
+          assignedCount >= maxSlot &&
+          !isSelfAssigned;
+
+        let labelText = time;
+        if (maxSlot !== undefined && maxSlot !== null) {
+          labelText = `${time} (${assignedCount}/${maxSlot}人${
+            isFull ? ' - 已满' : ''
+          })`;
+        }
+
         periodChildren.push({
-          label: time,
+          label: labelText,
           value: interviewId,
+          disabled: isFull,
         });
       });
       DateChildren.push({
@@ -197,6 +231,37 @@ const selectedTime = computed(() => {
 });
 
 const handleBeforeOk = async () => {
+  if (!form.value.selectInterviewId) {
+    Message.warning(
+      t('common.operation.allocateTimeRequired') || '请选择面试场次',
+    );
+    return false;
+  }
+
+  // 校验所选场次是否已达最大人数
+  const targetInterview = filteredInterviews.value.find(
+    (i) => i.uid === form.value.selectInterviewId,
+  );
+  if (
+    targetInterview &&
+    targetInterview.slot_number !== undefined &&
+    targetInterview.slot_number !== null
+  ) {
+    const isTeam = props.interviewType === 'team';
+    const assignedCount = recStore.curApplications.filter((app) => {
+      if (app.uid === props.applicationId) return false;
+      const allo = isTeam
+        ? app.interview_allocations_team
+        : app.interview_allocations_group;
+      return allo?.uid === targetInterview.uid;
+    }).length;
+
+    if (assignedCount >= targetInterview.slot_number) {
+      Message.warning('选择人数不能超过最大人数，该场次已满');
+      return false;
+    }
+  }
+
   const res = await allocateApplicationInterview(
     props.applicationId,
     props.interviewType as 'group' | 'team',
