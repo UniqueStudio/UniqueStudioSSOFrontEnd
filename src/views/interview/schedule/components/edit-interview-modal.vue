@@ -22,9 +22,6 @@
           ({{ currentSelectedCandidates.length }}/{{
             form.slotNumber || props.interview?.slot_number || 1
           }}人)
-          <span v-if="isOverLimit" class="text-xs font-normal ml-1">
-            (选择人数已超过最大人数)
-          </span>
         </span>
       </div>
 
@@ -269,7 +266,7 @@ import { Group, Period, PeriodDefineHour, Step } from '@/constants/team';
 import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import { allocateApplicationInterview } from '@/api/application';
-import { HR_BASE_URL } from '@/constants';
+import { deleteInterview } from '@/api/interview';
 import useWindowResize from '@/hooks/resize';
 
 const props = defineProps({
@@ -567,20 +564,8 @@ const safeDeleteInterview = async (
 ): Promise<boolean> => {
   if (!rid || !iid) return false;
   try {
-    const url = `${HR_BASE_URL}/recruitments/${rid}/interviews/${group}`;
-    const res = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify([{ iid }]),
-    });
-    if (res.ok) {
-      const json = await res.json().catch(() => ({}));
-      return json?.code === 200;
-    }
-    return false;
+    const res = await deleteInterview(rid, group as Group, [{ iid }]);
+    return res !== null && res !== undefined;
   } catch {
     return false;
   }
@@ -641,17 +626,24 @@ const resolveTargetInterviewId = async (
   match = searchInCurInterviews();
   if (match?.uid) return match.uid;
 
-  // 4. 兜底策略：寻找该组别在该日期新加入的非排除场次
+  // 4. 兜底策略：寻找该组别在该日期新加入的非排除场次（优先匹配开始时间最接近的）
   const dateStr = dayjs(expectedStart).format('YYYY-MM-DD');
-  const fallback = recStore.curInterviews.find((i) => {
-    if (excludeUid && i.uid === excludeUid) return false;
-    const iGroup = (i.name || '').toLowerCase();
-    return (
-      iGroup === targetGroupLower &&
-      dayjs(i.start).format('YYYY-MM-DD') === dateStr
+  const expectedStartMs = dayjs(expectedStart).valueOf();
+  const candidates = recStore.curInterviews
+    .filter((i) => {
+      if (excludeUid && i.uid === excludeUid) return false;
+      const iGroup = (i.name || '').toLowerCase();
+      return (
+        iGroup === targetGroupLower &&
+        dayjs(i.start).format('YYYY-MM-DD') === dateStr
+      );
+    })
+    .sort(
+      (a, b) =>
+        Math.abs(dayjs(a.start).valueOf() - expectedStartMs) -
+        Math.abs(dayjs(b.start).valueOf() - expectedStartMs),
     );
-  });
-  if (fallback?.uid) return fallback.uid;
+  if (candidates.length > 0 && candidates[0]?.uid) return candidates[0].uid;
 
   return '';
 };
@@ -788,50 +780,133 @@ const handleBeforeOk = async () => {
         form.value.candidateIds.length,
       );
 
-      // 1. 创建新时间段场次
-      const createRes = await recStore.createInterview(groupToCreate, [
-        {
-          date: new Date(dateStr).toISOString(),
-          period: calcPeriod(startDate),
-          start: newStartIso,
-          end: newEndIso,
-          slot_number: targetSlotNumber,
-        },
-      ]);
+      if (hasOriginallyAssigned) {
+        // 有已分配选手时：后端不允许删除有选手的场次，且不允许创建开始时间相同的场次
+        // 策略：先创建临时场次迁移选手 → 删除原场次 → 创建目标场次 → 迁移选手到目标场次 → 删除临时场次
+        const tempStart = dayjs(startDate).add(1, 'minute');
+        const tempEnd = dayjs(endDate).add(1, 'minute');
+        const tempCreateRes = await recStore.createInterview(groupToCreate, [
+          {
+            date: new Date(dateStr).toISOString(),
+            period: calcPeriod(tempStart.toDate()),
+            start: tempStart.toISOString(),
+            end: tempEnd.toISOString(),
+            slot_number: targetSlotNumber,
+          },
+        ]);
+        const tempInterviewId = await resolveTargetInterviewId(
+          tempCreateRes,
+          groupKey,
+          tempStart.toDate(),
+          tempEnd.toDate(),
+        );
+        if (!tempInterviewId) {
+          throw new Error('未能创建临时面试场次，未能完成时间变更');
+        }
 
-      // 2. 解析新场次 UID
-      targetInterviewId = await resolveTargetInterviewId(
-        createRes,
-        groupKey,
-        startDate,
-        endDate,
-        props.interview.uid,
-      );
+        // 迁移选手到临时场次（原场次不再有选手，可以安全删除）
+        await originalCandidateIds.value.reduce<Promise<void>>(
+          (chain, aid) =>
+            chain.then(async () => {
+              await allocateApplicationInterview(aid, interviewType, {
+                interview_id: tempInterviewId,
+              });
+            }),
+          Promise.resolve(),
+        );
+        await recStore.refresh();
 
-      if (!targetInterviewId) {
-        throw new Error('未能匹配到新建的面试场次，未能完成候选人安排');
+        // 删除原场次
+        const deleted = await safeDeleteInterview(
+          recStore.currentRid,
+          groupToCreate,
+          props.interview.uid,
+        );
+        if (!deleted) {
+          throw new Error('删除原面试场次失败，未能完成时间变更');
+        }
+
+        // 创建目标场次
+        const createRes = await recStore.createInterview(groupToCreate, [
+          {
+            date: new Date(dateStr).toISOString(),
+            period: calcPeriod(startDate),
+            start: newStartIso,
+            end: newEndIso,
+            slot_number: targetSlotNumber,
+          },
+        ]);
+        targetInterviewId = await resolveTargetInterviewId(
+          createRes,
+          groupKey,
+          startDate,
+          endDate,
+          props.interview.uid,
+        );
+        if (!targetInterviewId) {
+          throw new Error('未能匹配到新建的面试场次，未能完成候选人安排');
+        }
+
+        // 迁移所有选手到目标场次
+        await form.value.candidateIds.reduce<Promise<void>>(
+          (chain, aid) =>
+            chain.then(async () => {
+              await allocateApplicationInterview(aid, interviewType, {
+                interview_id: targetInterviewId,
+              });
+            }),
+          Promise.resolve(),
+        );
+
+        // 删除临时场次
+        await safeDeleteInterview(
+          recStore.currentRid,
+          groupToCreate,
+          tempInterviewId,
+        );
+      } else {
+        // 无选手：先删除原场次（避免新开始时间与原场次相同时创建冲突），再创建新场次
+        const deleted = await safeDeleteInterview(
+          recStore.currentRid,
+          groupToCreate,
+          props.interview.uid,
+        );
+        if (!deleted) {
+          throw new Error('删除原面试场次失败，未能完成时间变更');
+        }
+
+        const createRes = await recStore.createInterview(groupToCreate, [
+          {
+            date: new Date(dateStr).toISOString(),
+            period: calcPeriod(startDate),
+            start: newStartIso,
+            end: newEndIso,
+            slot_number: targetSlotNumber,
+          },
+        ]);
+
+        targetInterviewId = await resolveTargetInterviewId(
+          createRes,
+          groupKey,
+          startDate,
+          endDate,
+          props.interview.uid,
+        );
+        if (!targetInterviewId) {
+          throw new Error('未能匹配到新建的面试场次，未能完成候选人安排');
+        }
+
+        // 安排新选中的候选人到新场次
+        await form.value.candidateIds.reduce<Promise<void>>(
+          (chain, aid) =>
+            chain.then(async () => {
+              await allocateApplicationInterview(aid, interviewType, {
+                interview_id: targetInterviewId,
+              });
+            }),
+          Promise.resolve(),
+        );
       }
-
-      // 3. 将候选人迁移/安排至新场次
-      await form.value.candidateIds.reduce<Promise<void>>(
-        (chain, aid) =>
-          chain.then(async () => {
-            const res = await allocateApplicationInterview(aid, interviewType, {
-              interview_id: targetInterviewId,
-            });
-            if (!res) {
-              // 分配结果为空，不阻断流程
-            }
-          }),
-        Promise.resolve(),
-      );
-
-      // 4. 清理旧场次（使用 fetch 避免被 Axios 拦截器弹窗拦截）
-      await safeDeleteInterview(
-        recStore.currentRid,
-        groupToCreate,
-        props.interview.uid,
-      );
     } else {
       // 时间未变：
       // 如果原场次无选手占用，且修改了上限人数，可安全通过先删后建来更新 slot_number
