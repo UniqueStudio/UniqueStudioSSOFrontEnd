@@ -88,12 +88,13 @@
       >
         <div class="min-w-[780px] flex flex-col relative">
           <!-- 表头：横轴（周几 + 阳历日期） 粘性固定在顶部 -->
+          <!-- 注意：必须使用不透明背景（--color-bg-1），fill 色在深色模式下为半透明，会导致滚动内容透出 -->
           <div
-            class="sticky top-0 z-30 flex border-b border-[--color-border-2] bg-[--color-fill-1]"
+            class="sticky top-0 z-30 flex border-b border-[--color-border-2] bg-[--color-bg-1]"
           >
             <!-- 左上角时间标头：粘性固定在左上角 -->
             <div
-              class="sticky left-0 top-0 z-40 w-16 sm:w-20 shrink-0 border-r border-[--color-border-2] flex items-center justify-center py-2.5 bg-[--color-fill-1]"
+              class="sticky left-0 top-0 z-40 w-16 sm:w-20 shrink-0 border-r border-[--color-border-2] flex items-center justify-center py-2.5 bg-[--color-bg-1]"
             >
               <span class="text-xs text-[--color-text-3] font-medium"
                 >时间</span
@@ -540,8 +541,10 @@ const getDayCards = (dateStr: string): LayoutCard[] => {
 
     // 从 START_HOUR (8点) 起算分钟数
     const startMinutes = (s.hour() - START_HOUR) * 60 + s.minute();
-    const endMinutes = (e.hour() - START_HOUR) * 60 + e.minute();
-    const duration = Math.max(endMinutes - startMinutes, 15);
+    const rawEndMinutes = (e.hour() - START_HOUR) * 60 + e.minute();
+    // 保证最小15分钟持续时间，避免0时长场次无法显示
+    const duration = Math.max(rawEndMinutes - startMinutes, 15);
+    const endMinutes = startMinutes + duration;
 
     // 1分钟 = HOUR_HEIGHT / 60 像素 (当前为 1.5px)
     const top = Math.max(0, startMinutes * (HOUR_HEIGHT / 60));
