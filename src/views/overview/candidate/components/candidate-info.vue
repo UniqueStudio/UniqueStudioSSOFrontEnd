@@ -5,14 +5,14 @@
     <div class="flex items-center">
       <!-- @vue-ignore 由于逆变@change会报ts错误 -->
       <a-checkbox
-        class="sm:pr-5 w-max"
+        class="sm:pr-5 w-max shrink-0"
         :model-value="checkedAll"
         :indeterminate="indeterminate"
         @change="handleChangeAll"
         >{{ $t('common.operation.selectAll') }}
       </a-checkbox>
       <!-- 渲染选中人数，清空选择 -->
-      <div v-if="selectedApplications.length" class="flex items-center">
+      <div v-if="selectedApplications.length" class="flex items-end shrink-0">
         <a-descriptions
           :label-style="{ padding: '0 10px' }"
           :value-style="{ padding: '0' }"
@@ -26,32 +26,34 @@
       <a-input-search
         v-model="searchText"
         :placeholder="$t('common.operation.searchCandidate')"
-        class="!w-48 ml-4"
+        class="ml-2 sm:ml-4 flex-1 min-w-0"
         allow-clear
         size="small"
       />
     </div>
-    <div class="hidden max-sm:flex items-center">
-      <a-select
-        v-model="curStep"
-        :bordered="false"
-        class="text-[rgb(var(--primary-6))] text-right"
-      >
-        <a-option
-          v-for="(item, index) in recruitSteps"
-          :key="item.i18Key"
-          :value="index + 1"
-          >{{ $t(item.i18Key) }}</a-option
+    <div class="flex flex-row items-center">
+      <div class="hidden max-sm:flex items-center">
+        <a-select
+          v-model="curStep"
+          :bordered="false"
+          class="text-[rgb(var(--primary-6))] text-right"
         >
-        <a-option :value="recruitSteps.length + 1">{{
-          $t('common.steps.Fail')
-        }}</a-option>
-        <a-option :value="recruitSteps.length + 2">{{
-          $t('common.steps.All')
-        }}</a-option>
-      </a-select>
+          <a-option
+            v-for="(item, index) in recruitSteps"
+            :key="item.i18Key"
+            :value="index + 1"
+            >{{ $t(item.i18Key) }}</a-option
+          >
+          <a-option :value="recruitSteps.length + 1">{{
+            $t('common.steps.Fail')
+          }}</a-option>
+          <a-option :value="recruitSteps.length + 2">{{
+            $t('common.steps.All')
+          }}</a-option>
+        </a-select>
+      </div>
+      <team-group-radio v-model="currentGroup"></team-group-radio>
     </div>
-    <team-group-radio v-model="currentGroup"></team-group-radio>
   </div>
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-scrollbar
