@@ -73,7 +73,7 @@
           添加场次
         </a-button>
 
-        <team-group-radio v-model="currentGroup" />
+        <team-group-radio v-model="currentGroup" include-unique />
       </div>
     </div>
 
@@ -541,10 +541,8 @@ const getDayCards = (dateStr: string): LayoutCard[] => {
 
     // 从 START_HOUR (8点) 起算分钟数
     const startMinutes = (s.hour() - START_HOUR) * 60 + s.minute();
-    const rawEndMinutes = (e.hour() - START_HOUR) * 60 + e.minute();
-    // 保证最小15分钟持续时间，避免0时长场次无法显示
-    const duration = Math.max(rawEndMinutes - startMinutes, 15);
-    const endMinutes = startMinutes + duration;
+    const endMinutes = (e.hour() - START_HOUR) * 60 + e.minute();
+    const duration = Math.max(endMinutes - startMinutes, 15);
 
     // 1分钟 = HOUR_HEIGHT / 60 像素 (当前为 1.5px)
     const top = Math.max(0, startMinutes * (HOUR_HEIGHT / 60));
